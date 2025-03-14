@@ -23,7 +23,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  */
-package de.bundeswehr.mese.sedapexpress.crypto;
+package de.bundeswehr.mese.sedapexpress.utils;
 
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
@@ -40,43 +40,52 @@ import javax.crypto.spec.DHParameterSpec;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import de.bundeswehr.mese.sedapexpress.utils.EncryptionUtils.AESKeyLength;
+import de.bundeswehr.mese.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
+
 class DHUtilsTest {
 
     @Test
     void testDHKeyExchange() throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
 
-	Integer keySize = 256;
+	for (DHKEMKeyLength keyLengthDHKEM : DHKEMKeyLength.values()) {
 
-	DHParameterSpec parameterSpecsServer = DHUtils.generateVariables(keySize);
+	    for (AESKeyLength keyLengthSharedSecret : AESKeyLength.values()) {
 
-	BigInteger p = parameterSpecsServer.getP();
-	BigInteger g = parameterSpecsServer.getG();
+		DHParameterSpec parameterSpecsServer = DHUtils.generateVariables(keyLengthDHKEM);
 
-	DHParameterSpec parameterSpecsClient = DHUtils.generateVariables(keySize, p, g);
+		BigInteger p = parameterSpecsServer.getP();
+		BigInteger g = parameterSpecsServer.getG();
 
-	// Client Key (private / public)
-	KeyPair clientKeyPair = DHUtils.generateKeyPair(parameterSpecsServer);
+		DHParameterSpec parameterSpecsClient = DHUtils.generateVariables(keyLengthDHKEM, p, g);
 
-	// Server Key (private / public)
-	KeyPair serverKeyPair = DHUtils.generateKeyPair(parameterSpecsClient);
+		// Client Key (private / public)
+		KeyPair clientKeyPair = DHUtils.generateKeyPair(parameterSpecsServer);
 
-	// Client
-	byte[] secretClient = DHUtils.getSharedSecretKey(clientKeyPair.getPrivate(), serverKeyPair.getPublic());
+		// Server Key (private / public)
+		KeyPair serverKeyPair = DHUtils.generateKeyPair(parameterSpecsClient);
 
-	// Server
-	byte[] secretServer = DHUtils.getSharedSecretKey(serverKeyPair.getPrivate(), clientKeyPair.getPublic());
+		// Client
+		byte[] secretClient = DHUtils.getSharedSecretKey(clientKeyPair.getPrivate(), serverKeyPair.getPublic(), keyLengthSharedSecret);
 
-	Assertions.assertArrayEquals(secretClient, secretServer);
+		// Server
+		byte[] secretServer = DHUtils.getSharedSecretKey(serverKeyPair.getPrivate(), clientKeyPair.getPublic(), keyLengthSharedSecret);
 
-	System.out.println("KeySize: " + keySize);
-	System.out.println("p:       " + p);
-	System.out.println("g:       " + g);
-	System.out.println();
-	System.out.println("Public key client: " + HexFormat.of().withUpperCase().formatHex(clientKeyPair.getPublic().getEncoded()));
-	System.out.println("Public key server: " + HexFormat.of().withUpperCase().formatHex(serverKeyPair.getPublic().getEncoded()));
-	System.out.println();
-	System.out.println("Shared secret client: " + HexFormat.of().withUpperCase().formatHex(secretClient));
-	System.out.println("Shared secret sever:  " + HexFormat.of().withUpperCase().formatHex(secretServer));
+		Assertions.assertArrayEquals(secretClient, secretServer);
 
+		System.out.println();
+		System.out.println();
+		System.out.println("Key length for DH:        " + keyLengthDHKEM.getIntValue());
+		System.out.println("p:                        " + p);
+		System.out.println("g:                        " + g);
+		System.out.println();
+		System.out.println("Public key client:        " + HexFormat.of().withUpperCase().formatHex(clientKeyPair.getPublic().getEncoded()));
+		System.out.println("Public key server:        " + HexFormat.of().withUpperCase().formatHex(serverKeyPair.getPublic().getEncoded()));
+		System.out.println();
+		System.out.println("Key length shared secret: " + keyLengthSharedSecret.getIntValue());
+		System.out.println("Shared secret client:     " + HexFormat.of().withUpperCase().formatHex(secretClient));
+		System.out.println("Shared secret sever:      " + HexFormat.of().withUpperCase().formatHex(secretServer));
+	    }
+	}
     }
 }

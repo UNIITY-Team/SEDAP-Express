@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HexFormat;
@@ -46,6 +47,7 @@ import de.bundeswehr.mese.sedapexpress.messages.TIMESYNC;
 import de.bundeswehr.mese.sedapexpress.processing.SEDAPExpressInputLoggingSubscriber;
 import de.bundeswehr.mese.sedapexpress.processing.SEDAPExpressOutputLoggingSubscriber;
 import de.bundeswehr.mese.sedapexpress.processing.SEDAPExpressSubscriber;
+import de.bundeswehr.mese.sedapexpress.utils.EncryptionUtils;
 
 /**
  *
@@ -74,8 +76,7 @@ public abstract class SEDAPExpressCommunicator {
     /**
      * Unsubscribe for logging messages related to data input
      * 
-     * @param subscriber The class which should NOT process the logging message
-     *                   anymore
+     * @param subscriber The class which should NOT process the logging message anymore
      */
     public void unsubscripeForInputLogging(SEDAPExpressInputLoggingSubscriber subscriber) {
 	this.inputLogger.remove(subscriber);
@@ -93,8 +94,7 @@ public abstract class SEDAPExpressCommunicator {
     /**
      * Unsubscribe for logging messages related to data output
      * 
-     * @param subscriber The class which should NOT process the logging message
-     *                   anymore
+     * @param subscriber The class which should NOT process the logging message anymore
      */
     public void unsubscripeForOutputLogging(SEDAPExpressOutputLoggingSubscriber subscriber) {
 	this.outputLogger.remove(subscriber);
@@ -120,7 +120,7 @@ public abstract class SEDAPExpressCommunicator {
 
 	clazzes.forEach(clazz -> {
 
-	    this.subscriptions.computeIfAbsent(clazz, _ -> new CopyOnWriteArraySet<SEDAPExpressSubscriber>());
+	    this.subscriptions.computeIfAbsent(clazz, x -> new CopyOnWriteArraySet<SEDAPExpressSubscriber>());
 
 	    this.subscriptions.get(clazz).add(subscriber);
 	});
@@ -148,7 +148,7 @@ public abstract class SEDAPExpressCommunicator {
     public void unsubscribeMessages(SEDAPExpressSubscriber subscriber, Collection<MessageType> clazzes) {
 	clazzes.forEach(clazz ->
 
-	this.subscriptions.computeIfPresent(clazz, (_, value) -> {
+	this.subscriptions.computeIfPresent(clazz, (x, value) -> {
 	    value.remove(subscriber);
 	    return value;
 	}));
@@ -186,6 +186,82 @@ public abstract class SEDAPExpressCommunicator {
 	}
     }
 
+    private static boolean useMessageAuthentication = false;
+
+    /**
+     * Enables the authentication of messages. You also have to set a shared secret key to get it working. This method gives you the status back, if every requirement for using the authentication feature has been fullfilled.
+     * 
+     * @return Status of the message authentiation feature. True means the feature is activated, false means not and that not all requirements are fullfilled or the shared secret key is not useable.
+     */
+    public static boolean enableMessageAuthentication() {
+	SEDAPExpressCommunicator.useMessageAuthentication = true && EncryptionUtils.checkKey(SEDAPExpressCommunicator.sharedSecretKey);
+	return SEDAPExpressCommunicator.useMessageAuthentication;
+    }
+
+    /**
+     * Disables the message authentication feature.
+     */
+    public static void disableMessageAuthentication() {
+	SEDAPExpressCommunicator.useMessageAuthentication = false;
+    }
+
+    private static boolean useMessageEncryption = false;
+
+    /**
+     * Enables the encryption of messages. You also have to set a shared secret key to get it working. This method gives you the status back, if every requirement for using the encryption feature has been fullfilled.
+     * 
+     * @return Status of the message encryption feature. True means the feature is activated, false means not and that not all requirements are fullfilled or the shared secret key is not useable.
+     */
+    public static boolean enableMessageEncrytion() {
+	SEDAPExpressCommunicator.useMessageEncryption = true && EncryptionUtils.checkKey(SEDAPExpressCommunicator.sharedSecretKey);
+	return SEDAPExpressCommunicator.useMessageEncryption;
+    }
+
+    /**
+     * Disables the message encryption feature.
+     */
+    public static void disableMessageEncryption() {
+	SEDAPExpressCommunicator.useMessageEncryption = false;
+    }
+
+    private static byte[] sharedSecretKey;
+
+    /**
+     * Gives the current shared secret key back, which will be used if encryption or authentication has been enabled
+     * 
+     * @return the shared secrey key
+     */
+    public static byte[] getSharedSecretKey() {
+	return SEDAPExpressCommunicator.sharedSecretKey;
+    }
+
+    /**
+     * Gives the current shared secret key in a BASE64 encoded format back, which will be used if encryption or authentication has been enabled
+     * 
+     * @return the shared secrey key
+     */
+    public static String getSharedSecretKeyAsBASE64Encoded() {
+	return Base64.getEncoder().encodeToString(SEDAPExpressCommunicator.sharedSecretKey);
+    }
+
+    /**
+     * Sets the shared secret key, which will be used if encryption or authentication has been enabled
+     * 
+     * @param sharedSecretKey
+     */
+    public static void setSharedSecretKey(byte[] sharedSecretKey) {
+	SEDAPExpressCommunicator.sharedSecretKey = sharedSecretKey;
+    }
+
+    /**
+     * Sets the shared secret key, which will be used if encryption or authentication has been enabled
+     * 
+     * @param base64EncodedSharedSecretKey the shared secret key in BASE64 encoded format
+     */
+    public static void setSharedSecretKeyfromBASE64(String base64EncodedSharedSecretKey) {
+	SEDAPExpressCommunicator.sharedSecretKey = Base64.getDecoder().decode(base64EncodedSharedSecretKey);
+    }
+
     /**
      * Let the communicator establish a connection
      * 
@@ -199,8 +275,7 @@ public abstract class SEDAPExpressCommunicator {
      * @param message SEDAP-Express to send
      * @return Result if the sending was successfully
      * 
-     * @throws IOException While sending the SEDAP-Express message, somthing gone
-     *                     wrong
+     * @throws IOException While sending the SEDAP-Express message, somthing gone wrong
      */
     public abstract boolean sendSEDAPExpressMessage(SEDAPExpressMessage message) throws IOException;
 
@@ -296,9 +371,7 @@ public abstract class SEDAPExpressCommunicator {
     };
 
     /**
-     * Do a time synchronization via TIMESYNC message. (Please notice, that this
-     * requiries the right on the system to change the system time, which is
-     * disabled by default on windows system)
+     * Do a time synchronization via TIMESYNC message. (Please notice, that this requiries the right on the system to change the system time, which is disabled by default on windows system)
      */
     public void doTimesync() {
 

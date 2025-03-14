@@ -96,7 +96,7 @@ public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements 
 	    final HttpServer server = provider.createHttpServer(new InetSocketAddress(80), 64);
 	    final HttpContext context = server.createContext("/SEDAPExpress");
 	    context.getFilters().add(new TracingFilter());
-	    context.setHandler(SEDAPExpressRESTServer.respondWith(_ -> HttpResponse.ok("Hello " + Instant.now()).text()));
+	    context.setHandler(SEDAPExpressRESTServer.respondWith(x -> HttpResponse.ok("Hello " + Instant.now()).text()));
 	    server.start();
 
 	    SEDAPExpressRESTServer.logger.logp(Level.INFO, "SEDAPExpressRESTServer", "run()", "REST server listening on port: " + this.port);

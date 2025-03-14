@@ -23,7 +23,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  */
-package de.bundeswehr.mese.sedapexpress.crypto;
+package de.bundeswehr.mese.sedapexpress.utils;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -39,59 +39,74 @@ import org.bouncycastle.pqc.jcajce.spec.KyberParameterSpec;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import de.bundeswehr.mese.sedapexpress.utils.KyberUtils;
+import de.bundeswehr.mese.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
+
 class KyberUtilsTest {
 
     @Test
     void testKyberKEM512() throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
 
-	KeyPair pairServer = KyberUtils.generateKeyPair(KyberParameterSpec.kyber512);
+	for (DHKEMKeyLength keyLength : DHKEMKeyLength.values()) {
 
-	SecretKeyWithEncapsulation encapsulation = KyberUtils.generateSharedSecretKeyWithEncapsulation(pairServer.getPublic(), 256);
+	    KeyPair pairServer = KyberUtils.generateKeyPair(KyberParameterSpec.kyber512);
 
-	byte[] secretClient = encapsulation.getEncoded();
-	byte[] encapsulatedKey = encapsulation.getEncapsulation();
+	    SecretKeyWithEncapsulation encapsulation = KyberUtils.generateSharedSecretKeyWithEncapsulation(pairServer.getPublic(), keyLength);
 
-	byte[] secretServer = KyberUtils.generateSharedSecretKeyFromEncapsulation(pairServer.getPrivate(), encapsulatedKey, 256);
+	    byte[] secretClient = encapsulation.getEncoded();
+	    byte[] encapsulatedKey = encapsulation.getEncapsulation();
 
-	Assertions.assertArrayEquals(secretClient, secretServer);
+	    byte[] secretServer = KyberUtils.generateSharedSecretKeyFromEncapsulation(pairServer.getPrivate(), encapsulatedKey, keyLength);
 
-	System.out.println("Shared secret client: " + HexFormat.of().withUpperCase().formatHex(secretClient));
-	System.out.println("Shared secret sever:  " + HexFormat.of().withUpperCase().formatHex(secretServer));
+	    Assertions.assertArrayEquals(secretClient, secretServer);
+
+	    System.out.println("Shared secret client: " + HexFormat.of().withUpperCase().formatHex(secretClient));
+	    System.out.println("Shared secret sever:  " + HexFormat.of().withUpperCase().formatHex(secretServer));
+	}
+
     }
 
     @Test
     void testKyberKEM768() throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
 
-	KeyPair pairServer = KyberUtils.generateKeyPair(KyberParameterSpec.kyber768);
+	for (DHKEMKeyLength keyLength : DHKEMKeyLength.values()) {
 
-	SecretKeyWithEncapsulation encapsulation = KyberUtils.generateSharedSecretKeyWithEncapsulation(pairServer.getPublic(), 256);
+	    KeyPair pairServer = KyberUtils.generateKeyPair(KyberParameterSpec.kyber768);
 
-	byte[] secretClient = encapsulation.getEncoded();
-	byte[] encapsulatedKey = encapsulation.getEncapsulation();
+	    SecretKeyWithEncapsulation encapsulation = KyberUtils.generateSharedSecretKeyWithEncapsulation(pairServer.getPublic(), keyLength);
 
-	byte[] secretServer = KyberUtils.generateSharedSecretKeyFromEncapsulation(pairServer.getPrivate(), encapsulatedKey, 256);
+	    byte[] secretClient = encapsulation.getEncoded();
+	    byte[] encapsulatedKey = encapsulation.getEncapsulation();
 
-	Assertions.assertArrayEquals(secretClient, secretServer);
+	    byte[] secretServer = KyberUtils.generateSharedSecretKeyFromEncapsulation(pairServer.getPrivate(), encapsulatedKey, keyLength);
 
-	System.out.println("Shared secret client: " + HexFormat.of().withUpperCase().formatHex(secretClient));
-	System.out.println("Shared secret sever:  " + HexFormat.of().withUpperCase().formatHex(secretServer));
+	    Assertions.assertArrayEquals(secretClient, secretServer);
+
+	    System.out.println("Shared secret client: " + HexFormat.of().withUpperCase().formatHex(secretClient));
+	    System.out.println("Shared secret sever:  " + HexFormat.of().withUpperCase().formatHex(secretServer));
+	}
+
     }
 
     @Test
     void testKyberKEM1024() throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
 
-	KeyPair pairServer = KyberUtils.generateKeyPair(KyberParameterSpec.kyber1024);
+	for (DHKEMKeyLength keyLength : DHKEMKeyLength.values()) {
 
-	SecretKeyWithEncapsulation encapsulation = KyberUtils.generateSharedSecretKeyWithEncapsulation(pairServer.getPublic(), 256);
+	    KeyPair pairServer = KyberUtils.generateKeyPair(KyberParameterSpec.kyber1024);
 
-	byte[] secretClient = encapsulation.getEncoded();
-	byte[] encapsulatedKey = encapsulation.getEncapsulation();
+	    SecretKeyWithEncapsulation encapsulation = KyberUtils.generateSharedSecretKeyWithEncapsulation(pairServer.getPublic(), keyLength);
 
-	byte[] secretServer = KyberUtils.generateSharedSecretKeyFromEncapsulation(pairServer.getPrivate(), encapsulatedKey, 256);
+	    byte[] secretClient = encapsulation.getEncoded();
+	    byte[] encapsulatedKey = encapsulation.getEncapsulation();
 
-	Assertions.assertArrayEquals(secretClient, secretServer);
+	    byte[] secretServer = KyberUtils.generateSharedSecretKeyFromEncapsulation(pairServer.getPrivate(), encapsulatedKey, keyLength);
 
-	System.out.println("Shared secret client: " + HexFormat.of().withUpperCase().formatHex(secretClient));
-	System.out.println("Shared secret sever:  " + HexFormat.of().withUpperCase().formatHex(secretServer));
+	    Assertions.assertArrayEquals(secretClient, secretServer);
+
+	    System.out.println("Shared secret client: " + HexFormat.of().withUpperCase().formatHex(secretClient));
+	    System.out.println("Shared secret sever:  " + HexFormat.of().withUpperCase().formatHex(secretServer));
+	}
+
     }
 }

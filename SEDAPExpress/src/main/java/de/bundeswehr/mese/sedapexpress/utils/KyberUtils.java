@@ -23,7 +23,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  */
-package de.bundeswehr.mese.sedapexpress.crypto;
+package de.bundeswehr.mese.sedapexpress.utils;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
@@ -44,6 +44,8 @@ import org.bouncycastle.jcajce.SecretKeyWithEncapsulation;
 import org.bouncycastle.jcajce.spec.KEMExtractSpec;
 import org.bouncycastle.jcajce.spec.KEMGenerateSpec;
 import org.bouncycastle.pqc.jcajce.spec.KyberParameterSpec;
+
+import de.bundeswehr.mese.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
 
 public class KyberUtils {
 
@@ -75,7 +77,8 @@ public class KyberUtils {
     /**
      * Calculates the shared secret key with encapsulation
      * 
-     * @param publicKey
+     * @param publicKey The own public key
+     * @param keyLength The length of the key in bits
      * 
      * @return shared secret key with encapsulation
      * 
@@ -83,10 +86,10 @@ public class KyberUtils {
      * @throws NoSuchProviderException
      * @throws InvalidAlgorithmParameterException
      */
-    public static SecretKeyWithEncapsulation generateSharedSecretKeyWithEncapsulation(PublicKey publicKey, int bitSize) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+    public static SecretKeyWithEncapsulation generateSharedSecretKeyWithEncapsulation(PublicKey publicKey, DHKEMKeyLength keyLength) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
 	KeyGenerator keyGenerator = KeyGenerator.getInstance("Kyber", "BCPQC");
-	KEMGenerateSpec kemGenerateSpec = new KEMGenerateSpec(publicKey, "Secret", bitSize);
+	KEMGenerateSpec kemGenerateSpec = new KEMGenerateSpec(publicKey, "Secret", keyLength.getIntValue());
 	keyGenerator.init(kemGenerateSpec);
 
 	return (SecretKeyWithEncapsulation) keyGenerator.generateKey();
@@ -95,8 +98,8 @@ public class KyberUtils {
     /**
      * Calculates the shared secret key from encapsulation
      * 
-     * @param privateKey
-     * @param encapsulation
+     * @param privateKey    The own private key
+     * @param encapsulation The encapsulation
      * 
      * @return the shared secret key
      * 
@@ -104,9 +107,9 @@ public class KyberUtils {
      * @throws NoSuchProviderException
      * @throws InvalidAlgorithmParameterException
      */
-    public static byte[] generateSharedSecretKeyFromEncapsulation(PrivateKey privateKey, byte[] encapsulation, int bitSize) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+    public static byte[] generateSharedSecretKeyFromEncapsulation(PrivateKey privateKey, byte[] encapsulation, DHKEMKeyLength keyLength) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
-	KEMExtractSpec kemExtractSpec = new KEMExtractSpec(privateKey, encapsulation, "Secret", bitSize);
+	KEMExtractSpec kemExtractSpec = new KEMExtractSpec(privateKey, encapsulation, "Secret", keyLength.getIntValue());
 	KeyGenerator keyGenerator = KeyGenerator.getInstance("Kyber", "BCPQC");
 	keyGenerator.init(kemExtractSpec);
 

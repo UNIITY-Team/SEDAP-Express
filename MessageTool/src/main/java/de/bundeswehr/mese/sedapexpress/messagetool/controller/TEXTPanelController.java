@@ -104,7 +104,7 @@ public class TEXTPanelController extends MessagePanelController {
     public TEXT createMessage(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
 
 	return new TEXT(number, time, sender, classification, acknowledgement, mac, this.recipientTextField.getText(), this.typeComboBox.getSelectionModel().getSelectedItem(), this.encodingComboBox.getSelectionModel().getSelectedItem(),
-		this.textTextArea.getText());
+		this.textTextArea.getText(), null);
     }
 
     @Override

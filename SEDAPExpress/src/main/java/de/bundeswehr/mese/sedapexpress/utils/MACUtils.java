@@ -23,7 +23,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  */
-package de.bundeswehr.mese.sedapexpress.crypto;
+package de.bundeswehr.mese.sedapexpress.utils;
 
 import java.security.Security;
 import java.util.HexFormat;
@@ -94,7 +94,7 @@ public class MACUtils {
     public static String calcAdler32Checksum(String str) {
 	Adler32 adler = new Adler32();
 	adler.update(str.getBytes());
-	return MACUtils.hexFormatter.toHexDigits(adler.getValue());
+	return MACUtils.hexFormatter.toHexDigits(adler.getValue(), 8);
     }
 
     public static String calc32BitHMAC(final byte[] key, final SEDAPExpressMessage message) {
@@ -184,11 +184,12 @@ public class MACUtils {
     }
 
     /**
+     * Checks if a message is authentic.
      *
-     * @param key
-     * @param message
+     * @param key     Shared secret key
+     * @param message Original message
      *
-     * @return Status if the message is authentic
+     * @return Status if the message is authentic. True means yes, false means not.
      */
     public static boolean isMessageAuthentic(final byte[] key, final SEDAPExpressMessage message) {
 
@@ -201,12 +202,13 @@ public class MACUtils {
     }
 
     /**
-     *
+     * Checks if a message is authentic.
+     * 
      * @param key        En-/Decryption key
      * @param initVector Initialisation vector (sometimes called IV), could be null
      * @param message    Message to prove
      *
-     * @return Status if the message is authentic
+     * @return Status if the message is authentic. True means yes, false means not.
      */
     public static boolean isMessageAuthentic(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
 

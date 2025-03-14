@@ -299,6 +299,7 @@ public class STATUSPanelController extends MessagePanelController {
     	        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
     	        	ammunitionLevelLabel.setVisible(true);
     	        	System.out.println("Ungültiges Format: " + pairs[i] + "#" + pairs[i + 1]);
+    	        	ammunitionLevelNames.remove(i);
        	        }   
     	}
     }
@@ -315,6 +316,7 @@ public class STATUSPanelController extends MessagePanelController {
     	        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
     	        	fuelLevelLabel.setVisible(true);
     	        	System.out.println("Ungültiges Format: " + pairs[i] + "#" + pairs[i + 1]);
+    	        	fuelLevelNames.remove(i);
        	        }   
     	}
     }
@@ -331,6 +333,7 @@ public class STATUSPanelController extends MessagePanelController {
     	        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
     	        	batterieLevelLabel.setVisible(true);
     	        	System.out.println("Ungültiges Format: " + pairs[i] + "#" + pairs[i + 1]);
+    	        	batterieLevelNames.remove(i);
        	        }   
     	}
     }
@@ -350,6 +353,7 @@ public class STATUSPanelController extends MessagePanelController {
     	if(this.mediaUrls != null && this.mediaUrls.isEmpty()) {
     		this.mediaUrls = null;
     	}
+    	
     	
 	STATUS status = new STATUS(number, time, sender,
 		classification, acknowledgement, mac,
@@ -374,7 +378,7 @@ public class STATUSPanelController extends MessagePanelController {
     @Override
     public boolean isValidFilled() {
 
-	return !ammunitionLevelLabel.isVisible() && !batterieLevelLabel.isVisible() && !fuelLevelLabel.isVisible(); 
+    	return !ammunitionLevelLabel.isVisible() && !batterieLevelLabel.isVisible() && !fuelLevelLabel.isVisible(); 
     }
 
 }

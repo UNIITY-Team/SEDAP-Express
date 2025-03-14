@@ -33,7 +33,7 @@ module SEDAPExpress {
     exports de.bundeswehr.mese.sedapexpress.messages;
     exports de.bundeswehr.mese.sedapexpress.network;
     exports de.bundeswehr.mese.sedapexpress.processing;
-    exports de.bundeswehr.mese.sedapexpress.crypto;
+    exports de.bundeswehr.mese.sedapexpress.utils;
     exports de.bundeswehr.mese.sedapexpress.json;
 
     opens de.bundeswehr.mese.sedapexpress;
@@ -41,7 +41,7 @@ module SEDAPExpress {
     opens de.bundeswehr.mese.sedapexpress.messages;
     opens de.bundeswehr.mese.sedapexpress.network;
     opens de.bundeswehr.mese.sedapexpress.processing;
-    opens de.bundeswehr.mese.sedapexpress.crypto;
+    opens de.bundeswehr.mese.sedapexpress.utils;
     opens de.bundeswehr.mese.sedapexpress.json;
 
     requires java.logging;

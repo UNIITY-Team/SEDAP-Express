@@ -23,7 +23,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  */
-package de.bundeswehr.mese.sedapexpress.crypto;
+package de.bundeswehr.mese.sedapexpress.utils;
 
 import java.math.BigInteger;
 import java.security.AlgorithmParameterGenerator;
@@ -42,11 +42,15 @@ import java.security.spec.InvalidParameterSpecException;
 
 import javax.crypto.KeyAgreement;
 import javax.crypto.spec.DHParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.macs.HMac;
 import org.bouncycastle.crypto.prng.SP800SecureRandomBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+import de.bundeswehr.mese.sedapexpress.utils.EncryptionUtils.AESKeyLength;
+import de.bundeswehr.mese.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
 
 public class DHUtils {
 
@@ -58,7 +62,7 @@ public class DHUtils {
     /**
      * Generate key generation Diffie-Hellman-Merkel parameters ("p" and "g" variables)
      *
-     * @param bitLength
+     * @param keyLength
      *
      * @return Diffie-Hellman-Merkel parameters
      * 
@@ -66,10 +70,11 @@ public class DHUtils {
      * @throws NoSuchProviderException
      * @throws NoSuchAlgorithmException
      */
-    public static DHParameterSpec generateVariables(Integer bitLength) throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException {
+    public static DHParameterSpec generateVariables(DHKEMKeyLength keyLength) throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException {
 
 	AlgorithmParameterGenerator algGen = AlgorithmParameterGenerator.getInstance("DH", BouncyCastleProvider.PROVIDER_NAME);
-	algGen.init(bitLength, DHUtils.random);
+	algGen.init(keyLength.getIntValue(), DHUtils.random);
+
 	AlgorithmParameters algoParams = algGen.generateParameters();
 
 	return algoParams.getParameterSpec(DHParameterSpec.class);
@@ -79,9 +84,10 @@ public class DHUtils {
     /**
      * Generate key generation Diffie-Hellman-Merkel parameters using given "p" and "g" variables
      *
-     * @param bitLength
-     * @param p
-     * @param g
+     * @param keyLength Length of the key in bits
+     * 
+     * @param p         Prime number
+     * @param g         Natural number
      *
      * @return Diffie-Hellman-Merkel parameters
      * 
@@ -89,9 +95,9 @@ public class DHUtils {
      * @throws NoSuchProviderException
      * @throws NoSuchAlgorithmException
      */
-    public static DHParameterSpec generateVariables(Integer bitLength, BigInteger p, BigInteger g) throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException {
+    public static DHParameterSpec generateVariables(DHKEMKeyLength keyLength, BigInteger p, BigInteger g) throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException {
 
-	return new DHParameterSpec(p, g, bitLength);
+	return new DHParameterSpec(p, g, keyLength.getIntValue());
 
     }
 
@@ -119,8 +125,9 @@ public class DHUtils {
     /**
      * Calculates the shared secret key
      *
-     * @param ownSecretKey   the own secret key
-     * @param otherPublicKey the public key of the other side
+     * @param ownSecretKey          The own secret key
+     * @param otherPublicKey        The public key of the other side
+     * @param keyLengthSharedSecret The desired bit length of the shared secret key
      * 
      * @return the shared secret key
      *
@@ -128,13 +135,13 @@ public class DHUtils {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeyException
      */
-    public static byte[] getSharedSecretKey(PrivateKey ownSecretKey, PublicKey otherPublicKey) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
+    public static byte[] getSharedSecretKey(PrivateKey ownSecretKey, PublicKey otherPublicKey, AESKeyLength keyLengthSharedSecret) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
 
 	KeyAgreement serverKeyAgreement = KeyAgreement.getInstance("DH", BouncyCastleProvider.PROVIDER_NAME);
 	serverKeyAgreement.init(ownSecretKey);
 	serverKeyAgreement.doPhase(otherPublicKey, true);
 
-	return serverKeyAgreement.generateSecret();
+	return new SecretKeySpec(serverKeyAgreement.generateSecret(), 0, keyLengthSharedSecret.getIntValue() / 8, "PBKDF2WithHmacSHA256").getEncoded();
     }
 
 }

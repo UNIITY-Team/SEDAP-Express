@@ -23,7 +23,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  */
-package de.bundeswehr.mese.sedapexpress.crypto;
+package de.bundeswehr.mese.sedapexpress.utils;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -36,9 +36,12 @@ import java.security.PublicKey;
 import java.security.Security;
 
 import javax.crypto.KeyAgreement;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.bouncycastle.jcajce.spec.XDHParameterSpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+import de.bundeswehr.mese.sedapexpress.utils.EncryptionUtils.AESKeyLength;
 
 public class ECDHUtils {
 
@@ -66,8 +69,9 @@ public class ECDHUtils {
     /**
      * Calculates the shared secret key
      *
-     * @param ownSecretKey   the own secret key
-     * @param otherPublicKey the public key of the other side
+     * @param ownSecretKey          The own secret key
+     * @param otherPublicKey        The public key of the other side
+     * @param keyLengthSharedSecret The desired bit length of the shared secret key
      * 
      * @return the shared secret key
      *
@@ -75,13 +79,13 @@ public class ECDHUtils {
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeyException
      */
-    public static byte[] getSharedSecretKey(PrivateKey ownSecretKey, PublicKey otherPublicKey) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
+    public static byte[] getSharedSecretKey(PrivateKey ownSecretKey, PublicKey otherPublicKey, AESKeyLength keyLengthSharedSecret) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
 
 	KeyAgreement serverKeyAgreement = KeyAgreement.getInstance("X25519", BouncyCastleProvider.PROVIDER_NAME);
 	serverKeyAgreement.init(ownSecretKey);
 	serverKeyAgreement.doPhase(otherPublicKey, true);
 
-	return serverKeyAgreement.generateSecret();
+	return new SecretKeySpec(serverKeyAgreement.generateSecret(), 0, keyLengthSharedSecret.getIntValue() / 8, "PBKDF2WithHmacSHA256").getEncoded();
     }
 
 }

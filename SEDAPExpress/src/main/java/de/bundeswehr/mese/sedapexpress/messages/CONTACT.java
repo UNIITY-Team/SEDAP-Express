@@ -628,7 +628,7 @@ public class CONTACT extends SEDAPExpressMessage {
 
 	// Source
 	if (message.hasNext()) {
-	    value = message.next();
+	    value = message.next().trim();
 	    if (value.isBlank()) {
 		SEDAPExpressMessage.logger.logp(Level.INFO, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"source\" is empty!");
 	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.SOURCE_MATCHER, value)) {
@@ -754,7 +754,8 @@ public class CONTACT extends SEDAPExpressMessage {
     public String toString() {
 
 	StringBuilder sourceStr = new StringBuilder();
-	this.source.forEach(s -> sourceStr.append(s));
+	if (this.source != null)
+	    this.source.forEach(s -> sourceStr.append(s));
 
 	return SEDAPExpressMessage.removeSemicolons(serializeHeader()
 

@@ -115,6 +115,36 @@ public class HEARTBEAT extends SEDAPExpressMessage {
 	}
     }
 
+    /**
+     * Generates a new Answer-HEARTBEAT message from a HEARTBEART-Request.
+     * 
+     * @param originalHEARTBEAT Original HEARTBEAT request message
+     * @return answer HEARTBEAT message
+     */
+    public static HEARTBEAT generateAnswerHEARTBEAT(HEARTBEAT originalHEARTBEAT) {
+
+	HEARTBEAT heartBeat = new HEARTBEAT();
+
+	if (originalHEARTBEAT.getSender() != null) {
+	    heartBeat.setRecipient(originalHEARTBEAT.getSender());
+	}
+
+	if (originalHEARTBEAT.getRecipient() != null) {
+	    heartBeat.setSender(originalHEARTBEAT.getSender());
+	}
+
+	if (originalHEARTBEAT.getClassification() != null) {
+	    heartBeat.setClassification(originalHEARTBEAT.getClassification());
+	}
+
+	if (originalHEARTBEAT.getTime() != null) {
+	    heartBeat.setTime(System.currentTimeMillis());
+	}
+
+	return heartBeat;
+
+    }
+
     @Override
     public boolean equals(Object obj) {
 

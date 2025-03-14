@@ -75,6 +75,8 @@ public class TEXT extends SEDAPExpressMessage {
 
     private String recipient;
 
+    private String reference;
+
     public TextType getType() {
 	return this.type;
     }
@@ -107,6 +109,14 @@ public class TEXT extends SEDAPExpressMessage {
 	this.recipient = recipient;
     }
 
+    public String getReference() {
+	return this.reference;
+    }
+
+    public void setReference(String reference) {
+	this.reference = reference;
+    }
+
     /**
      * 
      * @param number
@@ -119,8 +129,10 @@ public class TEXT extends SEDAPExpressMessage {
      * @param type
      * @param encoding
      * @param textContent
+     * @param reference
      */
-    public TEXT(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient, TextType type, DataEncoding encoding, String textContent) {
+    public TEXT(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient,
+	    TextType type, DataEncoding encoding, String textContent, String reference) {
 
 	super(number, time, sender, classification, acknowledgement, mac);
 
@@ -128,6 +140,7 @@ public class TEXT extends SEDAPExpressMessage {
 	this.type = type;
 	this.encoding = encoding;
 	this.textContent = textContent;
+	this.reference = reference;
 
     }
 
@@ -212,6 +225,17 @@ public class TEXT extends SEDAPExpressMessage {
 	    SEDAPExpressMessage.logger.logp(Level.SEVERE, "TEXT", "TEXT(Iterator<String> message)", "Incomplete message!");
 	}
 
+	// Reference
+	if (message.hasNext()) {
+	    value = message.next();
+	    if (value.isBlank()) {
+		SEDAPExpressMessage.logger.logp(Level.INFO, "TEXT", "TEXT(Iterator<String> message)", "Optional field \"reference\" is empty!");
+	    } else {
+		this.reference = value;
+	    }
+	} else
+	    SEDAPExpressMessage.logger.logp(Level.INFO, "TEXT", "TEXT(Iterator<String> message)", "Optional field \"reference\" is empty!");
+
     }
 
     @Override
@@ -228,7 +252,9 @@ public class TEXT extends SEDAPExpressMessage {
 
 		    (((this.textContent == null) && (((TEXT) obj).textContent == null)) || ((this.textContent != null) && this.textContent.equals(((TEXT) obj).textContent))) &&
 
-		    (((this.recipient == null) && (((TEXT) obj).recipient == null)) || ((this.recipient != null) && this.recipient.equals(((TEXT) obj).recipient)));
+		    (((this.recipient == null) && (((TEXT) obj).recipient == null)) || ((this.recipient != null) && this.recipient.equals(((TEXT) obj).recipient))) &&
+
+		    (((this.reference == null) && (((TEXT) obj).reference == null)) || ((this.reference != null) && this.reference.equals(((TEXT) obj).reference)));
 	}
     }
 
@@ -241,8 +267,12 @@ public class TEXT extends SEDAPExpressMessage {
     public String toString() {
 
 	return SEDAPExpressMessage
-		.removeSemicolons(serializeHeader().append(";").append((this.recipient != null) ? this.recipient : "").append(";").append((this.type != null) ? this.type : "").append(";").append((this.encoding != null) ? this.encoding : "")
-			.append(";").append((this.textContent != null) ? ((this.encoding == DataEncoding.BASE64) ? Base64.toBase64String(this.textContent.getBytes()) : this.textContent) : "").toString());
+		.removeSemicolons(serializeHeader()
+			.append((this.recipient != null) ? this.recipient : "").append(";")
+			.append((this.type != null) ? this.type : "").append(";")
+			.append((this.encoding != null) ? this.encoding : "").append(";")
+			.append((this.textContent != null) ? ((this.encoding == DataEncoding.BASE64) ? Base64.toBase64String(this.textContent.getBytes()) : this.textContent) : "")
+			.append((this.reference != null) ? ";" + this.reference : "").toString());
     }
 
 }

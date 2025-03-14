@@ -756,7 +756,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	result.append(';');
 
 	if (this.time != null) {
-	    result.append(SEDAPExpressMessage.HEXFOMATER.toHexDigits(this.time));
+	    result.append(SEDAPExpressMessage.HEXFOMATER.toHexDigits(this.time, 12));
 	}
 	result.append(';');
 

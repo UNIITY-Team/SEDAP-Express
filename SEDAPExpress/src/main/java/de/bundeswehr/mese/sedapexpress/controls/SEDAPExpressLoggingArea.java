@@ -110,7 +110,7 @@ public class SEDAPExpressLoggingArea extends GridPane {
     public SEDAPExpressLoggingArea() {
 
 	final Button saveButton = new Button("Save");
-	saveButton.setOnAction(_ -> {
+	saveButton.setOnAction(action -> {
 	    final FileChooser fileChooser = new FileChooser();
 	    fileChooser.setTitle("Save logging to a file");
 	    fileChooser.setInitialDirectory(new File("."));
@@ -134,7 +134,7 @@ public class SEDAPExpressLoggingArea extends GridPane {
 	});
 
 	final Button clipboardButton = new Button("Clipboard");
-	clipboardButton.setOnAction(_ -> {
+	clipboardButton.setOnAction(action -> {
 	    final StringBuilder allText = new StringBuilder();
 	    this.textList.getItems().forEach(allText::append);
 	    final HashMap<DataFormat, Object> data = new HashMap<>();
@@ -143,12 +143,12 @@ public class SEDAPExpressLoggingArea extends GridPane {
 	});
 
 	final Button clearButton = new Button("Clear");
-	clearButton.setOnAction(_ -> {
+	clearButton.setOnAction(action -> {
 	    this.textList.getItems().clear();
 	});
 
 	this.startStopLoggingButton = new ToggleButton("Stop logging");
-	this.startStopLoggingButton.selectedProperty().addListener((_, _, n) -> {
+	this.startStopLoggingButton.selectedProperty().addListener((s, o, n) -> {
 	    this.selected = n;
 	});
 

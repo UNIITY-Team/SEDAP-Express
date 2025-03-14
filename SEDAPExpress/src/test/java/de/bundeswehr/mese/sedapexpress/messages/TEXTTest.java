@@ -41,7 +41,7 @@ class TEXTTest {
     @Test
     final void testConstructorValues() {
 
-	final TEXT text = new TEXT((short) 55, 641244434L, "8F3A", Classification.Secret, Acknowledgement.TRUE, "4389F10D", "ORKA", TextType.Chat, DataEncoding.NONE, "TESTTEST");
+	final TEXT text = new TEXT((short) 55, 641244434L, "8F3A", Classification.Secret, Acknowledgement.TRUE, "4389F10D", "ORKA", TextType.Chat, DataEncoding.NONE, "TESTTEST", "5533");
 
 	Assertions.assertEquals((short) 55, text.getNumber());
 	Assertions.assertEquals(641244434L, text.getTime());
@@ -53,6 +53,7 @@ class TEXTTest {
 	Assertions.assertEquals(TextType.Chat, text.getType());
 	Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
 	Assertions.assertEquals("TESTTEST", text.getTextContent());
+	Assertions.assertEquals("5533", text.getReference());
     }
 
     @Test
@@ -72,6 +73,7 @@ class TEXTTest {
 	Assertions.assertEquals(TextType.Alert, text.getType());
 	Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
 	Assertions.assertEquals("\"This is an alert!\"", text.getTextContent());
+	Assertions.assertNull(text.getReference());
 
 	message = "TEXT;D4;661D458E;324E;C;TRUE;;;2;NONE;\"This is a warning!\"";
 
@@ -87,8 +89,9 @@ class TEXTTest {
 	Assertions.assertEquals(TextType.Warning, text.getType());
 	Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
 	Assertions.assertEquals("\"This is a warning!\"", text.getTextContent());
+	Assertions.assertNull(text.getReference());
 
-	message = "TEXT;D5;661D6565;324E;R;;;;3;;\"This is a notice!\"";
+	message = "TEXT;D5;661D6565;324E;R;;;;3;;\"This is a notice!\";1133";
 
 	text = new TEXT(message);
 
@@ -102,6 +105,7 @@ class TEXTTest {
 	Assertions.assertEquals(TextType.Notice, text.getType());
 	Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
 	Assertions.assertEquals("\"This is a notice!\"", text.getTextContent());
+	Assertions.assertEquals("1133", text.getReference());
 
 	message = "TEXT;D6;661D7032;324E;U;;;E4F1;4;BASE64;IlRoaXMgaXMgYSBjaGF0IG1lc3NhZ2UhIg==";
 
@@ -117,6 +121,7 @@ class TEXTTest {
 	Assertions.assertEquals(TextType.Chat, text.getType());
 	Assertions.assertEquals(DataEncoding.BASE64, text.getEncoding());
 	Assertions.assertEquals("\"This is a chat message!\"", text.getTextContent());
+	Assertions.assertNull(text.getReference());
     }
 
     @Test
@@ -136,6 +141,7 @@ class TEXTTest {
 	Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
 	Assertions.assertEquals("10.0.0.1", text.getTextContent());
 	Assertions.assertEquals("7D31", text.getRecipient());
+	Assertions.assertNull(text.getReference());
 
     }
 }

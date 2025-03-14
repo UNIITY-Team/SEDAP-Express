@@ -70,8 +70,21 @@ public class COMMAND extends SEDAPExpressMessage {
 
     public enum CommandType {
 
-	Poweroff((byte) 0), Restart((byte) 1), Standby((byte) 2), Sync_time((byte) 3), Send_status((byte) 4), Move((byte) 5), Rotate((byte) 6), Loiter((byte) 7), Scan_area((byte) 8), Take_photo((byte) 9), Make_video((byte) 10),
-	Live_video((byte) 11), Engagement((byte) 12), Generic_action((byte) 255);
+	Poweroff((byte) 0x00),
+	Restart((byte) 0x01),
+	Standby((byte) 0x02),
+	Sync_time((byte) 0x03),
+	Send_status((byte) 0x04),
+	Move((byte) 0x05),
+	Rotate((byte) 0x06),
+	Loiter((byte) 0x07),
+	Scan_area((byte) 0x08),
+	Take_photo((byte) 0x09),
+	Make_video((byte) 0x0A),
+	Live_video((byte) 0x0B),
+	Engagement((byte) 0x0C),
+	Sanitize((byte) 0xEE),
+	Generic_action((byte) 0xFF);
 
 	byte type;
 

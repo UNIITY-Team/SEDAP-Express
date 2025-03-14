@@ -27,11 +27,9 @@ package de.bundeswehr.mese.sedapexpress.messages;
 
 import java.math.BigInteger;
 import java.security.PublicKey;
+import java.util.HexFormat;
 import java.util.Iterator;
 import java.util.logging.Level;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
@@ -85,13 +83,14 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
     private AlgorithmType algorithmType;
     private Integer phase;
 
-    private Integer keyLength;
+    private Integer keyLengthSharedSecret;
+    private Integer keyLengthDHKEM;
+
     private BigInteger primeNumber;
     private BigInteger naturalNumber;
+    private Long iv;
 
     private PublicKey publicKey;
-
-    private SecretKey encryptedKey;
 
     public String getRecipient() {
 	return this.recipient;
@@ -117,12 +116,20 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
 	this.phase = phase;
     }
 
-    public Integer getKeyLength() {
-	return this.keyLength;
+    public Integer getKeyLengthSharedSecret() {
+	return this.keyLengthSharedSecret;
     }
 
-    public void setKeyLength(Integer keyLength) {
-	this.keyLength = keyLength;
+    public void setKeyLengthSharedSecret(Integer keyLengthSharedSecret) {
+	this.keyLengthSharedSecret = keyLengthSharedSecret;
+    }
+
+    public Integer getKeyLengthDHKEM() {
+	return this.keyLengthDHKEM;
+    }
+
+    public void setKeyLengthDHKEM(Integer keyLengthDHKEM) {
+	this.keyLengthDHKEM = keyLengthDHKEM;
     }
 
     public BigInteger getPrimeNumber() {
@@ -141,20 +148,20 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
 	this.naturalNumber = naturalNumber;
     }
 
+    public Long getIV() {
+	return this.iv;
+    }
+
+    public void setIV(Long iv) {
+	this.iv = iv;
+    }
+
     public PublicKey getPublicKey() {
 	return this.publicKey;
     }
 
     public void setPublicKey(PublicKey publicKey) {
 	this.publicKey = publicKey;
-    }
-
-    public SecretKey getEncryptedKey() {
-	return this.encryptedKey;
-    }
-
-    public void setEncryptedKey(SecretKey encryptedKey) {
-	this.encryptedKey = encryptedKey;
     }
 
     /**
@@ -168,23 +175,26 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
      * @param recipient
      * @param algorithmType
      * @param phase
-     * @param keyLength
+     * @param keyLengthSharedSecret
+     * @param keyLengthDHKEM
      * @param primeNumber
      * @param naturalNumber
+     * @param iv
      * @param publicKey
-     * @param encryptedKey
      */
-    public KEYEXCHANGE(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient, AlgorithmType algorithmType, Integer phase, Integer keyLength,
-	    BigInteger primeNumber, BigInteger naturalNumber, PublicKey publicKey, SecretKey encryptedKey) {
+    public KEYEXCHANGE(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient,
+	    AlgorithmType algorithmType, Integer phase, Integer keyLengthSharedSecret, Integer keyLengthDHKEM,
+	    BigInteger primeNumber, BigInteger naturalNumber, Long iv, PublicKey publicKey) {
 	super(number, time, sender, classification, acknowledgement, mac);
 	this.recipient = recipient;
 	this.algorithmType = algorithmType;
 	this.phase = phase;
-	this.keyLength = keyLength;
+	this.keyLengthSharedSecret = keyLengthSharedSecret;
+	this.keyLengthDHKEM = keyLengthDHKEM;
 	this.primeNumber = primeNumber;
 	this.naturalNumber = naturalNumber;
+	this.iv = iv;
 	this.publicKey = publicKey;
-	this.encryptedKey = encryptedKey;
     }
 
     /**
@@ -242,19 +252,37 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
 	    SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Incomplete message!");
 	}
 
-	// KeyLength
+	// KeyLengthSharedSecret
 	if (message.hasNext()) {
 	    value = message.next();
 	    if ("128".equals(value) || "256".equals(value)) {
-		this.keyLength = Integer.parseInt(value);
+		this.keyLengthSharedSecret = Integer.parseInt(value);
 	    } else if (!value.isBlank() && (this.phase == 0)) {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Mandatory (phase 0) field \"KeyLength\" contains not a valid number!", value);
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Mandatory (phase 0) field \"KeyLengthSharedSecret\" contains not a valid number!", value);
 	    } else if (!value.isBlank()) {
-		SEDAPExpressMessage.logger.logp(Level.WARNING, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional (not in phase 0) field \"KeyLength\" contains not a valid number!", value);
+		SEDAPExpressMessage.logger.logp(Level.WARNING, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional (not in phase 0) field \"KeyLengthSharedSecret\" contains not a valid number!", value);
 	    } else if (this.phase == 0) {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Mandatory (phase 0) field \"KeyLength\" is empty!");
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Mandatory (phase 0) field \"KeyLengthSharedSecret\" is empty!");
 	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional (not in phase 0) field \"KeyLength\" is empty!");
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional (not in phase 0) field \"KeyLengthSharedSecret\" is empty!");
+	    }
+	} else {
+	    SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Incomplete message!");
+	}
+
+	// KeyLengthDHKEM
+	if (message.hasNext()) {
+	    value = message.next();
+	    if ("1024".equals(value) || "2048".equals(value) || "4096".equals(value)) {
+		this.keyLengthSharedSecret = Integer.parseInt(value);
+	    } else if (!value.isBlank() && (this.phase == 0)) {
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Mandatory (phase 0) field \"KeyLengthDHKEM\" contains not a valid number!", value);
+	    } else if (!value.isBlank()) {
+		SEDAPExpressMessage.logger.logp(Level.WARNING, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional (not in phase 0) field \"KeyLengthDHKEM\" contains not a valid number!", value);
+	    } else if (this.phase == 0) {
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Mandatory (phase 0) field \"KeyLengthDHKEM\" is empty!");
+	    } else {
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional (not in phase 0) field \"KeyLengthDHKEM\" is empty!");
 	    }
 	} else {
 	    SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Incomplete message!");
@@ -296,6 +324,24 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
 	    SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Incomplete message!");
 	}
 
+	// IV
+	if (message.hasNext()) {
+	    value = message.next();
+	    if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.HEXNUMBER_MATCHER, value)) {
+
+		if (this.phase == 0)
+		    this.iv = HexFormat.fromHexDigitsToLong(value);
+		else
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional field \"IV\" contains a valid value, but phase is not 0!", value);
+	    } else if (!value.isBlank() && (this.phase == 0)) {
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional (phase 0) field \"IV\" contains not a valid value!", value);
+	    } else if (value.isBlank() && (this.phase == 0)) {
+		SEDAPExpressMessage.logger.logp(Level.INFO, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional (phase 0) field \"IV\" is empty!", value);
+	    }
+	} else {
+	    SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Incomplete message!");
+	}
+
 	// PublicKey
 	if (message.hasNext()) {
 	    value = message.next();
@@ -319,28 +365,6 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
 	    }
 	}
 
-	// SecretKey
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isBlank() && (this.phase == 2) && (this.algorithmType != AlgorithmType.Diffie_Hellman_Merkle) && (this.algorithmType != AlgorithmType.Diffie_Hellman_Merkle_with_Curve25519)) {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Mandatory (Kyber, phase 2) field \"EncryptedKey\" is empty!");
-
-	    } else if (value.isBlank()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional (not phase 2 or Kyber) field \"EncryptedKey\" is empty!");
-
-	    } else {
-		try {
-		    this.encryptedKey = new SecretKeySpec(Base64.decode(value), "DH");
-		} catch (DecoderException e) {
-
-		    if (this.phase == 1) {
-			SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Madatory (Kyber, phase 2) field \"EncryptedKey\" could not be decoded from Base64!");
-		    } else {
-			SEDAPExpressMessage.logger.logp(Level.WARNING, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional (not in phase 1) field \"EncryptedKey\" could not be decoded from Base64!");
-		    }
-		}
-	    }
-	}
     }
 
     @Override
@@ -354,11 +378,14 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
 
 		    (this.algorithmType == ((KEYEXCHANGE) obj).algorithmType) && (this.phase == ((KEYEXCHANGE) obj).phase) &&
 
-		    (this.keyLength == ((KEYEXCHANGE) obj).keyLength) && (this.primeNumber == ((KEYEXCHANGE) obj).primeNumber) && (this.naturalNumber == ((KEYEXCHANGE) obj).naturalNumber) &&
+		    (this.keyLengthSharedSecret == ((KEYEXCHANGE) obj).keyLengthSharedSecret) &&
+		    (this.keyLengthDHKEM == ((KEYEXCHANGE) obj).keyLengthDHKEM) &&
 
-		    (((this.publicKey == null) && (((KEYEXCHANGE) obj).publicKey == null)) || ((this.publicKey != null) && this.publicKey.equals(((KEYEXCHANGE) obj).publicKey))) &&
+		    (this.primeNumber == ((KEYEXCHANGE) obj).primeNumber) && (this.naturalNumber == ((KEYEXCHANGE) obj).naturalNumber) &&
 
-		    ((this.encryptedKey == null) && (((KEYEXCHANGE) obj).encryptedKey == null))) || ((this.encryptedKey != null) && this.encryptedKey.equals(((KEYEXCHANGE) obj).encryptedKey));
+		    this.getIV() == ((KEYEXCHANGE) obj).getIV() &&
+
+		    (((this.publicKey == null) && (((KEYEXCHANGE) obj).publicKey == null)) || ((this.publicKey != null) && this.publicKey.equals(((KEYEXCHANGE) obj).publicKey))));
 
 	}
     }
@@ -373,9 +400,12 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
 
 	return SEDAPExpressMessage.removeSemicolons(serializeHeader()
 
-		.append((this.algorithmType != null) ? this.algorithmType : "").append(";").append((this.phase != null) ? this.phase : "").append(";").append((this.keyLength != null) ? this.keyLength : "").append(";")
-		.append((this.primeNumber != null) ? this.primeNumber : "").append(";").append((this.naturalNumber != null) ? this.naturalNumber : "").append(";")
-		.append((this.publicKey != null) ? SEDAPExpressMessage.HEXFOMATER.formatHex(this.publicKey.getEncoded()) : "").append(";")
-		.append((this.publicKey != null) ? SEDAPExpressMessage.HEXFOMATER.formatHex(this.encryptedKey.getEncoded()) : "").toString());
+		.append((this.algorithmType != null) ? this.algorithmType : "").append(";").append((this.phase != null) ? this.phase : "").append(";")
+		.append((this.keyLengthSharedSecret != null) ? this.keyLengthSharedSecret : "").append(";")
+		.append((this.keyLengthDHKEM != null) ? this.keyLengthDHKEM : "").append(";")
+		.append((this.primeNumber != null) ? this.primeNumber : "").append(";")
+		.append((this.naturalNumber != null) ? this.naturalNumber : "").append(";")
+		.append((this.iv != null) ? SEDAPExpressMessage.HEXFOMATER.toHexDigits(this.iv, 16) : "").append(";")
+		.append((this.publicKey != null) ? SEDAPExpressMessage.HEXFOMATER.formatHex(this.publicKey.getEncoded()) : "").toString());
     }
 }
