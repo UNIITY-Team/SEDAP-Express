@@ -28,5 +28,5 @@
  */
 module SampleProtobufClient {
 
-    requires transitive SEDAPExpress;
+    requires transitive sedapexpress;
 }

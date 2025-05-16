@@ -28,5 +28,5 @@
  */
 module SampleRESTClient {
 
-    requires transitive SEDAPExpress;
+    requires transitive sedapexpress;
 }

@@ -778,7 +778,7 @@ public class CONTACT extends SEDAPExpressMessage {
 		.append(this.width != null ? SEDAPExpressMessage.numberFormatter.format(this.width) : "").append(";").append(this.length != null ? SEDAPExpressMessage.numberFormatter.format(this.length) : "").append(";")
 		.append(this.height != null ? SEDAPExpressMessage.numberFormatter.format(this.height) : "").append(";")
 
-		.append(this.name != null ? this.name : "").append(";").append(sourceStr.isEmpty() ? sourceStr.toString() : "").append(";")
+		.append(this.name != null ? this.name : "").append(";").append(!sourceStr.isEmpty() ? sourceStr.toString() : "").append(";")
 
 		.append(this.sidc != null ? String.valueOf(this.sidc) : "").append(";").append(this.mmsi != null ? this.mmsi : "").append(";").append(this.icao != null ? this.icao : "").append(";")
 

@@ -28,5 +28,5 @@
  */
 module SampleTCPServer {
 
-    requires transitive SEDAPExpress;
+    requires transitive sedapexpress;
 }

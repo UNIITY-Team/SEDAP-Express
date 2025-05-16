@@ -29,6 +29,6 @@
 module SampleSerialClient {
 
     requires transitive jssc;
-    requires transitive SEDAPExpress;
+    requires transitive sedapexpress;
 
 }

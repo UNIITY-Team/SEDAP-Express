@@ -28,5 +28,5 @@
  */
 module SampleUDPClient {
 
-    requires transitive SEDAPExpress;
+    requires transitive sedapexpress;
 }
