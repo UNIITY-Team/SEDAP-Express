@@ -294,7 +294,6 @@ public class CONTACT extends SEDAPExpressMessage {
     }
 
     /**
-     * 
      * Instantiate a new CONTACT message
      * 
      * @param number

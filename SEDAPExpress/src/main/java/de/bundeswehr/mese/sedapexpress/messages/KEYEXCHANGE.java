@@ -165,6 +165,7 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new KEYEXCHANGE message
      * 
      * @param number
      * @param time

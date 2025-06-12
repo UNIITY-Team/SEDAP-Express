@@ -79,6 +79,8 @@ public class GRAPHIC extends SEDAPExpressMessage {
 
     private Integer fillColor;
 
+    private Integer textColor;
+
     private DataEncoding encoding;
 
     private String annotation;
@@ -115,6 +117,14 @@ public class GRAPHIC extends SEDAPExpressMessage {
 	this.fillColor = fillColor;
     }
 
+    public Integer getTextColor() {
+	return this.textColor;
+    }
+
+    public void setTextColor(Integer textColor) {
+	this.textColor = textColor;
+    }
+
     public DataEncoding getEncoding() {
 	return this.encoding;
     }
@@ -132,7 +142,8 @@ public class GRAPHIC extends SEDAPExpressMessage {
     }
 
     /**
-     *
+     * Instantiate a new GRAPHIC message
+     * 
      * @param number
      * @param time
      * @param sender
@@ -143,11 +154,12 @@ public class GRAPHIC extends SEDAPExpressMessage {
      * @param lineWidth
      * @param lineColor
      * @param fillColor
+     * @param textColor
      * @param encoding
      * @param annotation
      */
-    public GRAPHIC(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, GraphicType graphicType, Double lineWidth, Integer lineColor, Integer fillColor, DataEncoding encoding,
-	    String annotation) {
+    public GRAPHIC(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac,
+	    GraphicType graphicType, Double lineWidth, Integer lineColor, Integer fillColor, Integer textColor, DataEncoding encoding, String annotation) {
 
 	super(number, time, sender, classification, acknowledgement, mac);
 
@@ -155,6 +167,7 @@ public class GRAPHIC extends SEDAPExpressMessage {
 	this.lineWidth = lineWidth;
 	this.lineColor = lineColor;
 	this.fillColor = fillColor;
+	this.textColor = textColor;
 	this.encoding = encoding;
 	this.annotation = annotation;
     }
@@ -218,6 +231,16 @@ public class GRAPHIC extends SEDAPExpressMessage {
 	    }
 	}
 
+	// TextColor
+	if (message.hasNext()) {
+	    value = message.next();
+	    if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.RGBA_MATCHER, value)) {
+		this.textColor = Integer.parseInt(value, 16);
+	    } else if (!value.isBlank()) {
+		SEDAPExpressMessage.logger.logp(Level.WARNING, "GRAPHIC", "GRAPHIC(Iterator<String> message)", "Optional field \"textColor\" contains invalid value!", value);
+	    }
+	}
+
 	// Encoding
 	if (message.hasNext()) {
 	    value = message.next();
@@ -259,9 +282,10 @@ public class GRAPHIC extends SEDAPExpressMessage {
 	} else if (!(obj instanceof GRAPHIC)) {
 	    return false;
 	} else {
-	    return super.equals(obj) && (this.graphicType == (((GRAPHIC) obj).graphicType)) && (this.lineWidth == (((GRAPHIC) obj).lineWidth)) && (this.lineColor == (((GRAPHIC) obj).lineColor))
-		    && (this.fillColor == (((GRAPHIC) obj).fillColor)) &&
-
+	    return super.equals(obj) && (this.graphicType == (((GRAPHIC) obj).graphicType)) && (this.lineWidth == (((GRAPHIC) obj).lineWidth))
+		    && (this.lineColor == (((GRAPHIC) obj).lineColor))
+		    && (this.fillColor == (((GRAPHIC) obj).fillColor))
+		    && (this.textColor == (((GRAPHIC) obj).textColor)) &&
 		    (((this.encoding == null) && (((GRAPHIC) obj).encoding == null)) || ((this.encoding != null) && this.encoding.equals(((GRAPHIC) obj).encoding))) &&
 
 		    (((this.annotation == null) && (((GRAPHIC) obj).annotation == null)) || ((this.annotation != null) && this.annotation.equals(((GRAPHIC) obj).annotation)));
@@ -278,7 +302,8 @@ public class GRAPHIC extends SEDAPExpressMessage {
     public String toString() {
 
 	return SEDAPExpressMessage.removeSemicolons(serializeHeader().append((this.graphicType != null) ? this.graphicType : "").append(";").append((this.lineWidth != null) ? SEDAPExpressMessage.numberFormatter.format(this.lineWidth) : "")
-		.append(";").append((this.lineColor != null) ? this.lineColor : "").append(";").append((this.fillColor != null) ? this.fillColor : "").append(";").append((this.encoding != null) ? this.encoding : "").append(";")
+		.append(";").append((this.lineColor != null) ? this.lineColor : "").append(";").append((this.fillColor != null) ? this.fillColor : "").append(";").append((this.textColor != null) ? this.textColor : "").append(";")
+		.append((this.encoding != null) ? this.encoding : "").append(";")
 		.append((this.annotation != null) ? ((this.encoding == DataEncoding.BASE64) ? Base64.toBase64String(this.annotation.getBytes()) : this.annotation) : "").toString());
     }
 

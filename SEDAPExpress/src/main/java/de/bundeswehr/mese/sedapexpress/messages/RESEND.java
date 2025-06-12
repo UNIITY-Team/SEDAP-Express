@@ -63,6 +63,7 @@ public class RESEND extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new RESEND message
      *
      * @param number
      * @param time

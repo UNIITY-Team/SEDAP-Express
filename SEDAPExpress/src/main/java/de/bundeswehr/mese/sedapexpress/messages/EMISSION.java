@@ -243,6 +243,7 @@ public class EMISSION extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new EMISSION message
      *
      * @param number
      * @param time

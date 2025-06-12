@@ -258,6 +258,7 @@ public class STATUS extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new STATUS message
      *
      * @param number
      * @param time
@@ -287,6 +288,7 @@ public class STATUS extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new STATUS message
      *
      * @param number
      * @param time
@@ -316,6 +318,7 @@ public class STATUS extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new STATUS message
      *
      * @param number
      * @param time

@@ -30,8 +30,13 @@ import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.MulticastSocket;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -117,6 +122,27 @@ public class SEDAPExpressUDPClient extends SEDAPExpressCommunicator implements R
     @Override
     public void run() {
 
+	HashSet<InetAddress> localIPAddresses = new HashSet<>();
+
+	try {
+	    final Enumeration<NetworkInterface> enumInterf = NetworkInterface.getNetworkInterfaces();
+
+	    while (enumInterf.hasMoreElements()) {
+		final NetworkInterface networkInterface = enumInterf.nextElement();
+
+		if (networkInterface.isUp()
+			&& !networkInterface.getInterfaceAddresses().isEmpty()) {
+
+		    for (final InterfaceAddress ip : networkInterface.getInterfaceAddresses()) {
+
+			localIPAddresses.add(ip.getAddress());
+		    }
+		}
+	    }
+	} catch (SocketException e) {
+
+	}
+
 	while (this.status) {
 
 	    try {
@@ -124,6 +150,13 @@ public class SEDAPExpressUDPClient extends SEDAPExpressCommunicator implements R
 		final DatagramPacket packet = new DatagramPacket(new byte[65000], 65000);
 
 		this.socket.receive(packet);
+
+		final InetAddress sender = packet.getAddress();
+
+		// Do not receive packages from yourself
+		if (localIPAddresses.contains(sender)) {
+		    continue;
+		}
 
 		Arrays.asList(new String(packet.getData(), 0, packet.getLength()).split("\n")).forEach(message -> distributeReceivedSEDAPExpressMessage(SEDAPExpressMessage.deserialize(message)));
 

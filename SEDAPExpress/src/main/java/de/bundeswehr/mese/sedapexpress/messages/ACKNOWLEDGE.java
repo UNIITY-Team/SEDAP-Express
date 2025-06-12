@@ -63,6 +63,7 @@ public class ACKNOWLEDGE extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new ACKNOWLEDGE message
      *
      * @param number
      * @param time

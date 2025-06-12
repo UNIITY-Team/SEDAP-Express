@@ -43,6 +43,7 @@ public class HEARTBEAT extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new HEARTBEAT message
      *
      * @param number
      * @param time
@@ -59,6 +60,7 @@ public class HEARTBEAT extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new HEARTBEAT message
      *
      * @param number
      * @param time

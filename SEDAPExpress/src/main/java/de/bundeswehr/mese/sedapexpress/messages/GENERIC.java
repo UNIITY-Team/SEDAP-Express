@@ -68,6 +68,7 @@ public class GENERIC extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new GENERIC message
      *
      * @param number
      * @param time

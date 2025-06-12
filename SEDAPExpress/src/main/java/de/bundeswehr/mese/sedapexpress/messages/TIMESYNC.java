@@ -43,7 +43,7 @@ public class TIMESYNC extends SEDAPExpressMessage {
     }
 
     /**
-     * Instanciate the initial TIMESYNC message
+     * Instantiate the initial TIMESYNC message
      *
      * @param number
      * @param time
@@ -58,7 +58,7 @@ public class TIMESYNC extends SEDAPExpressMessage {
     }
 
     /**
-     * Instanciate the answer TIMESYNC message (used only by the SEC/SECMockUp
+     * Instantiate the answer TIMESYNC message (used only by the SEC/SECMockUp
      * 
      * @param number
      * @param time
@@ -74,6 +74,7 @@ public class TIMESYNC extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new TIMESYNC message
      *
      * @param message
      */

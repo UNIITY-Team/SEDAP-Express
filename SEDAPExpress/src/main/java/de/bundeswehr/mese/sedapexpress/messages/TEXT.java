@@ -118,6 +118,7 @@ public class TEXT extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new TEXT message
      * 
      * @param number
      * @param time

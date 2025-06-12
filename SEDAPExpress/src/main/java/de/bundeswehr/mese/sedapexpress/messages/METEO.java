@@ -160,6 +160,7 @@ public class METEO extends SEDAPExpressMessage {
     }
 
     /**
+     * Instantiate a new METEO message
      *
      * @param number
      * @param time
