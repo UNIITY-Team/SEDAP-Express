@@ -74,10 +74,10 @@ class CONTACTTest {
     @Test
     final void testConstructorValues() {
 
-	final CONTACT contact = new CONTACT((short) 66, 85435438782L, "59CE", Classification.Unclas, Acknowledgement.FALSE, "FFAA327B", "1000", DeleteFlag.FALSE, 43.21, -111.22, 10011.0, 1.0, 2.0, 3.0, 200.0, 275.0, 10.0, 20.0, 30.0, 33.0,
+	final CONTACT contact = new CONTACT((byte) 66, 85435438782L, "59CE", Classification.Unclas, Acknowledgement.FALSE, "FFAA327B", "1000", DeleteFlag.FALSE, 43.21, -111.22, 10011.0, 1.0, 2.0, 3.0, 200.0, 275.0, 10.0, 20.0, 30.0, 33.0,
 		22.0, 11.0, "Track Alpha", Source.IFF, "sfapmf---------".toCharArray(), "221333201", "FA550C", this.imageData, "This is a test track");
 
-	Assertions.assertEquals((short) 66, contact.getNumber());
+	Assertions.assertEquals((byte) 66, contact.getNumber());
 	Assertions.assertEquals(85435438782L, contact.getTime());
 	Assertions.assertEquals("59CE", contact.getSender());
 	Assertions.assertEquals(Classification.Unclas, contact.getClassification());
@@ -108,10 +108,11 @@ class CONTACTTest {
 	Assertions.assertArrayEquals(this.imageData, contact.getImageData());
 	Assertions.assertEquals("This is a test track", contact.getComment());
 
-	final CONTACT contact2 = new CONTACT((short) 66, 85435438782L, "59CE", Classification.Unclas, Acknowledgement.FALSE, "FFAA327B", "1000", DeleteFlag.FALSE, 43.21, -111.22, 10011.0, 1.0, 2.0, 3.0, 200.0, 275.0, 10.0, 20.0, 30.0, 33.0,
+	final CONTACT contact2 = new CONTACT((byte) 0x6A, 85435438782L, "59CE", Classification.Unclas, Acknowledgement.FALSE, "FFAA327B", "1000", DeleteFlag.FALSE, 43.21, -111.22, 10011.0, 1.0, 2.0, 3.0, 200.0, 275.0, 10.0, 20.0, 30.0,
+		33.0,
 		22.0, 11.0, "Track Alpha", Source.IFF.toString() + Source.Radar.toString(), "sfapmf---------".toCharArray(), "221333201", "FA550C", this.imageData, "This is a test track");
 
-	Assertions.assertEquals((short) 66, contact2.getNumber());
+	Assertions.assertEquals((byte) 0x6A, contact2.getNumber());
 	Assertions.assertEquals(85435438782L, contact2.getTime());
 	Assertions.assertEquals("59CE", contact2.getSender());
 	Assertions.assertEquals(Classification.Unclas, contact2.getClassification());
@@ -152,7 +153,7 @@ class CONTACTTest {
 
 	CONTACT contact = new CONTACT(message);
 
-	Assertions.assertEquals((short) 0x66, contact.getNumber());
+	Assertions.assertEquals((byte) 0x66, contact.getNumber());
 	Assertions.assertEquals(0x1B351C87L, contact.getTime());
 	Assertions.assertEquals("59CE", contact.getSender());
 	Assertions.assertEquals(Classification.Unclas, contact.getClassification());
@@ -187,7 +188,7 @@ class CONTACTTest {
 
 	contact = new CONTACT(message);
 
-	Assertions.assertEquals((short) 0x5E, contact.getNumber());
+	Assertions.assertEquals((byte) 0x5E, contact.getNumber());
 	Assertions.assertEquals(0x661D4410L, contact.getTime());
 	Assertions.assertEquals("66A3", contact.getSender());
 	Assertions.assertEquals(Classification.Restricted, contact.getClassification());
@@ -223,7 +224,7 @@ class CONTACTTest {
 
 	contact = new CONTACT(message);
 
-	Assertions.assertEquals((short) 0x5f, contact.getNumber());
+	Assertions.assertEquals((byte) 0x5f, contact.getNumber());
 	Assertions.assertEquals(0x661D5420L, contact.getTime());
 	Assertions.assertEquals("83C5", contact.getSender());
 	Assertions.assertEquals(Classification.Unclas, contact.getClassification());
@@ -258,7 +259,7 @@ class CONTACTTest {
 
 	contact = new CONTACT(message);
 
-	Assertions.assertEquals((short) 0x60, contact.getNumber());
+	Assertions.assertEquals((byte) 0x60, contact.getNumber());
 	Assertions.assertEquals(0x54742310L, contact.getTime());
 	Assertions.assertEquals("4371", contact.getSender());
 	Assertions.assertEquals(Classification.Secret, contact.getClassification());
@@ -300,7 +301,7 @@ class CONTACTTest {
 
 	CONTACT contact = new CONTACT(it);
 
-	Assertions.assertEquals((short) 0x66, contact.getNumber());
+	Assertions.assertEquals((byte) 0x66, contact.getNumber());
 	Assertions.assertEquals(0x1B351C87L, contact.getTime());
 	Assertions.assertEquals("59CE", contact.getSender());
 	Assertions.assertEquals(Classification.Unclas, contact.getClassification());

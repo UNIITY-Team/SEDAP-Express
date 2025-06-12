@@ -45,9 +45,9 @@ class ACKNOWLEDGETest {
     @Test
     final void testConstructorValues() {
 
-	final ACKNOWLEDGE status = new ACKNOWLEDGE((short) 41, 7865454543L, "BB91", Classification.Confidential, Acknowledgement.TRUE, "93B37ACC", "Drone1", MessageType.CONTACT, (short) 43);
+	final ACKNOWLEDGE status = new ACKNOWLEDGE((byte) 41, 7865454543L, "BB91", Classification.Confidential, Acknowledgement.TRUE, "93B37ACC", "Drone1", MessageType.CONTACT, (short) 43);
 
-	Assertions.assertEquals((short) 41, status.getNumber());
+	Assertions.assertEquals((byte) 41, status.getNumber());
 	Assertions.assertEquals(7865454543L, status.getTime());
 	Assertions.assertEquals("BB91", status.getSender());
 	Assertions.assertEquals(Classification.Confidential, status.getClassification());
@@ -66,7 +66,7 @@ class ACKNOWLEDGETest {
 
 	ACKNOWLEDGE status = new ACKNOWLEDGE(message);
 
-	Assertions.assertEquals((short) 0x18, status.getNumber());
+	Assertions.assertEquals((byte) 0x18, status.getNumber());
 	Assertions.assertEquals(0x661D64C0L, status.getTime());
 	Assertions.assertEquals("129E", status.getSender());
 	Assertions.assertEquals(Classification.Restricted, status.getClassification());
@@ -85,7 +85,7 @@ class ACKNOWLEDGETest {
 
 	final ACKNOWLEDGE status = new ACKNOWLEDGE(it);
 
-	Assertions.assertEquals((short) 0x41, status.getNumber());
+	Assertions.assertEquals((byte) 0x41, status.getNumber());
 	Assertions.assertEquals(0xA0B0C0D0L, status.getTime());
 	Assertions.assertEquals("BB91", status.getSender());
 	Assertions.assertEquals(Classification.Confidential, status.getClassification());

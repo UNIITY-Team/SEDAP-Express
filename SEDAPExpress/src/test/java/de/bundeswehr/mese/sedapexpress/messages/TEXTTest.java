@@ -41,9 +41,9 @@ class TEXTTest {
     @Test
     final void testConstructorValues() {
 
-	final TEXT text = new TEXT((short) 55, 641244434L, "8F3A", Classification.Secret, Acknowledgement.TRUE, "4389F10D", "ORKA", TextType.Chat, DataEncoding.NONE, "TESTTEST", "5533");
+	final TEXT text = new TEXT((byte) 55, 641244434L, "8F3A", Classification.Secret, Acknowledgement.TRUE, "4389F10D", "ORKA", TextType.Chat, DataEncoding.NONE, "TESTTEST", "5533");
 
-	Assertions.assertEquals((short) 55, text.getNumber());
+	Assertions.assertEquals((byte) 55, text.getNumber());
 	Assertions.assertEquals(641244434L, text.getTime());
 	Assertions.assertEquals("8F3A", text.getSender());
 	Assertions.assertEquals(Classification.Secret, text.getClassification());
@@ -59,11 +59,11 @@ class TEXTTest {
     @Test
     final void testConstructorString() {
 
-	String message = "TEXT;D3;661D44D2;324E;S;TRUE;;;1;NONE;\"This is an alert!\"";
+	String message = "TEXT;13;661D44D2;324E;S;TRUE;;;1;NONE;\"This is an alert!\"";
 
 	TEXT text = new TEXT(message);
 
-	Assertions.assertEquals((short) 0xD3, text.getNumber());
+	Assertions.assertEquals((byte) 0x13, text.getNumber());
 	Assertions.assertEquals(0x661D44D2L, text.getTime());
 	Assertions.assertEquals("324E", text.getSender());
 	Assertions.assertEquals(Classification.Secret, text.getClassification());
@@ -79,7 +79,7 @@ class TEXTTest {
 
 	text = new TEXT(message);
 
-	Assertions.assertEquals((short) 0xD4, text.getNumber());
+	Assertions.assertEquals((byte) 0xD4, text.getNumber());
 	Assertions.assertEquals(0x661D458EL, text.getTime());
 	Assertions.assertEquals("324E", text.getSender());
 	Assertions.assertEquals(Classification.Confidential, text.getClassification());
@@ -91,11 +91,11 @@ class TEXTTest {
 	Assertions.assertEquals("\"This is a warning!\"", text.getTextContent());
 	Assertions.assertNull(text.getReference());
 
-	message = "TEXT;D5;661D6565;324E;R;;;;3;;\"This is a notice!\";1133";
+	message = "TEXT;15;661D6565;324E;R;;;;3;;\"This is a notice!\";1133";
 
 	text = new TEXT(message);
 
-	Assertions.assertEquals((short) 0xD5, text.getNumber());
+	Assertions.assertEquals((byte) 0x15, text.getNumber());
 	Assertions.assertEquals(0x661D6565L, text.getTime());
 	Assertions.assertEquals("324E", text.getSender());
 	Assertions.assertEquals(Classification.Restricted, text.getClassification());
@@ -107,11 +107,11 @@ class TEXTTest {
 	Assertions.assertEquals("\"This is a notice!\"", text.getTextContent());
 	Assertions.assertEquals("1133", text.getReference());
 
-	message = "TEXT;D6;661D7032;324E;U;;;E4F1;4;BASE64;IlRoaXMgaXMgYSBjaGF0IG1lc3NhZ2UhIg==";
+	message = "TEXT;26;661D7032;324E;U;;;E4F1;4;BASE64;IlRoaXMgaXMgYSBjaGF0IG1lc3NhZ2UhIg==";
 
 	text = new TEXT(message);
 
-	Assertions.assertEquals((short) 0xD6, text.getNumber());
+	Assertions.assertEquals((byte) 0x26, text.getNumber());
 	Assertions.assertEquals(0x661D7032L, text.getTime());
 	Assertions.assertEquals("324E", text.getSender());
 	Assertions.assertEquals(Classification.Unclas, text.getClassification());
@@ -131,7 +131,7 @@ class TEXTTest {
 
 	final TEXT text = new TEXT(it);
 
-	Assertions.assertEquals((short) 0x55, text.getNumber());
+	Assertions.assertEquals((byte) 0x55, text.getNumber());
 	Assertions.assertEquals(0x1B351C87L, text.getTime());
 	Assertions.assertEquals("5BCD", text.getSender());
 	Assertions.assertEquals(Classification.Secret, text.getClassification());

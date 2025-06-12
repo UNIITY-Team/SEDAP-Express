@@ -80,7 +80,7 @@ public class GENERIC extends SEDAPExpressMessage {
      * @param encoding
      * @param content
      */
-    public GENERIC(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, ContentType contentType, DataEncoding encoding, String content) {
+    public GENERIC(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, ContentType contentType, DataEncoding encoding, String content) {
 
 	super(number, time, sender, classification, acknowledgement, mac);
 

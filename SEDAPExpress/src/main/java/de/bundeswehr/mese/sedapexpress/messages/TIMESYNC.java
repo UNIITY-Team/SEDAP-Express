@@ -52,7 +52,7 @@ public class TIMESYNC extends SEDAPExpressMessage {
      * @param acknowledgement
      * @param mac
      */
-    public TIMESYNC(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
+    public TIMESYNC(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
 	super(number, time, sender, classification, acknowledgement, mac);
 	this.timestamp = null;
     }
@@ -68,7 +68,7 @@ public class TIMESYNC extends SEDAPExpressMessage {
      * @param mac
      * @param timestamp
      */
-    public TIMESYNC(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, Long timestamp) {
+    public TIMESYNC(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, Long timestamp) {
 	super(number, time, sender, classification, acknowledgement, mac);
 	this.timestamp = timestamp;
     }

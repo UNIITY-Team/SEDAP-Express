@@ -40,9 +40,9 @@ class RESENDTest {
     @Test
     final void testConstructorValues() {
 
-	final RESEND resend = new RESEND((short) 66, 641211134L, "4525", Classification.Confidential, Acknowledgement.TRUE, "4377F177", "RECI", MessageType.GRAPHIC, (short) 0x34);
+	final RESEND resend = new RESEND((byte) 66, 641211134L, "4525", Classification.Confidential, Acknowledgement.TRUE, "4377F177", "RECI", MessageType.GRAPHIC, (short) 0x34);
 
-	Assertions.assertEquals((short) 66, resend.getNumber());
+	Assertions.assertEquals((byte) 66, resend.getNumber());
 	Assertions.assertEquals(641211134L, resend.getTime());
 	Assertions.assertEquals("4525", resend.getSender());
 	Assertions.assertEquals(Classification.Confidential, resend.getClassification());
@@ -60,7 +60,7 @@ class RESENDTest {
 
 	RESEND resend = new RESEND(message);
 
-	Assertions.assertEquals((short) 0x20, resend.getNumber());
+	Assertions.assertEquals((byte) 0x20, resend.getNumber());
 	Assertions.assertEquals(0x661D64C0L, resend.getTime());
 	Assertions.assertEquals("129E", resend.getSender());
 	Assertions.assertEquals(Classification.Restricted, resend.getClassification());
@@ -79,7 +79,7 @@ class RESENDTest {
 
 	final RESEND resend = new RESEND(it);
 
-	Assertions.assertEquals((short) 0x78, resend.getNumber());
+	Assertions.assertEquals((byte) 0x78, resend.getNumber());
 	Assertions.assertEquals(0x1135AA87L, resend.getTime());
 	Assertions.assertEquals("2B65", resend.getSender());
 	Assertions.assertEquals(Classification.Secret, resend.getClassification());

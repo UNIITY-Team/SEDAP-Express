@@ -37,7 +37,6 @@ import java.util.HexFormat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import de.bundeswehr.mese.sedapexpress.utils.ECDHUtils;
 import de.bundeswehr.mese.sedapexpress.utils.EncryptionUtils.AESKeyLength;
 
 class ECDHUtilsTest {

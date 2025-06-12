@@ -149,7 +149,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
     public static final HexFormat HEXFOMATER = HexFormat.of().withUpperCase();
 
     public static final Pattern NAME_MATCHER = Pattern.compile("^[a-zA-Z]+$"); // Name
-    public static final Pattern NUMBER_MATCHER = Pattern.compile("^[A-Fa-f0-9]{1,2}$"); // Number
+    public static final Pattern NUMBER_MATCHER = Pattern.compile("^[0-7][0-9A-F]$"); // Number 00-7F
     public static final Pattern TIME_MATCHER = Pattern.compile("^[A-Fa-f0-9]{8,16}$"); // Time
     public static final Pattern MAC_MATCHER = Pattern.compile("^[A-Fa-f0-9]{1,32}$"); // HexNumber
     public static final Pattern CLASSIFICATION_MATCHER = Pattern.compile("^[P,U,R,C,S,T]{1}$");
@@ -183,7 +183,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	return pattern.matcher(value).matches();
     }
 
-    private Short number;
+    private Byte number;
 
     private Long time;
 
@@ -195,11 +195,11 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 
     private String mac;
 
-    public Short getNumber() {
+    public Byte getNumber() {
 	return this.number;
     }
 
-    public void setNumber(Short number) {
+    public void setNumber(Byte number) {
 	this.number = number;
     }
 
@@ -595,7 +595,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
      * @param acknowledgement
      * @param mac             Message Authentification Code
      */
-    protected SEDAPExpressMessage(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
+    protected SEDAPExpressMessage(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
 	super();
 	this.number = number;
 	this.time = time;
@@ -620,7 +620,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 		if (value.isEmpty()) {
 		    SEDAPExpressMessage.logger.logp(Level.INFO, "SEDAPExpressMessage", "SEDAPExpressMessage(Iterator<String> message)", "Optional field \"number\" is empty!", value);
 		} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.NUMBER_MATCHER, value)) {
-		    this.number = Short.parseShort(value, 16);
+		    this.number = Byte.parseByte(value, 16);
 		} else if (!value.isBlank()) {
 		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "SEDAPExpressMessage", "SEDAPExpressMessage(Iterator<String> message)", "Optional field \"number\" contains invalid value!", value);
 		}

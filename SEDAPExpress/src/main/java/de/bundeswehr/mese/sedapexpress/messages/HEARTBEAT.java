@@ -52,7 +52,7 @@ public class HEARTBEAT extends SEDAPExpressMessage {
      * @param acknowledgement
      * @param mac
      */
-    public HEARTBEAT(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
+    public HEARTBEAT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
 
 	super(number, time, sender, classification, acknowledgement, mac);
 
@@ -70,7 +70,7 @@ public class HEARTBEAT extends SEDAPExpressMessage {
      * @param mac
      * @param recipient
      */
-    public HEARTBEAT(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient) {
+    public HEARTBEAT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient) {
 
 	super(number, time, sender, classification, acknowledgement, mac);
 

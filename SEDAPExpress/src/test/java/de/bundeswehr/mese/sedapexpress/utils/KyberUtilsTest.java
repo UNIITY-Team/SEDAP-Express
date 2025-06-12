@@ -39,7 +39,6 @@ import org.bouncycastle.pqc.jcajce.spec.KyberParameterSpec;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import de.bundeswehr.mese.sedapexpress.utils.KyberUtils;
 import de.bundeswehr.mese.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
 
 class KyberUtilsTest {

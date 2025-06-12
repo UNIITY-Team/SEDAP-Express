@@ -326,7 +326,7 @@ public class CONTACT extends SEDAPExpressMessage {
      * @param imageData
      * @param comment
      */
-    public CONTACT(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String contactID, DeleteFlag deleteFlag, Double latitude, Double longitude, Double altitude,
+    public CONTACT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String contactID, DeleteFlag deleteFlag, Double latitude, Double longitude, Double altitude,
 	    Double relativeXDistance, Double relativeYDistance, Double relativeZDistance, Double speed, Double course, Double heading, Double roll, Double pitch, Double width, Double length, Double height, String name, Source source,
 	    char[] sidc, String mmsi, String icao, byte[] imageData, String comment) {
 	this(number, time, sender, classification, acknowledgement, mac, contactID, deleteFlag, latitude, longitude, altitude, relativeXDistance, relativeYDistance, relativeZDistance, speed, course, heading, roll, pitch, width, length,
@@ -368,7 +368,7 @@ public class CONTACT extends SEDAPExpressMessage {
      * @param imageData
      * @param comment
      */
-    public CONTACT(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String contactID, DeleteFlag deleteFlag, Double latitude, Double longitude, Double altitude,
+    public CONTACT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String contactID, DeleteFlag deleteFlag, Double latitude, Double longitude, Double altitude,
 	    Double relativeXDistance, Double relativeYDistance, Double relativeZDistance, Double speed, Double course, Double heading, Double roll, Double pitch, Double width, Double length, Double height, String name, String source,
 	    char[] sidc, String mmsi, String icao, byte[] imageData, String comment) {
 

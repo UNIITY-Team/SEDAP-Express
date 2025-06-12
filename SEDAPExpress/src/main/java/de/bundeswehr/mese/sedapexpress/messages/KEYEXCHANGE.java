@@ -183,7 +183,7 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
      * @param iv
      * @param publicKey
      */
-    public KEYEXCHANGE(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient,
+    public KEYEXCHANGE(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient,
 	    AlgorithmType algorithmType, Integer phase, Integer keyLengthSharedSecret, Integer keyLengthDHKEM,
 	    BigInteger primeNumber, BigInteger naturalNumber, Long iv, PublicKey publicKey) {
 	super(number, time, sender, classification, acknowledgement, mac);

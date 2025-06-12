@@ -47,11 +47,11 @@ class STATUSTest {
     @Test
     final void testConstructorValues() {
 
-	final STATUS status = new STATUS((short) 41, 7865454543L, "BB91", Classification.Confidential, Acknowledgement.TRUE, "93B37ACC", TechnicalState.Operational, OperationalState.Operational, Arrays.asList("MLG"), Arrays.asList(50.0),
+	final STATUS status = new STATUS((byte) 41, 7865454543L, "BB91", Classification.Confidential, Acknowledgement.TRUE, "93B37ACC", TechnicalState.Operational, OperationalState.Operational, Arrays.asList("MLG"), Arrays.asList(50.0),
 		Arrays.asList("Tank1"), Arrays.asList(75.3), Arrays.asList("MainAkku"), Arrays.asList(10.8), 34, CommandState.Executed_successfully, "10.8.0.6", Arrays.asList("rtsp://10.8.0.6/stream1", "rtsp://10.8.0.6/stream2"),
 		"This is a sample!");
 
-	Assertions.assertEquals((short) 41, status.getNumber());
+	Assertions.assertEquals((byte) 41, status.getNumber());
 	Assertions.assertEquals(7865454543L, status.getTime());
 	Assertions.assertEquals("BB91", status.getSender());
 	Assertions.assertEquals(Classification.Confidential, status.getClassification());
@@ -80,7 +80,7 @@ class STATUSTest {
 
 	STATUS status = new STATUS(message);
 
-	Assertions.assertEquals((short) 0x41, status.getNumber());
+	Assertions.assertEquals((byte) 0x41, status.getNumber());
 	Assertions.assertEquals(0x50505050L, status.getTime());
 	Assertions.assertEquals("BB91", status.getSender());
 	Assertions.assertEquals(Classification.Confidential, status.getClassification());
@@ -104,7 +104,7 @@ class STATUSTest {
 
 	status = new STATUS(message);
 
-	Assertions.assertEquals((short) 0x15, status.getNumber());
+	Assertions.assertEquals((byte) 0x15, status.getNumber());
 	Assertions.assertEquals(0x66e2d520L, status.getTime());
 	Assertions.assertEquals("LASSY", status.getSender());
 	Assertions.assertEquals(Classification.Confidential, status.getClassification());
@@ -134,7 +134,7 @@ class STATUSTest {
 
 	final STATUS status = new STATUS(it);
 
-	Assertions.assertEquals((short) 0x41, status.getNumber());
+	Assertions.assertEquals((byte) 0x41, status.getNumber());
 	Assertions.assertEquals(0xA0B0C0D0L, status.getTime());
 	Assertions.assertEquals("BB91", status.getSender());
 	Assertions.assertEquals(Classification.Confidential, status.getClassification());

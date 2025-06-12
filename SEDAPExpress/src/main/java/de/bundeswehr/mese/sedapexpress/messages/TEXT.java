@@ -132,7 +132,7 @@ public class TEXT extends SEDAPExpressMessage {
      * @param textContent
      * @param reference
      */
-    public TEXT(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient,
+    public TEXT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient,
 	    TextType type, DataEncoding encoding, String textContent, String reference) {
 
 	super(number, time, sender, classification, acknowledgement, mac);

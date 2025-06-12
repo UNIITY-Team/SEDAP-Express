@@ -270,7 +270,7 @@ public class EMISSION extends SEDAPExpressMessage {
      * @param sidc
      * @param comment
      */
-    public EMISSION(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String emissionID, DeleteFlag deleteFlag, Double sensorLatitude, Double sensorLongitude,
+    public EMISSION(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String emissionID, DeleteFlag deleteFlag, Double sensorLatitude, Double sensorLongitude,
 	    Double sensorAltitude, Double emitterLatitude, Double emitterLongitude, Double emitterAltitude, Double bearing, List<Double> frequency, Double bandwidth, Double power, Integer freqAgility, Integer prfAgility, Integer function,
 	    Integer spotNumber, char[] sidc, String comment) {
 

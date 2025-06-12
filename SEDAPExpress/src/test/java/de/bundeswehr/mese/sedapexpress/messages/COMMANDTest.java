@@ -44,10 +44,10 @@ class COMMANDTest {
     @Test
     final void testConstructorValues() {
 
-	final COMMAND command = new COMMAND((short) 55, 641244434L, "8F3A", Classification.Secret, Acknowledgement.TRUE, "4389F10D", "7D31", (short) 0x3311, COMMAND.CommandFlag.CancelAll, COMMAND.CommandType.Sync_time,
+	final COMMAND command = new COMMAND((byte) 55, 641244434L, "8F3A", Classification.Secret, Acknowledgement.TRUE, "4389F10D", "7D31", (short) 0x3311, COMMAND.CommandFlag.CancelAll, COMMAND.CommandType.Sync_time,
 		Arrays.asList("10.8.0.6"));
 
-	Assertions.assertEquals((short) 55, command.getNumber());
+	Assertions.assertEquals((byte) 55, command.getNumber());
 	Assertions.assertEquals(641244434L, command.getTime());
 	Assertions.assertEquals("8F3A", command.getSender());
 	Assertions.assertEquals(Classification.Secret, command.getClassification());
@@ -67,7 +67,7 @@ class COMMANDTest {
 
 	COMMAND command = new COMMAND(message);
 
-	Assertions.assertEquals((short) 0x55, command.getNumber());
+	Assertions.assertEquals((byte) 0x55, command.getNumber());
 	Assertions.assertEquals(0x1B351C87L, command.getTime());
 	Assertions.assertEquals("5BCD", command.getSender());
 	Assertions.assertEquals(Classification.Secret, command.getClassification());
@@ -84,7 +84,7 @@ class COMMANDTest {
 
 	command = new COMMAND(message);
 
-	Assertions.assertEquals((short) 0x29, command.getNumber());
+	Assertions.assertEquals((byte) 0x29, command.getNumber());
 	Assertions.assertEquals(0x661D44C0L, command.getTime());
 	Assertions.assertEquals("E4B3", command.getSender());
 	Assertions.assertEquals(Classification.Confidential, command.getClassification());
@@ -104,7 +104,7 @@ class COMMANDTest {
 
 	final COMMAND command = new COMMAND(it);
 
-	Assertions.assertEquals((short) 0x55, command.getNumber());
+	Assertions.assertEquals((byte) 0x55, command.getNumber());
 	Assertions.assertEquals(0x1B351C87L, command.getTime());
 	Assertions.assertEquals("5BCD", command.getSender());
 	Assertions.assertEquals(Classification.Secret, command.getClassification());

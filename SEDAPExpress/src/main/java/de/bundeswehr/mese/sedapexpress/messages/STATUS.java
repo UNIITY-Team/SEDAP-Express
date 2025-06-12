@@ -280,7 +280,7 @@ public class STATUS extends SEDAPExpressMessage {
      * @param mediaUrls
      * @param freeText
      */
-    public STATUS(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, TechnicalState tecState, OperationalState opsState, String[] ammunitionLevelNames,
+    public STATUS(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, TechnicalState tecState, OperationalState opsState, String[] ammunitionLevelNames,
 	    Double[] ammunitionLevels, String[] fuelLevelNames, Double[] fuelLevels, String[] batterieLevelNames, Double[] batterieLevels, Integer cmdId, CommandState cmdState, String hostname, String mediaUrls, String freeText) {
 
 	this(number, time, sender, classification, acknowledgement, mac, tecState, opsState, Arrays.asList(ammunitionLevelNames), Arrays.asList(ammunitionLevels), Arrays.asList(fuelLevelNames), Arrays.asList(fuelLevels),
@@ -310,7 +310,7 @@ public class STATUS extends SEDAPExpressMessage {
      * @param mediaUrls
      * @param freeText
      */
-    public STATUS(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, TechnicalState tecState, OperationalState opsState, String ammunitionLevelName, Double ammunitionLevel,
+    public STATUS(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, TechnicalState tecState, OperationalState opsState, String ammunitionLevelName, Double ammunitionLevel,
 	    String fuelLevelName, Double fuelLevel, String batterieLevelName, Double batterieLevel, Integer cmdId, CommandState cmdState, String hostname, String mediaUrls, String freeText) {
 
 	this(number, time, sender, classification, acknowledgement, mac, tecState, opsState, Arrays.asList(ammunitionLevelName), Arrays.asList(ammunitionLevel), Arrays.asList(fuelLevelName), Arrays.asList(fuelLevel),
@@ -340,7 +340,7 @@ public class STATUS extends SEDAPExpressMessage {
      * @param mediaUrls
      * @param freeText
      */
-    public STATUS(Short number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, TechnicalState tecState, OperationalState opsState, List<String> ammunitionLevelNames,
+    public STATUS(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, TechnicalState tecState, OperationalState opsState, List<String> ammunitionLevelNames,
 	    List<Double> ammunitionLevels, List<String> fuelLevelNames, List<Double> fuelLevels, List<String> batterieLevelNames, List<Double> batterieLevels, Integer cmdId, CommandState cmdState, String hostname, List<String> mediaUrls,
 	    String freeText) {
 
