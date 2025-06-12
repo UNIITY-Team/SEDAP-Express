@@ -146,7 +146,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	FALSE, TRUE;
     }
 
-    public static final HexFormat HEXFOMATER = HexFormat.of().withUpperCase();
+    public static final HexFormat HexFormater = HexFormat.of().withUpperCase();
 
     public static final Pattern NAME_MATCHER = Pattern.compile("^[a-zA-Z]+$"); // Name
     public static final Pattern NUMBER_MATCHER = Pattern.compile("^[0-7][0-9A-F]$"); // Number 00-7F
@@ -751,12 +751,12 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	StringBuilder result = new StringBuilder(this.getClass().getSimpleName()).append(';');
 
 	if (this.number != null) {
-	    result.append(SEDAPExpressMessage.HEXFOMATER.toHexDigits((this.number)).substring(2));
+	    result.append(SEDAPExpressMessage.HexFormater.toHexDigits((this.number)).substring(2));
 	}
 	result.append(';');
 
 	if (this.time != null) {
-	    result.append(SEDAPExpressMessage.HEXFOMATER.toHexDigits(this.time, 12));
+	    result.append(SEDAPExpressMessage.HexFormater.toHexDigits(this.time, 12));
 	}
 	result.append(';');
 

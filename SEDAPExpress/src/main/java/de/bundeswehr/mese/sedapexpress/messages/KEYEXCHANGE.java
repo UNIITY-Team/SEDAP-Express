@@ -406,7 +406,7 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
 		.append((this.keyLengthDHKEM != null) ? this.keyLengthDHKEM : "").append(";")
 		.append((this.primeNumber != null) ? this.primeNumber : "").append(";")
 		.append((this.naturalNumber != null) ? this.naturalNumber : "").append(";")
-		.append((this.iv != null) ? SEDAPExpressMessage.HEXFOMATER.toHexDigits(this.iv, 16) : "").append(";")
-		.append((this.publicKey != null) ? SEDAPExpressMessage.HEXFOMATER.formatHex(this.publicKey.getEncoded()) : "").toString());
+		.append((this.iv != null) ? SEDAPExpressMessage.HexFormater.toHexDigits(this.iv, 16) : "").append(";")
+		.append((this.publicKey != null) ? SEDAPExpressMessage.HexFormater.formatHex(this.publicKey.getEncoded()) : "").toString());
     }
 }

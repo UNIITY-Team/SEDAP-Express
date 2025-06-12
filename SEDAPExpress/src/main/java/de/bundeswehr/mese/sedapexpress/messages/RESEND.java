@@ -36,7 +36,7 @@ public class RESEND extends SEDAPExpressMessage {
 
     private MessageType nameOfTheMissingMessage;
 
-    private Short numberOfTheMissingMessage;
+    private Byte numberOfTheMissingMessage;
 
     public String getRecipient() {
 	return this.recipient;
@@ -54,11 +54,11 @@ public class RESEND extends SEDAPExpressMessage {
 	this.nameOfTheMissingMessage = nameOfTheMissingMessage;
     }
 
-    public Short getNumberOfTheMissingMessage() {
+    public Byte getNumberOfTheMissingMessage() {
 	return this.numberOfTheMissingMessage;
     }
 
-    public void setNumberOfTheMissingMessage(Short numberOfTheMissingMessage) {
+    public void setNumberOfTheMissingMessage(Byte numberOfTheMissingMessage) {
 	this.numberOfTheMissingMessage = numberOfTheMissingMessage;
     }
 
@@ -75,7 +75,7 @@ public class RESEND extends SEDAPExpressMessage {
      * @param nameOfTheMissingMessage
      * @param numberOfTheMissingMessage
      */
-    public RESEND(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient, MessageType nameOfTheMissingMessage, Short numberOfTheMissingMessage) {
+    public RESEND(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient, MessageType nameOfTheMissingMessage, Byte numberOfTheMissingMessage) {
 
 	super(number, time, sender, classification, acknowledgement, mac);
 
@@ -133,7 +133,7 @@ public class RESEND extends SEDAPExpressMessage {
 	    if (value.isEmpty()) {
 		SEDAPExpressMessage.logger.logp(Level.SEVERE, "RESEND", "RESEND(Iterator<String> message)", "Mandatory field \"numberOfTheMissingMessage\" is empty!");
 	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.NUMBER_MATCHER, value)) {
-		this.numberOfTheMissingMessage = Short.parseShort(value, 16);
+		this.numberOfTheMissingMessage = Byte.parseByte(value, 16);
 	    } else if (!value.isBlank()) {
 		SEDAPExpressMessage.logger.logp(Level.SEVERE, "RESEND", "RESEND(Iterator<String> message)", "Mandatory field \"numberOfTheMissingMessage\" contains invalid value!", value);
 	    }
@@ -166,7 +166,7 @@ public class RESEND extends SEDAPExpressMessage {
     @Override
     public String toString() {
 	return SEDAPExpressMessage.removeSemicolons(serializeHeader().append((this.recipient != null) ? this.recipient : "").append(";").append((this.nameOfTheMissingMessage != null) ? this.nameOfTheMissingMessage : "").append(";")
-		.append((this.numberOfTheMissingMessage != null) ? SEDAPExpressMessage.HEXFOMATER.toHexDigits(this.numberOfTheMissingMessage) : "").toString());
+		.append((this.numberOfTheMissingMessage != null) ? SEDAPExpressMessage.HexFormater.toHexDigits(this.numberOfTheMissingMessage) : "").toString());
     }
 
 }

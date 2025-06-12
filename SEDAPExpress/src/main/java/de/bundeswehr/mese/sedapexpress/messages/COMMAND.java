@@ -325,9 +325,9 @@ public class COMMAND extends SEDAPExpressMessage {
 	    StringBuilder parameters = new StringBuilder();
 	    this.cmdTypeDependentParameters.forEach(entry -> parameters.append(entry + ";"));
 
-	    return SEDAPExpressMessage.removeSemicolons(serializeHeader().append((this.recipient != null) ? this.recipient : "").append(";").append((this.cmdId != null) ? SEDAPExpressMessage.HEXFOMATER.toHexDigits(this.cmdId) : "")
-		    .append(";").append((this.cmdFlag != null) ? SEDAPExpressMessage.HEXFOMATER.toHexDigits(this.cmdFlag.getFlagValue()) : "").append(";")
-		    .append((this.cmdType != null) ? SEDAPExpressMessage.HEXFOMATER.toHexDigits(this.cmdType.getTypeValue()) : "").append(";").append((this.cmdTypeDependentParameters != null) ? parameters : "").toString());
+	    return SEDAPExpressMessage.removeSemicolons(serializeHeader().append((this.recipient != null) ? this.recipient : "").append(";").append((this.cmdId != null) ? SEDAPExpressMessage.HexFormater.toHexDigits(this.cmdId) : "")
+		    .append(";").append((this.cmdFlag != null) ? SEDAPExpressMessage.HexFormater.toHexDigits(this.cmdFlag.getFlagValue()) : "").append(";")
+		    .append((this.cmdType != null) ? SEDAPExpressMessage.HexFormater.toHexDigits(this.cmdType.getTypeValue()) : "").append(";").append((this.cmdTypeDependentParameters != null) ? parameters : "").toString());
 	} else {
 	    return SEDAPExpressMessage.removeSemicolons(
 		    serializeHeader().append((this.recipient != null) ? this.recipient : "").append(";").append((this.cmdId != null) ? this.cmdId : "").append(";").append((this.cmdType != null) ? this.cmdType : "").toString());

@@ -48,7 +48,7 @@ public class SampleTCPServer implements SEDAPExpressSubscriber {
 
     private final String senderId;
 
-    private short numberSTATUS = 0;
+    private byte numberSTATUS = 0;
 
     /**
      * Instantiate a sample TCP server

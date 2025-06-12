@@ -40,7 +40,7 @@ class RESENDTest {
     @Test
     final void testConstructorValues() {
 
-	final RESEND resend = new RESEND((byte) 66, 641211134L, "4525", Classification.Confidential, Acknowledgement.TRUE, "4377F177", "RECI", MessageType.GRAPHIC, (short) 0x34);
+	final RESEND resend = new RESEND((byte) 66, 641211134L, "4525", Classification.Confidential, Acknowledgement.TRUE, "4377F177", "RECI", MessageType.GRAPHIC, (byte) 0x34);
 
 	Assertions.assertEquals((byte) 66, resend.getNumber());
 	Assertions.assertEquals(641211134L, resend.getTime());
@@ -50,7 +50,7 @@ class RESENDTest {
 	Assertions.assertEquals("4377F177", resend.getMAC());
 	Assertions.assertEquals("RECI", resend.getRecipient());
 	Assertions.assertEquals(MessageType.GRAPHIC, resend.getNameOfTheMissingMessage());
-	Assertions.assertEquals((short) 0x34, resend.getNumberOfTheMissingMessage());
+	Assertions.assertEquals((byte) 0x34, resend.getNumberOfTheMissingMessage());
     }
 
     @Test
@@ -68,7 +68,7 @@ class RESENDTest {
 	Assertions.assertNull(resend.getMAC());
 	Assertions.assertEquals("FE2A", resend.getRecipient());
 	Assertions.assertEquals(MessageType.TEXT, resend.getNameOfTheMissingMessage());
-	Assertions.assertEquals((short) 0x5D, resend.getNumberOfTheMissingMessage());
+	Assertions.assertEquals((byte) 0x5D, resend.getNumberOfTheMissingMessage());
 
     }
 
@@ -87,7 +87,7 @@ class RESENDTest {
 	Assertions.assertEquals("6389F10D", resend.getMAC());
 	Assertions.assertEquals("7D31", resend.getRecipient());
 	Assertions.assertEquals(MessageType.COMMAND, resend.getNameOfTheMissingMessage());
-	Assertions.assertEquals((short) 0x33, resend.getNumberOfTheMissingMessage());
+	Assertions.assertEquals((byte) 0x33, resend.getNumberOfTheMissingMessage());
 
     }
 }

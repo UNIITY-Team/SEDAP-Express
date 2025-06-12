@@ -45,7 +45,7 @@ class ACKNOWLEDGETest {
     @Test
     final void testConstructorValues() {
 
-	final ACKNOWLEDGE status = new ACKNOWLEDGE((byte) 41, 7865454543L, "BB91", Classification.Confidential, Acknowledgement.TRUE, "93B37ACC", "Drone1", MessageType.CONTACT, (short) 43);
+	final ACKNOWLEDGE status = new ACKNOWLEDGE((byte) 41, 7865454543L, "BB91", Classification.Confidential, Acknowledgement.TRUE, "93B37ACC", "Drone1", MessageType.CONTACT, (byte) 43);
 
 	Assertions.assertEquals((byte) 41, status.getNumber());
 	Assertions.assertEquals(7865454543L, status.getTime());
@@ -55,7 +55,7 @@ class ACKNOWLEDGETest {
 	Assertions.assertEquals("93B37ACC", status.getMAC());
 	Assertions.assertEquals("Drone1", status.getRecipient());
 	Assertions.assertEquals(MessageType.CONTACT, status.getTypeOfTheMessage());
-	Assertions.assertEquals((short) 43, status.getNumberOfTheMessage());
+	Assertions.assertEquals((byte) 43, status.getNumberOfTheMessage());
 
     }
 
@@ -74,7 +74,7 @@ class ACKNOWLEDGETest {
 	Assertions.assertNull(status.getMAC());
 	Assertions.assertEquals("LASSY", status.getRecipient());
 	Assertions.assertEquals(MessageType.COMMAND, status.getTypeOfTheMessage());
-	Assertions.assertEquals((short) 0x2B, status.getNumberOfTheMessage());
+	Assertions.assertEquals((byte) 0x2B, status.getNumberOfTheMessage());
 
     }
 
@@ -93,7 +93,7 @@ class ACKNOWLEDGETest {
 	Assertions.assertEquals("93B37ACC", status.getMAC());
 	Assertions.assertEquals("LASSY", status.getRecipient());
 	Assertions.assertEquals(MessageType.COMMAND, status.getTypeOfTheMessage());
-	Assertions.assertEquals((short) 0x2B, status.getNumberOfTheMessage());
+	Assertions.assertEquals((byte) 0x2B, status.getNumberOfTheMessage());
 
     }
 }

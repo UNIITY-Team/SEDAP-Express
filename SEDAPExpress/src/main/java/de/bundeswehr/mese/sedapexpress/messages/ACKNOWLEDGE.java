@@ -36,7 +36,7 @@ public class ACKNOWLEDGE extends SEDAPExpressMessage {
 
     private MessageType typeOfTheMessage;
 
-    private Short numberOfTheMessage;
+    private Byte numberOfTheMessage;
 
     public String getRecipient() {
 	return this.recipient;
@@ -54,11 +54,11 @@ public class ACKNOWLEDGE extends SEDAPExpressMessage {
 	this.typeOfTheMessage = typeOfTheMessage;
     }
 
-    public Short getNumberOfTheMessage() {
+    public Byte getNumberOfTheMessage() {
 	return this.numberOfTheMessage;
     }
 
-    public void setNumberOfTheMessage(Short numberOfTheMessage) {
+    public void setNumberOfTheMessage(Byte numberOfTheMessage) {
 	this.numberOfTheMessage = numberOfTheMessage;
     }
 
@@ -75,7 +75,7 @@ public class ACKNOWLEDGE extends SEDAPExpressMessage {
      * @param nameOfTheMessage
      * @param numberOfTheMessage
      */
-    public ACKNOWLEDGE(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient, MessageType nameOfTheMessage, Short numberOfTheMessage) {
+    public ACKNOWLEDGE(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient, MessageType nameOfTheMessage, Byte numberOfTheMessage) {
 
 	super(number, time, sender, classification, acknowledgement, mac);
 
@@ -134,7 +134,7 @@ public class ACKNOWLEDGE extends SEDAPExpressMessage {
 	    if (value.isEmpty()) {
 		SEDAPExpressMessage.logger.logp(Level.SEVERE, "ACKNOWLEDGE", "ACKNOWLEDGE(Iterator<String> message)", "Mandatory field \"numberOfTheMessage\" is empty!");
 	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.NUMBER_MATCHER, value)) {
-		this.numberOfTheMessage = Short.parseShort(value, 16);
+		this.numberOfTheMessage = Byte.parseByte(value, 16);
 	    } else if (!value.isBlank()) {
 		SEDAPExpressMessage.logger.logp(Level.SEVERE, "ACKNOWLEDGE", "ACKNOWLEDGE(Iterator<String> message)", "Mandatory field \"numberOfTheMessage\" contains invalid value!", value);
 	    }

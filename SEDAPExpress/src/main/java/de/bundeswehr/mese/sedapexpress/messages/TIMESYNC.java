@@ -128,7 +128,7 @@ public class TIMESYNC extends SEDAPExpressMessage {
     @Override
     public String toString() {
 
-	return SEDAPExpressMessage.removeSemicolons(serializeHeader().append((this.timestamp != null) ? SEDAPExpressMessage.HEXFOMATER.toHexDigits(this.timestamp) : "").toString());
+	return SEDAPExpressMessage.removeSemicolons(serializeHeader().append((this.timestamp != null) ? SEDAPExpressMessage.HexFormater.toHexDigits(this.timestamp) : "").toString());
     }
 
 }
