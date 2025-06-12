@@ -120,7 +120,7 @@ public abstract class SEDAPExpressCommunicator {
 
 	clazzes.forEach(clazz -> {
 
-	    this.subscriptions.computeIfAbsent(clazz, _ -> new CopyOnWriteArraySet<SEDAPExpressSubscriber>());
+	    this.subscriptions.computeIfAbsent(clazz, x -> new CopyOnWriteArraySet<SEDAPExpressSubscriber>());
 
 	    this.subscriptions.get(clazz).add(subscriber);
 	});
@@ -148,7 +148,7 @@ public abstract class SEDAPExpressCommunicator {
     public void unsubscribeMessages(SEDAPExpressSubscriber subscriber, Collection<MessageType> clazzes) {
 	clazzes.forEach(clazz ->
 
-	this.subscriptions.computeIfPresent(clazz, (_, value) -> {
+	this.subscriptions.computeIfPresent(clazz, (x, value) -> {
 	    value.remove(subscriber);
 	    return value;
 	}));
