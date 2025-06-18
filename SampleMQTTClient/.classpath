@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/main" path="src/main/java"/>
+	<classpathentry kind="src" output="bin/test" path="src/test/java">
+		<attributes>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcpkix-jdk18on-1.80.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bcpkix-jdk18on-1.80-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcprov-jdk18on-1.80.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bcprov-jdk18on-1.80-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcutil-jdk18on-1.80.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bcutil-jdk18on-1.80-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Gson/gson-2.11.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Gson/gson-2.11.0-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Protobuf/protobuf-java-4.28.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Protobuf/protobuf-java-4.28.1-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Protobuf/protobuf-java-util-4.28.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Protobuf/protobuf-java-util-4.28.1-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFx">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/SEDAPExpress">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

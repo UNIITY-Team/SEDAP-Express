@@ -1,7 +1,7 @@
 /**
  * Note: This license has also been called the “Simplified BSD License” and the “FreeBSD License”.
  *
- * Copyright 2024 MESE POC: Volker Voß, Federal Armed Forces of Germany
+ * Copyright 2024-2025 UNIITY POC: Volker Voß, Federal Armed Forces of Germany
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -16,33 +16,40 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * CONTRIBUTORS BEn LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  */
-package de.bundeswehr.mese.sedapexpress.sample.tcpclient;
+package de.bundeswehr.uniity.sedapexpress.sample.mqttclient;
 
 import java.io.IOException;
+import java.io.InputStream;
 
-import de.bundeswehr.mese.sedapexpress.messages.CONTACT;
-import de.bundeswehr.mese.sedapexpress.messages.HEARTBEAT;
-import de.bundeswehr.mese.sedapexpress.messages.OWNUNIT;
-import de.bundeswehr.mese.sedapexpress.messages.SEDAPExpressMessage;
-import de.bundeswehr.mese.sedapexpress.messages.SEDAPExpressMessage.Acknowledgement;
-import de.bundeswehr.mese.sedapexpress.messages.SEDAPExpressMessage.Classification;
-import de.bundeswehr.mese.sedapexpress.messages.SEDAPExpressMessage.MessageType;
-import de.bundeswehr.mese.sedapexpress.messages.STATUS;
-import de.bundeswehr.mese.sedapexpress.messages.STATUS.CommandState;
-import de.bundeswehr.mese.sedapexpress.messages.STATUS.OperationalState;
-import de.bundeswehr.mese.sedapexpress.messages.STATUS.TechnicalState;
-import de.bundeswehr.mese.sedapexpress.network.SEDAPExpressCommunicator;
-import de.bundeswehr.mese.sedapexpress.network.SEDAPExpressTCPClient;
-import de.bundeswehr.mese.sedapexpress.processing.SEDAPExpressSubscriber;
+import de.bundeswehr.uniity.sedapexpress.messages.CONTACT;
+import de.bundeswehr.uniity.sedapexpress.messages.HEARTBEAT;
+import de.bundeswehr.uniity.sedapexpress.messages.OWNUNIT;
+import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
+import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.Acknowledgement;
+import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.Classification;
+import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.MessageType;
+import de.bundeswehr.uniity.sedapexpress.messages.STATUS;
+import de.bundeswehr.uniity.sedapexpress.messages.STATUS.CommandState;
+import de.bundeswehr.uniity.sedapexpress.messages.STATUS.OperationalState;
+import de.bundeswehr.uniity.sedapexpress.messages.STATUS.TechnicalState;
+import de.bundeswehr.uniity.sedapexpress.network.SEDAPExpressCommunicator;
+import de.bundeswehr.uniity.sedapexpress.network.SEDAPExpressMQTTClient;
+import de.bundeswehr.uniity.sedapexpress.processing.SEDAPExpressSubscriber;
 
-public class SampleTCPClient implements SEDAPExpressSubscriber {
+/**
+ * A sample skeleton class for building a MQTT client for SEDAP-Express
+ *
+ * @author Volker Voß
+ *
+ */
+public class SampleMQTTClient implements SEDAPExpressSubscriber {
 
     private final SEDAPExpressCommunicator communicator;
 
@@ -51,13 +58,22 @@ public class SampleTCPClient implements SEDAPExpressSubscriber {
     private byte numberSTATUS = 0;
 
     /**
-     * Instantiate a sample TCP client
+     * Instantiate a sample MQTT client
      *
      */
-    public SampleTCPClient() {
+    public SampleMQTTClient() {
 
-	this.communicator = new SEDAPExpressTCPClient("localhost", 50000);
-	this.communicator.connect();
+	InputStream caStream = SampleMQTTClient.class.getResourceAsStream("ca.crt");
+	InputStream clientStream = SampleMQTTClient.class.getResourceAsStream("client.crt");
+	InputStream clientKeyStream = SampleMQTTClient.class.getResourceAsStream("client.key");
+
+	this.communicator = new SEDAPExpressMQTTClient("ssl://localhost:8883", "MESE", "MESE", "MESE",
+		caStream, clientStream, clientKeyStream);
+
+	if (!this.communicator.connect()) {
+
+	    System.exit(1);
+	}
 
 	this.communicator.subscribeMessages(this, MessageType.OWNUNIT, MessageType.CONTACT, MessageType.HEARTBEAT, MessageType.STATUS);
 	this.senderId = this.communicator.createSenderId();
@@ -117,12 +133,7 @@ public class SampleTCPClient implements SEDAPExpressSubscriber {
     }
 
     public static void main(String[] args) {
-	new SampleTCPClient();
+	new SampleMQTTClient();
 
-	try {
-	    Thread.sleep(Integer.MAX_VALUE);
-	} catch (InterruptedException e) {
-
-	}
     }
 }
