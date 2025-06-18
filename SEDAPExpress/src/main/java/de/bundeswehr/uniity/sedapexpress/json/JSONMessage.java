@@ -23,21 +23,63 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  */
-package de.bundeswehr.mese.sedapexpress.messages;
+package de.bundeswehr.uniity.sedapexpress.json;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
+/**
+ *
+ * @author Volker Voß
+ *
+ */
+public class JSONMessage {
 
-class SEDAPExpressMessageTest {
+    @SerializedName("message")
+    @Expose
+    private String message;
 
-    @Test
-    final void testRemoveSemicolons() {
+    public String getMessage() {
+	return this.message;
+    }
 
-	Assertions.assertEquals("HEARTBEAT;42;661D5420;89AD;U;;;FE2A", SEDAPExpressMessage.removeSemicolons("HEARTBEAT;42;661D5420;89AD;U;;;FE2A"));
-	Assertions.assertEquals("HEARTBEAT;;;89AD;U", SEDAPExpressMessage.removeSemicolons("HEARTBEAT;;;89AD;U;;;"));
-	Assertions.assertEquals("HEARTBEAT;;661D5420", SEDAPExpressMessage.removeSemicolons("HEARTBEAT;;661D5420;;;;;"));
+    public void setMessage(String message) {
+	this.message = message;
+    }
+
+    @Override
+    public String toString() {
+	StringBuilder sb = new StringBuilder();
+	sb.append(JSONMessage.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+	sb.append("message");
+	sb.append('=');
+	sb.append(((this.message == null) ? "<null>" : this.message));
+	sb.append(',');
+	if (sb.charAt((sb.length() - 1)) == ',') {
+	    sb.setCharAt((sb.length() - 1), ']');
+	} else {
+	    sb.append(']');
+	}
+	return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+	int result = 1;
+	result = ((result * 31) + ((this.message == null) ? 0 : this.message.hashCode()));
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+	if (other == this) {
+	    return true;
+	}
+	if ((other instanceof JSONMessage) == false) {
+	    return false;
+	}
+	JSONMessage rhs = ((JSONMessage) other);
+	return ((this.message == rhs.message) || ((this.message != null) && this.message.equals(rhs.message)));
     }
 
 }

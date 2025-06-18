@@ -23,21 +23,14 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  */
-package de.bundeswehr.mese.sedapexpress.messages;
+package de.bundeswehr.uniity.sedapexpress.processing;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+/**
+ * 
+ * @author Volker Voß
+ *
+ */
+public interface SEDAPExpressOutputLoggingSubscriber {
 
-import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
-
-class SEDAPExpressMessageTest {
-
-    @Test
-    final void testRemoveSemicolons() {
-
-	Assertions.assertEquals("HEARTBEAT;42;661D5420;89AD;U;;;FE2A", SEDAPExpressMessage.removeSemicolons("HEARTBEAT;42;661D5420;89AD;U;;;FE2A"));
-	Assertions.assertEquals("HEARTBEAT;;;89AD;U", SEDAPExpressMessage.removeSemicolons("HEARTBEAT;;;89AD;U;;;"));
-	Assertions.assertEquals("HEARTBEAT;;661D5420", SEDAPExpressMessage.removeSemicolons("HEARTBEAT;;661D5420;;;;;"));
-    }
-
+    public void processSEDAPExpressOutputLoggingMessage(String message);
 }

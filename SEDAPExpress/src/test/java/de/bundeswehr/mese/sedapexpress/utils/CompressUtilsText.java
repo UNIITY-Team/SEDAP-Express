@@ -20,8 +20,9 @@ package de.bundeswehr.mese.sedapexpress.utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import de.bundeswehr.mese.sedapexpress.messages.SEDAPExpressMessage;
-import de.bundeswehr.mese.sedapexpress.messages.TEXT;
+import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
+import de.bundeswehr.uniity.sedapexpress.messages.TEXT;
+import de.bundeswehr.uniity.sedapexpress.utils.CompressUtils;
 
 public class CompressUtilsText {
 

@@ -28,6 +28,16 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/Jssc/jssc-2.9.6.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/Jssc/native-lib-loader-2.5.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFx">
 		<attributes>
 			<attribute name="module" value="true"/>
@@ -44,6 +54,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/Bouncycastle/bcutil-jdk18on-1.80.jar" sourcepath="libs/Bouncycastle/bcutil-jdk18on-1.80-sources.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/MQTT/org.eclipse.paho.mqttv5.client-1.2.5.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
