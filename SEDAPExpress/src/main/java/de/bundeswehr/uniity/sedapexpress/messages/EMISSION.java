@@ -39,50 +39,190 @@ public class EMISSION extends SEDAPExpressMessage {
 
     private static final long serialVersionUID = -421710238402316680L;
 
-    public static final Integer FREQAGILITY_Stable_Fixed = 0;
-    public static final Integer FREQAGILITY_Agile = 1;
-    public static final Integer FREQAGILITY_Periodic = 2;
-    public static final Integer FREQAGILITY_Hopper = 3;
-    public static final Integer FREQAGILITY_Batch_Hopper = 4;
-    public static final Integer FREQAGILITY_Unknown = 5;
+    public enum FreqAgility {
 
-    public static final Integer PRFAgility_Fixed_periodic = 0;
-    public static final Integer PRFAgility_Staggered = 1;
-    public static final Integer PRFAgility_Jittered = 2;
-    public static final Integer PRFAgility_Wobbulated = 3;
-    public static final Integer PRFAgility_Sliding = 4;
-    public static final Integer PRFAgility_Dwell_switch = 5;
-    public static final Integer PRFAgility_UnknownPRF = 6;
-    public static final Integer PRFAgility_CW = 7;
+	Stable_Fixed(0),
+	Agile(1),
+	Periodic(2),
+	Hopper(3),
+	Batch_Hopper(4),
+	Unknown(5);
 
-    public static final Integer FUNCTION_ESM_Beacon_Transponder = 1;
-    public static final Integer FUNCTION_ESM_Navigation = 2;
-    public static final Integer FUNCTION_ESM_Voice_Communication = 3;
-    public static final Integer FUNCTION_ESM_Data_Communication = 4;
-    public static final Integer FUNCTION_ESM_Radar = 5;
-    public static final Integer FUNCTION_ESM_Iff = 6;
-    public static final Integer FUNCTION_ESM_Guidance = 7;
-    public static final Integer FUNCTION_ESM_Weapon = 8;
-    public static final Integer FUNCTION_ESM_Jammer = 9;
-    public static final Integer FUNCTION_ESM_Natural = 10;
-    public static final Integer FUNCTION_ACOUSTIC_Object = 11;
-    public static final Integer FUNCTION_ACOUSTIC_Submarine = 12;
-    public static final Integer FUNCTION_ACOUSTIC_Variable_Depth_Sonar = 13;
-    public static final Integer FUNCTION_ACOUSTIC_Array_Sonar = 14;
-    public static final Integer FUNCTION_ACOUSTIC_Active_Sonar = 15;
-    public static final Integer FUNCTION_ACOUSTIC_Torpedo_Sonar = 16;
-    public static final Integer FUNCTION_ACOUSTIC_Sono_Buoy = 17;
-    public static final Integer FUNCTION_ACOUSTIC_Decoy_Signal = 18;
-    public static final Integer FUNCTION_ACOUSTIC_Hit_Noise = 19;
-    public static final Integer FUNCTION_ACOUSTIC_Propeller_Noise = 20;
-    public static final Integer FUNCTION_ACOUSTIC_Underwater_Telephone = 21;
-    public static final Integer FUNCTION_ACOUSTIC_Communication = 22;
-    public static final Integer FUNCTION_ACOUSTIC_Noise = 23;
-    public static final Integer FUNCTION_LASER_Range_Finder = 24;
-    public static final Integer FUNCTION_LASER_Designator = 25;
-    public static final Integer FUNCTION_LASER_Beam_Rider = 26;
-    public static final Integer FUNCTION_LASER_Dazzler = 27;
-    public static final Integer FUNCTION_LASER_Lidar = 28;
+	int freqAgility;
+
+	public int getFreqAgility() {
+	    return this.freqAgility;
+	}
+
+	private FreqAgility(int freqAgility) {
+	    this.freqAgility = freqAgility;
+	}
+
+	public static FreqAgility valueOfFreqAgility(int freqAgility) {
+
+	    return switch (freqAgility) {
+	    case 0 -> Stable_Fixed;
+	    case 1 ->
+		Agile;
+	    case 2 ->
+		Periodic;
+	    case 3 ->
+		Hopper;
+	    case 4 ->
+		Batch_Hopper;
+	    case 5 ->
+		Unknown;
+	    default -> Unknown;
+	    };
+	}
+
+	@Override
+	public String toString() {
+	    return String.valueOf(this.freqAgility);
+	}
+    }
+
+    public enum PRFAgility {
+
+	Fixed_periodic(0),
+	Staggered(1),
+	Jittered(2),
+	Wobbulated(3),
+	Sliding(4),
+	Dwell_switch(5),
+	CW(6),
+	UnknownPRF(7);
+
+	int prfAgility;
+
+	public int getPRFAgility() {
+	    return this.prfAgility;
+	}
+
+	private PRFAgility(int prfAgility) {
+	    this.prfAgility = prfAgility;
+	}
+
+	public static PRFAgility valueOfPRFAgility(int prfAgility) {
+
+	    return switch (prfAgility) {
+	    case 0 -> Fixed_periodic;
+	    case 1 ->
+		Staggered;
+	    case 2 ->
+		Jittered;
+	    case 3 ->
+		Wobbulated;
+	    case 4 ->
+		Sliding;
+	    case 5 ->
+		Dwell_switch;
+	    case 6 ->
+		CW;
+	    case 7 ->
+		UnknownPRF;
+
+	    default -> UnknownPRF;
+	    };
+	}
+
+	@Override
+	public String toString() {
+	    return String.valueOf(this.prfAgility);
+	}
+    }
+
+    public enum Function {
+
+	Unknown(0), ESM_Beacon_Transponder(1), ESM_Navigation(2), ESM_Voice_Communication(3), ESM_Data_Communication(4), ESM_Radar(5), ESM_Iff(6), ESM_Guidance(7), ESM_Weapon(8), ESM_Jammer(9), ESM_Natural(10),
+	ACOUSTIC_Object(11), ACOUSTIC_Submarine(12), ACOUSTIC_Variable_Depth_Sonar(13), ACOUSTIC_Array_Sonar(14), ACOUSTIC_Active_Sonar(15), ACOUSTIC_Torpedo_Sonar(16), ACOUSTIC_Sono_Buoy(17), ACOUSTIC_Decoy_Signal(18),
+	ACOUSTIC_Hit_Noise(19), ACOUSTIC_Propeller_Noise(20), ACOUSTIC_Underwater_Telephone(21), ACOUSTIC_Communication(22), ACOUSTIC_Noise(23), LASER_Range_Finder(24), LASER_Designator(25), LASER_Beam_Rider(26), LASER_Dazzler(27),
+	LASER_Lidar(28), LASER_Weapon(29), VISUAL_Object(30);
+
+	int function;
+
+	public int getFunction() {
+	    return this.function;
+	}
+
+	private Function(int function) {
+	    this.function = function;
+	}
+
+	public static Function valueOfFunction(int function) {
+
+	    return switch (function) {
+	    case 0 -> Unknown;
+	    case 1 ->
+		ESM_Beacon_Transponder;
+	    case 2 ->
+		ESM_Navigation;
+	    case 3 ->
+		ESM_Voice_Communication;
+	    case 4 ->
+		ESM_Data_Communication;
+	    case 5 ->
+		ESM_Radar;
+	    case 6 ->
+		ESM_Iff;
+	    case 7 ->
+		ESM_Guidance;
+	    case 8 ->
+		ESM_Weapon;
+	    case 9 ->
+		ESM_Jammer;
+	    case 10 ->
+		ESM_Natural;
+	    case 11 ->
+		ACOUSTIC_Object;
+	    case 12 ->
+		ACOUSTIC_Submarine;
+	    case 13 ->
+		ACOUSTIC_Variable_Depth_Sonar;
+	    case 14 ->
+		ACOUSTIC_Array_Sonar;
+	    case 15 ->
+		ACOUSTIC_Active_Sonar;
+	    case 16 ->
+		ACOUSTIC_Torpedo_Sonar;
+	    case 17 ->
+		ACOUSTIC_Sono_Buoy;
+	    case 18 ->
+		ACOUSTIC_Decoy_Signal;
+	    case 19 ->
+		ACOUSTIC_Hit_Noise;
+	    case 20 ->
+		ACOUSTIC_Propeller_Noise;
+	    case 21 ->
+		ACOUSTIC_Underwater_Telephone;
+	    case 22 ->
+		ACOUSTIC_Communication;
+	    case 23 ->
+		ACOUSTIC_Noise;
+	    case 24 ->
+		LASER_Range_Finder;
+	    case 25 ->
+		LASER_Designator;
+	    case 26 ->
+		LASER_Beam_Rider;
+	    case 27 ->
+		LASER_Dazzler;
+	    case 28 ->
+		LASER_Lidar;
+	    case 29 ->
+		LASER_Weapon;
+	    case 30 ->
+		VISUAL_Object;
+
+	    default -> Unknown;
+	    };
+	}
+
+	@Override
+	public String toString() {
+	    return String.valueOf(this.function);
+	}
+    }
 
     private String emissionID;
     private DeleteFlag deleteFlag;
@@ -96,9 +236,9 @@ public class EMISSION extends SEDAPExpressMessage {
     private List<Double> frequencies;
     private Double bandwidth;
     private Double power;
-    private Integer freqAgility;
-    private Integer prfAgility;
-    private Integer function;
+    private FreqAgility freqAgility;
+    private PRFAgility prfAgility;
+    private Function function;
     private Integer spotNumber;
     private char[] sidc;
     private String comment;
@@ -199,27 +339,27 @@ public class EMISSION extends SEDAPExpressMessage {
 	this.power = power;
     }
 
-    public Integer getFreqAgility() {
+    public FreqAgility getFreqAgility() {
 	return this.freqAgility;
     }
 
-    public void setFreqAgility(Integer freqAgility) {
+    public void setFreqAgility(FreqAgility freqAgility) {
 	this.freqAgility = freqAgility;
     }
 
-    public Integer getPrfAgility() {
+    public PRFAgility getPrfAgility() {
 	return this.prfAgility;
     }
 
-    public void setPrfAgility(Integer prfAgility) {
+    public void setPrfAgility(PRFAgility prfAgility) {
 	this.prfAgility = prfAgility;
     }
 
-    public Integer getFunction() {
+    public Function getFunction() {
 	return this.function;
     }
 
-    public void setFunction(Integer function) {
+    public void setFunction(Function function) {
 	this.function = function;
     }
 
@@ -276,7 +416,8 @@ public class EMISSION extends SEDAPExpressMessage {
      * @param comment
      */
     public EMISSION(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String emissionID, DeleteFlag deleteFlag, Double sensorLatitude, Double sensorLongitude,
-	    Double sensorAltitude, Double emitterLatitude, Double emitterLongitude, Double emitterAltitude, Double bearing, List<Double> frequency, Double bandwidth, Double power, Integer freqAgility, Integer prfAgility, Integer function,
+	    Double sensorAltitude, Double emitterLatitude, Double emitterLongitude, Double emitterAltitude, Double bearing, List<Double> frequency, Double bandwidth, Double power, FreqAgility freqAgility, PRFAgility prfAgility,
+	    Function function,
 	    Integer spotNumber, char[] sidc, String comment) {
 
 	super(number, time, sender, classification, acknowledgement, mac);
@@ -469,7 +610,13 @@ public class EMISSION extends SEDAPExpressMessage {
 	    if (value.isBlank()) {
 		SEDAPExpressMessage.logger.logp(Level.INFO, "EMISSION", "EMISSION(Iterator<String> message)", "Optional field \"freqAgility\" is empty!");
 	    } else if (!value.isEmpty() && SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.INTEGER_MATCHER, value)) {
-		this.freqAgility = Integer.valueOf(value);
+		int freqAgilityValue = Integer.parseInt(value);
+		if (freqAgilityValue >= 0 && freqAgilityValue <= 5) {
+		    this.freqAgility = FreqAgility.valueOfFreqAgility(freqAgilityValue);
+		} else {
+		    this.freqAgility = FreqAgility.Unknown;
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "EMISSION", "EMISSION(Iterator<String> message)", "Optional field \"freqAgility\" contains invalid value!", value);
+		}
 	    } else {
 		SEDAPExpressMessage.logger.logp(Level.SEVERE, "EMISSION", "EMISSION(Iterator<String> message)", "Optional field \"freqAgility\" contains invalid value!", value);
 	    }
@@ -481,7 +628,13 @@ public class EMISSION extends SEDAPExpressMessage {
 	    if (value.isBlank()) {
 		SEDAPExpressMessage.logger.logp(Level.INFO, "EMISSION", "EMISSION(Iterator<String> message)", "Optional field \"prfAgility\" is empty!");
 	    } else if (!value.isEmpty() && SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.INTEGER_MATCHER, value)) {
-		this.prfAgility = Integer.valueOf(value);
+		int prfAgilityValueValue = Integer.parseInt(value);
+		if (prfAgilityValueValue >= 0 && prfAgilityValueValue <= 7) {
+		    this.prfAgility = PRFAgility.valueOfPRFAgility(prfAgilityValueValue);
+		} else {
+		    this.prfAgility = PRFAgility.UnknownPRF;
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "EMISSION", "EMISSION(Iterator<String> message)", "Optional field \"prfAgility\" contains invalid value!", value);
+		}
 	    } else {
 		SEDAPExpressMessage.logger.logp(Level.SEVERE, "EMISSION", "EMISSION(Iterator<String> message)", "Optional field \"prfAgility\" contains invalid value!", value);
 	    }
@@ -493,7 +646,13 @@ public class EMISSION extends SEDAPExpressMessage {
 	    if (value.isBlank()) {
 		SEDAPExpressMessage.logger.logp(Level.INFO, "EMISSION", "EMISSION(Iterator<String> message)", "Optional field \"function\" is empty!");
 	    } else if (!value.isEmpty() && SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.INTEGER_MATCHER, value)) {
-		this.function = Integer.valueOf(value);
+		int functionValue = Integer.parseInt(value);
+		if (functionValue >= 0 && functionValue <= 30) {
+		    this.function = Function.valueOfFunction(functionValue);
+		} else {
+		    this.function = Function.Unknown;
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "EMISSION", "EMISSION(Iterator<String> message)", "Optional field \"function\" contains invalid value!", value);
+		}
 	    } else {
 		SEDAPExpressMessage.logger.logp(Level.SEVERE, "EMISSION", "EMISSION(Iterator<String> message)", "Optional field \"function\" contains invalid value!", value);
 	    }

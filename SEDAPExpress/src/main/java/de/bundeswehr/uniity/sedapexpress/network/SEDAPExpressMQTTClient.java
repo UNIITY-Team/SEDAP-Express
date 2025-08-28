@@ -120,8 +120,32 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 	    final String clientUsername, final String clientPassword,
 	    final InputStream caCertificateStream, final InputStream clientCertificateStream, InputStream clientKeyFileStream, final List<String> filterNames) {
 
+	this(mqttAddress, name, clientUsername, clientPassword, caCertificateStream, clientCertificateStream, clientKeyFileStream, filterNames, "SEDAP-X/");
+    }
+
+    /**
+     * Instantiate a new SEDAP-Express MQTT client
+     * 
+     * @param mqttAddress
+     * @param name
+     * @param clientUsername
+     * @param clientPassword
+     * @param caCertificateStream
+     * @param clientCertificateStream
+     * @param clientKeyFileStream
+     * @param filterNames             List of topics/path which should be filted
+     * @param rootPath                default "SEDAP-X"
+     */
+    public SEDAPExpressMQTTClient(final String mqttAddress, final String name,
+	    final String clientUsername, final String clientPassword,
+	    final InputStream caCertificateStream, final InputStream clientCertificateStream, InputStream clientKeyFileStream, final List<String> filterNames, String rootPath) {
+
 	this.mqttAddress = mqttAddress;
-	this.mqttRoot = "SEDAP-X/" + name;
+	if (rootPath.endsWith("/")) {
+	    this.mqttRoot = rootPath + name;
+	} else {
+	    this.mqttRoot = rootPath + "/" + name;
+	}
 
 	this.clientUsername = clientUsername;
 	this.clientPassword = clientPassword;
@@ -153,6 +177,30 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 		new FileInputStream(caCertificateFile),
 		new FileInputStream(clientCertificateFile),
 		new FileInputStream(clientKeyFileFile), new ArrayList<String>());
+    }
+
+    /**
+     * Instantiate a new SEDAP-Express MQTT client
+     * 
+     * @param mqttAddress
+     * @param name
+     * @param clientUsername
+     * @param clientPassword
+     * @param caCertificateFile
+     * @param clientCertificateFile
+     * @param clientKeyFileFile
+     * @param filterNames           List of topics/path which should be filted
+     * @param rootPath              default "SEDAP-X"
+     * @throws FileNotFoundException
+     */
+    public SEDAPExpressMQTTClient(final String mqttAddress, final String name,
+	    final String clientUsername, final String clientPassword,
+	    final String caCertificateFile, final String clientCertificateFile, String clientKeyFileFile, final List<String> filterNames, String rootPath) throws FileNotFoundException {
+
+	this(mqttAddress, name, clientUsername, clientPassword,
+		new FileInputStream(caCertificateFile),
+		new FileInputStream(clientCertificateFile),
+		new FileInputStream(clientKeyFileFile), new ArrayList<String>(), rootPath);
     }
 
     @Override
@@ -324,7 +372,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
     @Override
     public Exception getLastException() {
 
-	return null;
+	return this.lastException;
     }
 
 }

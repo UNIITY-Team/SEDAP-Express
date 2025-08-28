@@ -450,15 +450,20 @@ public class CONTACT extends SEDAPExpressMessage {
 	    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Incomplete message!");
 	}
 
+	byte latWarning = 0;
+	String latValue = "";
+	byte lonWarning = 0;
+	String lonValue = "";
 	// Latitude
 	if (message.hasNext()) {
 	    value = message.next();
 	    if (value.isBlank()) {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Mandatory field latitude is empty!");
+		latWarning = 1;
 	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
 		this.latitude = Double.valueOf(value);
 	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Mandatory field \"latitude\" contains invalid value!", value);
+		latWarning = 2;
+		latValue = value;
 	    }
 	} else {
 	    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Incomplete message!");
@@ -468,11 +473,12 @@ public class CONTACT extends SEDAPExpressMessage {
 	if (message.hasNext()) {
 	    value = message.next();
 	    if (value.isBlank()) {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Mandatory field \"longitude\" is empty!");
+		lonWarning = 1;
 	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
 		this.longitude = Double.valueOf(value);
 	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Mandatory field \"longitude\" contains invalid value!", value);
+		lonWarning = 2;
+		lonValue = value;
 	    }
 	} else {
 	    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Incomplete message!");
@@ -490,15 +496,29 @@ public class CONTACT extends SEDAPExpressMessage {
 	    }
 	}
 
+	byte relXWarning = 0;
+	byte relYWarning = 0;
+	byte relZWarning = 0;
+
 	// Relative-X-Distance
 	if (message.hasNext()) {
 	    value = message.next();
 	    if (value.isBlank()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"relativeXDistance\" is empty!");
+		relXWarning = 1;
+		if (latWarning == 0 && lonWarning == 0) {
+		    SEDAPExpressMessage.logger.logp(Level.INFO, "CONTACT", "CONTACT(Iterator<String> message)", "Field \"relativeXDistance\" is empty, but Lat/Lon exists!");
+		} else {
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Field \"relativeXDistance\" is empty!");
+		}
 	    } else if (!value.isEmpty() && SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
 		this.relativeXDistance = Double.valueOf(value);
 	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"relativeXDistance\" contains invalid value!", value);
+		relXWarning = 2;
+		if (latWarning == 0 && lonWarning == 0) {
+		    SEDAPExpressMessage.logger.logp(Level.WARNING, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"relativeXDistance\" contains invalid value!", value);
+		} else {
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"relativeXDistance\" contains invalid value!", value);
+		}
 	    }
 	}
 
@@ -506,11 +526,21 @@ public class CONTACT extends SEDAPExpressMessage {
 	if (message.hasNext()) {
 	    value = message.next();
 	    if (value.isBlank()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"relativeYDistance\" is empty!");
+		relYWarning = 1;
+		if (latWarning == 0 && lonWarning == 0) {
+		    SEDAPExpressMessage.logger.logp(Level.INFO, "CONTACT", "CONTACT(Iterator<String> message)", "Field \"relativeYDistance\" is empty, but Lat/Lon exists!");
+		} else {
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Field \"relativeYDistance\" is empty!");
+		}
 	    } else if (!value.isEmpty() && SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
 		this.relativeYDistance = Double.valueOf(value);
 	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"relativeYDistance\" contains invalid value!", value);
+		relYWarning = 2;
+		if (latWarning == 0 && lonWarning == 0) {
+		    SEDAPExpressMessage.logger.logp(Level.WARNING, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"relativeYDistance\" contains invalid value!", value);
+		} else {
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"relativeYDistance\" contains invalid value!", value);
+		}
 	    }
 	}
 
@@ -518,11 +548,59 @@ public class CONTACT extends SEDAPExpressMessage {
 	if (message.hasNext()) {
 	    value = message.next();
 	    if (value.isBlank()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"relativeZDistance\" is empty!");
+		relZWarning = 1;
+		if (latWarning == 0 && lonWarning == 0) {
+		    SEDAPExpressMessage.logger.logp(Level.INFO, "CONTACT", "CONTACT(Iterator<String> message)", "Field \"relativeZDistance\" is empty, but Lat/Lon exists!");
+		} else {
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Field \"relativeZDistance\" is empty!");
+		}
 	    } else if (!value.isEmpty() && SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
 		this.relativeZDistance = Double.valueOf(value);
 	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"relativeZDistance\" contains invalid value!", value);
+		relZWarning = 2;
+		if (latWarning == 0 && lonWarning == 0) {
+		    SEDAPExpressMessage.logger.logp(Level.WARNING, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"relativeZDistance\" contains invalid value!", value);
+		} else {
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"relativeZDistance\" contains invalid value!", value);
+		}
+	    }
+	}
+
+	// Neither Lat/Lon nor relative position information
+	if ((latWarning > 0 || lonWarning > 0) && (relXWarning > 0 || relYWarning > 0 || relZWarning > 0)) {
+	    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Neither valid Lat/Lon nor relative position information!");
+
+	} else if (latWarning == 0 && lonWarning == 0 && relXWarning == 0 && relYWarning == 0 && relZWarning == 0) {
+	    SEDAPExpressMessage.logger.logp(Level.INFO, "CONTACT", "CONTACT(Iterator<String> message)",
+		    "Please specify either longitude/latitude OR relative positions! Relative positions will be ignored if longitude/latitude have been specified.");
+
+	}
+
+	if (relXWarning == 0 && relYWarning == 0 && relZWarning == 0) {
+
+	    if (latWarning == 1) {
+		SEDAPExpressMessage.logger.logp(Level.INFO, "CONTACT", "CONTACT(Iterator<String> message)", "field \"latitude\" is empty, but relative position exists!");
+	    } else if (latWarning == 2) {
+		SEDAPExpressMessage.logger.logp(Level.WARNING, "CONTACT", "CONTACT(Iterator<String> message)", "field \"latitude\" contains invalid value, but relative position exists!", latValue);
+	    }
+
+	    if (lonWarning == 1) {
+		SEDAPExpressMessage.logger.logp(Level.INFO, "CONTACT", "CONTACT(Iterator<String> message)", "field \"longitude\" is empty, but relative position exists!");
+	    } else if (lonWarning == 2) {
+		SEDAPExpressMessage.logger.logp(Level.WARNING, "CONTACT", "CONTACT(Iterator<String> message)", "field \"longitude\" contains invalid value, but relative position exists!", lonValue);
+	    }
+	} else {
+
+	    if (latWarning == 1) {
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "field \"latitude\" is empty!");
+	    } else if (latWarning == 2) {
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "field \"latitude\" contains invalid value!", latValue);
+	    }
+
+	    if (lonWarning == 1) {
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "field \"longitude\" is empty!");
+	    } else if (lonWarning == 2) {
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "field \"longitude\" contains invalid value!", lonValue);
 	    }
 	}
 
@@ -687,6 +765,9 @@ public class CONTACT extends SEDAPExpressMessage {
 	    } else {
 		try {
 		    this.imageData = Base64.decode(value);
+		    if (this.imageData.length > 65000) {
+			SEDAPExpressMessage.logger.logp(Level.WARNING, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"imageData\" exceeds 32768 bytes!");
+		    }
 		} catch (DecoderException e) {
 		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"imageData\" could not be decoded from Base64!");
 		}

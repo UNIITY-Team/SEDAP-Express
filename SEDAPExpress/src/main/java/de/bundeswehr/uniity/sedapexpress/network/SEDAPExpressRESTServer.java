@@ -28,30 +28,28 @@ package de.bundeswehr.uniity.sedapexpress.network;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.URI;
-import java.time.Instant;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.Function;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.net.httpserver.Filter;
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpContext;
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.spi.HttpServerProvider;
 
+import de.bundeswehr.uniity.sedapexpress.json.Message;
+import de.bundeswehr.uniity.sedapexpress.json.SEDAPExpressJSONMessage;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
 
 /**
- * UDP receiver/sender class for SEDAP-Express
+ * REST server class for SEDAP-Express
  *
  * @author Volker Voß
  *
  */
-public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements Runnable {
+public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements HttpHandler {
 
     protected static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     static {
@@ -60,30 +58,29 @@ public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements 
 
     private Exception lastException = null;
 
-    private HttpServer socket;
-
-    private final String receiver;
-
     private final int port;
+
+    private int requestDelay;
 
     private boolean status = true;
 
-    private Thread ownThread;
+    private final Gson gson = new Gson();
+
+    private ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
 
     private static final LinkedBlockingQueue<SEDAPExpressMessage> messageBuffer = new LinkedBlockingQueue<>();
 
     /**
-     * Instantiate a new SEDAP-Express UDP Client
+     * Instantiate a new SEDAP-Express REST server
      *
-     * @param receiver Receiver hostname/IP to be used
-     * @param port     Port to be used
+     * @param port Port to be used
      */
-    public SEDAPExpressRESTServer(String receiver, final int port) {
+    public SEDAPExpressRESTServer(final int port, int requestDelay) {
 
 	super();
 
-	this.receiver = receiver;
 	this.port = port;
+	this.requestDelay = requestDelay;
     }
 
     public boolean connect() {
@@ -92,11 +89,10 @@ public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements 
 	logInput("Starting REST server");
 
 	try {
-	    final HttpServerProvider provider = HttpServerProvider.provider();
-	    final HttpServer server = provider.createHttpServer(new InetSocketAddress(80), 64);
-	    final HttpContext context = server.createContext("/SEDAPExpress");
-	    context.getFilters().add(new TracingFilter());
-	    context.setHandler(SEDAPExpressRESTServer.respondWith(x -> HttpResponse.ok("Hello " + Instant.now()).text()));
+
+	    HttpServer server = HttpServer.create(new InetSocketAddress(this.port), 64);
+	    server.setExecutor(this.threadPoolExecutor);
+	    server.createContext("/", this);
 	    server.start();
 
 	    SEDAPExpressRESTServer.logger.logp(Level.INFO, "SEDAPExpressRESTServer", "run()", "REST server listening on port: " + this.port);
@@ -113,115 +109,70 @@ public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements 
 
     }
 
-    static HttpHandler respondWith(final HttpFunc hf) {
-	return exchange -> {
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
 
-	    final HttpRequest req = HttpRequest.of(exchange);
-	    final HttpResponse res = hf.apply(req);
-
-	    exchange.getResponseHeaders().putAll(res.headers());
+	if ("GET".equals(exchange.getRequestMethod())) {
 
 	    try {
-		exchange.sendResponseHeaders(res.status(), 0);
 
-		try (OutputStream os = exchange.getResponseBody()) {
+		SEDAPExpressJSONMessage jsonMessage = new SEDAPExpressJSONMessage();
 
-		    while (true) {
-			final String entry = SEDAPExpressRESTServer.messageBuffer.take().toString();
-			os.write(entry.getBytes());
-			os.write('|');
-			System.out.println("> " + entry);
-		    }
-		} catch (final IOException | InterruptedException e) {
+		while (!SEDAPExpressRESTServer.messageBuffer.isEmpty()) {
+		    jsonMessage.getMessages().add(new Message(SEDAPExpressRESTServer.messageBuffer.take().toString()));
 
 		}
-	    } catch (final IOException e) {
 
-	    }
-	};
-    }
+		handleResponse(exchange, "", this.gson.toJson(jsonMessage), 200);
 
-    interface HttpFunc extends Function<HttpRequest, HttpResponse> {
-    }
-
-    record HttpRequest(String method, URI requestUri, Headers headers, HttpExchange exchange) {
-
-	static HttpRequest of(final HttpExchange exchange) {
-	    return new HttpRequest(exchange.getRequestMethod(), exchange.getRequestURI(), exchange.getRequestHeaders(), exchange);
-	}
-    }
-
-    record HttpResponse(int status, Headers headers, String body) {
-
-	static HttpResponse ok() {
-	    return HttpResponse.ok("");
-	}
-
-	static HttpResponse ok(final String body) {
-	    return new HttpResponse(200, new Headers(), body);
-	}
-
-	HttpResponse header(final String name, final String value) {
-	    final var res = new HttpResponse(status(), headers(), body());
-	    res.headers().add(name, value);
-	    return res;
-	}
-
-	HttpResponse json() {
-	    return header("Content-type", "application/json");
-	}
-
-	HttpResponse text() {
-	    return header("Content-type", "text/plain");
-	}
-    }
-
-    static class TracingFilter extends Filter {
-
-	@Override
-	public void doFilter(final HttpExchange exchange, final Chain chain) throws IOException {
-	    final var req = HttpRequest.of(exchange);
-	    System.out.println(req.toString());
-	    chain.doFilter(exchange);
-	}
-
-	@Override
-	public String description() {
-	    return "Trace";
-	}
-    }
-
-    @Override
-    public void run() {
-
-	while (this.status) {
-
-	    try {
-
-		// distributeReceivedSEDAPExpressMessage(SEDAPExpressMessage.deserialize(message);
+		logInput("REST server sent " + jsonMessage.getMessages().size() + " messages successfully to the client!");
 
 	    } catch (final Exception e) {
-		this.lastException = e;
 
-		if (this.status) {
-		    SEDAPExpressTCPServer.logger.logp(Level.SEVERE, "SEDAPExpressRESTServer", "run()", "Waiting 2 seconds for reconnect on port:" + this.port);
-		    logInput("Waiting 2 seconds for reconnect on port:" + this.port);
-		    try {
-			Thread.sleep(2000);
-		    } catch (InterruptedException ex) {
-		    }
-		}
 	    }
 
+	} else if ("POST".equals(exchange.getRequestMethod())) {
+
+	    try {
+		String postBodyStr = new String(exchange.getRequestBody().readAllBytes());
+
+		SEDAPExpressJSONMessage jsonMessage = this.gson.fromJson(postBodyStr, SEDAPExpressJSONMessage.class);
+
+		logInput("REST server received " + jsonMessage.getMessages().size() + " messages from the client!");
+
+		jsonMessage.getMessages().forEach(message -> distributeReceivedSEDAPExpressMessage(SEDAPExpressMessage.deserialize(message.getMessage())));
+
+		exchange.getResponseHeaders().set("Content-Type", "application/json;charset=UTF-8");
+		handleResponse(exchange, postBodyStr, "{\"success\":\"true\"}", 200);
+	    } catch (Exception e) {
+
+		handleResponse(exchange, "", "{\"success\":\"false\"}", 400);
+	    }
 	}
+
+    }
+
+    private void handleResponse(HttpExchange httpExchange, String requestParamValue, String responseString, int responseCode) throws IOException {
+
+	OutputStream outputStream = httpExchange.getResponseBody();
+
+	// this line is a must
+	httpExchange.sendResponseHeaders(responseCode, responseString.length());
+
+	outputStream.write(responseString.getBytes());
+
+	outputStream.flush();
+
+	outputStream.close();
+
     }
 
     @Override
     public boolean sendSEDAPExpressMessage(SEDAPExpressMessage message) throws IOException {
 
-	byte[] data = SEDAPExpressMessage.serialize(message).getBytes();
+	SEDAPExpressRESTServer.messageBuffer.add(message);
 
-	return false;
+	return true;
     }
 
     @Override

@@ -31,10 +31,10 @@ import java.util.Iterator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import de.bundeswehr.uniity.sedapexpress.messages.TEXT;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.Acknowledgement;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.Classification;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.DataEncoding;
+import de.bundeswehr.uniity.sedapexpress.messages.TEXT;
 import de.bundeswehr.uniity.sedapexpress.messages.TEXT.TextType;
 
 class TEXTTest {
@@ -76,11 +76,11 @@ class TEXTTest {
 	Assertions.assertEquals("\"This is an alert!\"", text.getTextContent());
 	Assertions.assertNull(text.getReference());
 
-	message = "TEXT;D4;661D458E;324E;C;TRUE;;;2;NONE;\"This is a warning!\"";
+	message = "TEXT;74;661D458E;324E;C;TRUE;;;2;NONE;\"This is a warning!\"";
 
 	text = new TEXT(message);
 
-	Assertions.assertEquals((byte) 0xD4, text.getNumber());
+	Assertions.assertEquals((byte) 0x74, text.getNumber());
 	Assertions.assertEquals(0x661D458EL, text.getTime());
 	Assertions.assertEquals("324E", text.getSender());
 	Assertions.assertEquals(Classification.Confidential, text.getClassification());

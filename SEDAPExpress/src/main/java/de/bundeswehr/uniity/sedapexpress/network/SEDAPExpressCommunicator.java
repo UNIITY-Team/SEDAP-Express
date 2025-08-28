@@ -41,9 +41,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
-import de.bundeswehr.uniity.sedapexpress.messages.TIMESYNC;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.Acknowledgement;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.MessageType;
+import de.bundeswehr.uniity.sedapexpress.messages.TIMESYNC;
 import de.bundeswehr.uniity.sedapexpress.processing.SEDAPExpressInputLoggingSubscriber;
 import de.bundeswehr.uniity.sedapexpress.processing.SEDAPExpressOutputLoggingSubscriber;
 import de.bundeswehr.uniity.sedapexpress.processing.SEDAPExpressSubscriber;
@@ -109,6 +109,10 @@ public abstract class SEDAPExpressCommunicator {
     }
 
     protected ConcurrentHashMap<MessageType, Set<SEDAPExpressSubscriber>> subscriptions = new ConcurrentHashMap<>();
+
+    public ConcurrentHashMap<MessageType, Set<SEDAPExpressSubscriber>> getSubscriptions() {
+	return this.subscriptions;
+    }
 
     /**
      * Subscribe one or more message types

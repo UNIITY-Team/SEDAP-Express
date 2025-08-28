@@ -39,8 +39,8 @@ import org.bouncycastle.pqc.jcajce.spec.FrodoParameterSpec;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import de.bundeswehr.uniity.sedapexpress.utils.FrodoUtils;
 import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
+import de.bundeswehr.uniity.sedapexpress.utils.FrodoUtils;
 
 class FrodoUtilsTest {
 

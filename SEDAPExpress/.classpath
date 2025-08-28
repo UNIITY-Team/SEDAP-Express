@@ -11,7 +11,6 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="lib" path="libs/Gson/gson-2.11.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Gson/gson-2.11.0-javadoc.jar!/"/>
@@ -59,6 +58,17 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/MQTT/org.eclipse.paho.mqttv5.client-1.2.5.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JUnit"/>
+	<classpathentry kind="lib" path="libs/Jakarta/jakarta.annotation-api-2.1.1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/Jakarta/jakarta.validation-api-3.1.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

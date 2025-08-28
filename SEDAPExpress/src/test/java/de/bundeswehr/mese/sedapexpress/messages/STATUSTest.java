@@ -31,9 +31,9 @@ import java.util.Iterator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import de.bundeswehr.uniity.sedapexpress.messages.STATUS;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.Acknowledgement;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.Classification;
+import de.bundeswehr.uniity.sedapexpress.messages.STATUS;
 import de.bundeswehr.uniity.sedapexpress.messages.STATUS.CommandState;
 import de.bundeswehr.uniity.sedapexpress.messages.STATUS.OperationalState;
 import de.bundeswehr.uniity.sedapexpress.messages.STATUS.TechnicalState;

@@ -52,4 +52,7 @@ module sedapexpress {
     requires transitive javafx.controls;
     requires transitive jdk.httpserver;
     requires transitive java.net.http;
+    requires java.compiler;
+    requires jakarta.annotation;
+    requires jakarta.validation;
 }
