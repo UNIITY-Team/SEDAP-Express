@@ -28,6 +28,7 @@ package de.bundeswehr.uniity.sedapexpress.sample.tcpclient;
 import java.io.IOException;
 
 import de.bundeswehr.uniity.sedapexpress.messages.CONTACT;
+import de.bundeswehr.uniity.sedapexpress.messages.EMISSION;
 import de.bundeswehr.uniity.sedapexpress.messages.HEARTBEAT;
 import de.bundeswehr.uniity.sedapexpress.messages.OWNUNIT;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
@@ -65,23 +66,33 @@ public class SampleTCPClient implements SEDAPExpressSubscriber {
 	this.communicator = new SEDAPExpressTCPClient("localhost", 50000);
 	this.communicator.connect();
 
-	this.communicator.subscribeMessages(this, MessageType.OWNUNIT, MessageType.CONTACT, MessageType.HEARTBEAT, MessageType.STATUS);
+	this.communicator.subscribeMessages(this, MessageType.OWNUNIT, MessageType.CONTACT, MessageType.EMISSION, MessageType.HEARTBEAT, MessageType.STATUS);
 	this.senderId = this.communicator.createSenderId();
 
 	// Sample thread as example for how producing messages
 	new Thread(() -> {
 
-	    final STATUS status = new STATUS(this.numberSTATUS++, System.currentTimeMillis(), this.senderId, Classification.Confidential, Acknowledgement.FALSE, null, TechnicalState.Operational, OperationalState.Operational, "MLG", 50.0,
-		    "Tank", 75.3, "MainAkku", 10.8, 23, CommandState.Executed_successfully, "10.8.0.6", "rtsp://10.8.0.6/stream1", "This is a sample!");
+	    while (true) {
 
-	    try {
-		this.communicator.sendSEDAPExpressMessage(status);
-	    } catch (IOException e) {
-		e.printStackTrace();
-	    }
+		final STATUS status = new STATUS(this.numberSTATUS++, System.currentTimeMillis(), this.senderId, Classification.Confidential, Acknowledgement.FALSE, null, TechnicalState.Operational, OperationalState.Operational, "MLG",
+			50.0,
+			"Tank", 75.3, "MainAkku", 10.8, 23, CommandState.Executed_successfully, "10.8.0.6", "rtsp://10.8.0.6/stream1", "This is a sample!");
 
-	    if (this.numberSTATUS == 7f) {
-		this.numberSTATUS = 0;
+		try {
+		    this.communicator.sendSEDAPExpressMessage(status);
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+
+		if (this.numberSTATUS == 0x7f) {
+		    this.numberSTATUS = 0;
+		}
+
+		try {
+		    Thread.sleep(5000);
+		} catch (InterruptedException e) {
+		}
+
 	    }
 
 	}).start();
@@ -98,6 +109,11 @@ public class SampleTCPClient implements SEDAPExpressSubscriber {
 	}
 
 	else if (message instanceof CONTACT contactMessage) {
+
+	    // Write here your own processing code
+	}
+
+	else if (message instanceof EMISSION emissionMessage) {
 
 	    // Write here your own processing code
 	}

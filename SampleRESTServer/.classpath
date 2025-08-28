@@ -53,7 +53,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/SEDAPExpress/libs/MQTT/org.eclipse.paho.mqttv5.client-1.2.5.jar">
+	<classpathentry combineaccessrules="false" kind="src" path="/SEDAPExpress">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
@@ -68,7 +68,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/SEDAPExpress">
+	<classpathentry kind="lib" path="/SEDAPExpress/libs/MQTT/org.eclipse.paho.mqttv5.client-1.2.5.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

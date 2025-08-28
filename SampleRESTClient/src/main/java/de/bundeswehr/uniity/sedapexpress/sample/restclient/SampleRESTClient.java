@@ -23,7 +23,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  */
-package de.bundeswehr.uniity.sedapexpress.samples.udpclient;
+package de.bundeswehr.uniity.sedapexpress.sample.restclient;
 
 import java.io.IOException;
 
@@ -40,16 +40,17 @@ import de.bundeswehr.uniity.sedapexpress.messages.STATUS.CommandState;
 import de.bundeswehr.uniity.sedapexpress.messages.STATUS.OperationalState;
 import de.bundeswehr.uniity.sedapexpress.messages.STATUS.TechnicalState;
 import de.bundeswehr.uniity.sedapexpress.network.SEDAPExpressCommunicator;
-import de.bundeswehr.uniity.sedapexpress.network.SEDAPExpressUDPClient;
+import de.bundeswehr.uniity.sedapexpress.network.SEDAPExpressRESTClient;
+import de.bundeswehr.uniity.sedapexpress.processing.SEDAPExpressSimpleLoggingAdapter;
 import de.bundeswehr.uniity.sedapexpress.processing.SEDAPExpressSubscriber;
 
 /**
- * A sample skeleton class for building a UDP client for SEDAP-Express
+ * A sample skeleton class for building a REST client for SEDAP-Express
  *
  * @author Volker Voß
  *
  */
-public class SampleUDPClient implements SEDAPExpressSubscriber {
+public class SampleRESTClient implements SEDAPExpressSubscriber {
 
     private final SEDAPExpressCommunicator communicator;
 
@@ -58,16 +59,21 @@ public class SampleUDPClient implements SEDAPExpressSubscriber {
     private byte numberSTATUS = 0;
 
     /**
-     * Instantiate a sample UDP client
+     * Instantiate a sample TCP client
+     *
      */
-    public SampleUDPClient() {
+    public SampleRESTClient() {
 
-	this.communicator = new SEDAPExpressUDPClient("192.168.168.12", 10000);
+	this.communicator = new SEDAPExpressRESTClient("http://localhost:50000", 10000);
+	this.communicator.connect();
+
+	// Let's subscribe simple logging adapter for output via console
+	SEDAPExpressSimpleLoggingAdapter loggingAdapter = new SEDAPExpressSimpleLoggingAdapter();
+	this.communicator.subscripeForInputLogging(loggingAdapter);
+	this.communicator.subscripeForOutputLogging(loggingAdapter);
 
 	this.communicator.subscribeMessages(this, MessageType.OWNUNIT, MessageType.CONTACT, MessageType.EMISSION, MessageType.HEARTBEAT, MessageType.STATUS);
-
 	this.senderId = this.communicator.createSenderId();
-	this.communicator.connect();
 
 	// Sample thread as example for how producing messages
 	new Thread(() -> {
@@ -139,11 +145,7 @@ public class SampleUDPClient implements SEDAPExpressSubscriber {
     }
 
     public static void main(String[] args) {
-	new SampleUDPClient();
+	new SampleRESTClient();
 
-	try {
-	    Thread.sleep(Integer.MAX_VALUE);
-	} catch (InterruptedException e) {
-	}
     }
 }
