@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Created-By: 23.0.1+11 (AdoptOpenJDK)
+Created-By: 24.0.2+12 (AdoptOpenJDK)
 Built-By: Volker Voss (volker.v@gmx.net)
-Build-Jdk: 23.0.1+11
+Build-Jdk: 24.0.2+12
 Sealed: true
 Specification-Title: SEDAP-Express Framework
 Specification-Version: 1.0
@@ -10,8 +10,5 @@ Implementation-Title: de.bundeswehr.mese.sedapexpress
 Implementation-Version: 1.0
 Implementation-Vendor: Federal Armed Forces of Germany
 Main-Class: de.bundeswehr.mese.sedapexpress.ReleaseInfo
-Class-Path: . bcpkix-jdk18on-1.78.1.jar 
- bcprov-jdk18on-1.78.1.jar bcutil-jdk18on-1.78.1.jar
- gson-2.11.0.jar protobuf-java-4.28.1.jar protobuf-java-util-4.28.1.jar
- javafx.base javafx.controls javafx.fxml
+Class-Path: . 
 
