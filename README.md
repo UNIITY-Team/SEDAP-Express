@@ -39,6 +39,9 @@ Almost the same client as the TCP variant, but for use cases in which only UDP c
 ### SampleRESTClient
 If you want to implement a REST API client for SEDAP Express, you can use this sample client as a basis. It already contains everything you need for a smooth start.
 
+### SampleRESTServer
+When using the REST API it's also possible to play the server role. This is an example for how to easy setup a simple SEDAP-Express REST server.
+
 ### SampleProtobufClient
 The protocol buffer standard is another method for exchanging SEDAP Express messages. You can see how it works in this example client. As always, the required libraries can already be found in the libs folder of the project.
 
