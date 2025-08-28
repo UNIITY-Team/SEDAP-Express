@@ -53,11 +53,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/SEDAPExpress">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="/SEDAPExpress/libs/Jssc/jssc-2.9.6.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
@@ -69,6 +64,21 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/SEDAPExpress/libs/MQTT/org.eclipse.paho.mqttv5.client-1.2.5.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/SEDAPExpress/dist/SEDAPExpress-v1.0.0.jar" sourcepath="/SEDAPExpress/dist/SEDAPExpress-v1.0.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/SEDAPExpress/libs/Jakarta/jakarta.annotation-api-2.1.1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/SEDAPExpress/libs/Jakarta/jakarta.validation-api-3.1.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
