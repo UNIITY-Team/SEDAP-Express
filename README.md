@@ -2,7 +2,7 @@
 
 ## <span style="color:blue">Remarks</span> 
 <span style="color:blue">
-This repository has not yet been officially published. The ICD (Interface Description Document) is actually ready, but many software parts and source, which makes it easy to develop a SEDAP-Express interface, are still missing. This repository will be completed until the end of august.
+This repository has not yet been officially published. The ICD (Interface Description Document) is actually ready, but many software parts and source, which makes it very easy to develop a SEDAP-Express interface, are unfortunately still missing. This repository will be completed until the end of the year.
 </span>
  
 ## Scope
