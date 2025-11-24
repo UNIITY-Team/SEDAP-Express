@@ -31,6 +31,7 @@ import de.bundeswehr.uniity.sedapexpress.messages.CONTACT;
 import de.bundeswehr.uniity.sedapexpress.messages.EMISSION;
 import de.bundeswehr.uniity.sedapexpress.messages.HEARTBEAT;
 import de.bundeswehr.uniity.sedapexpress.messages.OWNUNIT;
+import de.bundeswehr.uniity.sedapexpress.messages.POINT;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.Acknowledgement;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.Classification;
@@ -64,7 +65,7 @@ public class SampleUDPClient implements SEDAPExpressSubscriber {
 
 	this.communicator = new SEDAPExpressUDPClient("192.168.168.12", 10000);
 
-	this.communicator.subscribeMessages(this, MessageType.OWNUNIT, MessageType.CONTACT, MessageType.EMISSION, MessageType.HEARTBEAT, MessageType.STATUS);
+	this.communicator.subscribeMessages(this, MessageType.OWNUNIT, MessageType.CONTACT, MessageType.POINT, MessageType.EMISSION, MessageType.HEARTBEAT, MessageType.STATUS);
 
 	this.senderId = this.communicator.createSenderId();
 	this.communicator.connect();
@@ -109,6 +110,11 @@ public class SampleUDPClient implements SEDAPExpressSubscriber {
 	}
 
 	else if (message instanceof CONTACT contactMessage) {
+
+	    // Write here your own processing code
+	}
+
+	else if (message instanceof POINT pointMessage) {
 
 	    // Write here your own processing code
 	}

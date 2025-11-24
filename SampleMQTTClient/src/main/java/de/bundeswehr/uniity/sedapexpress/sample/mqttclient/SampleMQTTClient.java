@@ -32,6 +32,7 @@ import de.bundeswehr.uniity.sedapexpress.messages.CONTACT;
 import de.bundeswehr.uniity.sedapexpress.messages.EMISSION;
 import de.bundeswehr.uniity.sedapexpress.messages.HEARTBEAT;
 import de.bundeswehr.uniity.sedapexpress.messages.OWNUNIT;
+import de.bundeswehr.uniity.sedapexpress.messages.POINT;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.Acknowledgement;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.Classification;
@@ -76,7 +77,7 @@ public class SampleMQTTClient implements SEDAPExpressSubscriber {
 	    System.exit(1);
 	}
 
-	this.communicator.subscribeMessages(this, MessageType.OWNUNIT, MessageType.CONTACT, MessageType.EMISSION, MessageType.HEARTBEAT, MessageType.STATUS);
+	this.communicator.subscribeMessages(this, MessageType.OWNUNIT, MessageType.CONTACT, MessageType.POINT, MessageType.EMISSION, MessageType.HEARTBEAT, MessageType.STATUS);
 	this.senderId = this.communicator.createSenderId();
 
 	// Sample thread as example for how producing messages
@@ -119,6 +120,11 @@ public class SampleMQTTClient implements SEDAPExpressSubscriber {
 	}
 
 	else if (message instanceof CONTACT contactMessage) {
+
+	    // Write here your own processing code
+	}
+
+	else if (message instanceof POINT pointMessage) {
 
 	    // Write here your own processing code
 	}
