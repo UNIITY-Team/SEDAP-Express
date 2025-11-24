@@ -130,6 +130,12 @@ public class COMMAND extends SEDAPExpressMessage {
 
     }
 
+    public enum CameraMode {
+	TV, // Visible light
+	IR, // Infra red
+	LL // Low Light
+    }
+
     public static final String CMDTYPE_ENGAGEMENT_CMD_Start = "start-engagement";
     public static final String CMDTYPE_ENGAGEMENT_CMD_Hold = "hold-engagement";
     public static final String CMDTYPE_ENGAGEMENT_CMD_Stop = "stop-engagement";

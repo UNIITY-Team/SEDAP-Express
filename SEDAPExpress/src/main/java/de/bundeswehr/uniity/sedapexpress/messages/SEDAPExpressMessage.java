@@ -56,7 +56,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 
     public enum MessageType {
 
-	ACKNOWLEDGE, COMMAND, CONTACT, EMISSION, GENERIC, GRAPHIC, HEARTBEAT, KEYEXCHANGE, METEO, OWNUNIT, RESEND, STATUS, TEXT, TIMESYNC;
+	ACKNOWLEDGE, COMMAND, CONTACT, POINT, EMISSION, GENERIC, GRAPHIC, HEARTBEAT, KEYEXCHANGE, METEO, OWNUNIT, RESEND, STATUS, TEXT, TIMESYNC;
 
 	public static MessageType valueOfMessageType(String type) {
 	    return MessageType.valueOf(type.toUpperCase());
@@ -564,7 +564,8 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 
 	Arrays.asList(
 
-		ACKNOWLEDGE.class, COMMAND.class, CONTACT.class, EMISSION.class, GENERIC.class, GRAPHIC.class, HEARTBEAT.class, TIMESYNC.class, KEYEXCHANGE.class, METEO.class, OWNUNIT.class, RESEND.class, STATUS.class, TEXT.class)
+		ACKNOWLEDGE.class, COMMAND.class, CONTACT.class, POINT.class, EMISSION.class, GENERIC.class, GRAPHIC.class, HEARTBEAT.class, TIMESYNC.class, KEYEXCHANGE.class, METEO.class, OWNUNIT.class, RESEND.class, STATUS.class,
+		TEXT.class)
 		.forEach(clazz -> {
 		    try {
 			SEDAPExpressMessage.messageNameToConstructor.put(clazz.getSimpleName(), clazz.getConstructor(paramTypes));
@@ -579,7 +580,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 			\n
 		***************************************************
 		***************************************************
-		** SEDAP-Express v1.1 (November 11th, 2025)      **
+		** SEDAP-Express v1.2 (November 21th, 2025)      **
 		** Licensed under the BSD-2-clause License       **
 		** (C)2024-2025, Federal Armed Forces of Germany **
 		***************************************************
