@@ -1,7 +1,7 @@
 /**
  * Note: This license has also been called the “Simplified BSD License” and the “FreeBSD License”.
  *
- * Copyright 2024-2025 UNIITY POC: Volker Voß, Federal Armed Forces of Germany
+ * Copyright 2024-2026 UNIITY POC: Volker Voß, Federal Armed Forces of Germany
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -580,9 +580,9 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 			\n
 		***************************************************
 		***************************************************
-		** SEDAP-Express v1.2 (November 21th, 2025)      **
+		** SEDAP-Express v1.2.1 (February 23th, 2026)    **
 		** Licensed under the BSD-2-clause License       **
-		** (C)2024-2025, Federal Armed Forces of Germany **
+		** (C)2024-2026, Federal Armed Forces of Germany **
 		***************************************************
 		***************************************************\n""");
     }
