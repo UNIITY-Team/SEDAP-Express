@@ -13,22 +13,25 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/Gson/gson-2.13.2.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Gson/gson-2.13.2-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Gson/gson-2.13.2-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Protobuf/protobuf-java-4.33.5.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Protobuf/protobuf-java-4.33.5-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Protobuf/protobuf-java-util-4.33.5.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Protobuf/protobuf-java-util-4.33.5-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/Jssc/jssc-2.10.2.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Jssc/jssc-2.10.2-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
@@ -44,16 +47,19 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcpkix-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcpkix-jdk18on-1.82-sources.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcpkix-jdk18on-1.83-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcprov-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcprov-jdk18on-1.82-sources.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcprov-jdk18on-1.83-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcutil-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcutil-jdk18on-1.82-sources.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcutil-jdk18on-1.83-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
