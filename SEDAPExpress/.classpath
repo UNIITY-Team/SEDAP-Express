@@ -17,12 +17,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Protobuf/protobuf-java-4.33.1.jar">
+	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Protobuf/protobuf-java-4.33.5.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Protobuf/protobuf-java-util-4.33.1.jar">
+	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Protobuf/protobuf-java-util-4.33.5.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
@@ -42,17 +42,17 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Bouncycastle/bcpkix-jdk18on-1.82.jar" sourcepath="libs/Bouncycastle/bcpkix-jdk18on-1.82-sources.jar">
+	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcpkix-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcpkix-jdk18on-1.82-sources.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Bouncycastle/bcprov-jdk18on-1.82.jar" sourcepath="libs/Bouncycastle/bcprov-jdk18on-1.82-sources.jar">
+	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcprov-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcprov-jdk18on-1.82-sources.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Bouncycastle/bcutil-jdk18on-1.82.jar" sourcepath="libs/Bouncycastle/bcutil-jdk18on-1.82-sources.jar">
+	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcutil-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcutil-jdk18on-1.82-sources.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

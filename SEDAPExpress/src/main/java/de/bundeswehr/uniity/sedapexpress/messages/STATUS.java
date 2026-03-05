@@ -77,7 +77,7 @@ public class STATUS extends SEDAPExpressMessage {
 
     public enum OperationalState {
 
-	Not_operational(0), Degraded(1), Operational(2);
+	Not_operational(0), Degraded(1), Operational(2), Operational_semi_autonomous(3), Operational_autonomous(4);
 
 	int state;
 
@@ -95,6 +95,8 @@ public class STATUS extends SEDAPExpressMessage {
 	    case 0 -> Not_operational;
 	    case 1 -> Degraded;
 	    case 2 -> Operational;
+	    case 3 -> Operational_semi_autonomous;
+	    case 4 -> Operational_autonomous;
 	    default -> Not_operational;
 	    };
 	}
