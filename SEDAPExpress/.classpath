@@ -13,25 +13,13 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/Gson/gson-2.13.2.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Gson/gson-2.13.2-javadoc.jar!/"/>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Protobuf/protobuf-java-4.33.5.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Protobuf/protobuf-java-4.33.5-javadoc.jar!/"/>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Protobuf/protobuf-java-util-4.33.5.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Protobuf/protobuf-java-util-4.33.5-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:libs/Gson/gson-2.13.2-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/Jssc/jssc-2.10.2.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Jssc/jssc-2.10.2-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:libs/Jssc/jssc-2.10.2-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
@@ -45,21 +33,21 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcpkix-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcpkix-jdk18on-1.82-sources.jar">
+	<classpathentry kind="lib" path="libs/Bouncycastle/bcpkix-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcpkix-jdk18on-1.82-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcpkix-jdk18on-1.83-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:libs/Bouncycastle/bcpkix-jdk18on-1.83-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcprov-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcprov-jdk18on-1.82-sources.jar">
+	<classpathentry kind="lib" path="libs/Bouncycastle/bcprov-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcprov-jdk18on-1.82-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcprov-jdk18on-1.83-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:libs/Bouncycastle/bcprov-jdk18on-1.83-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcutil-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcutil-jdk18on-1.82-sources.jar">
+	<classpathentry kind="lib" path="libs/Bouncycastle/bcutil-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcutil-jdk18on-1.82-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Projekte/VolkerVoss/SEDAP-Express/SEDAPExpress/libs/Bouncycastle/bcutil-jdk18on-1.83-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:libs/Bouncycastle/bcutil-jdk18on-1.83-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
@@ -69,13 +57,25 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JUnit"/>
-	<classpathentry kind="lib" path="libs/Jakarta/jakarta.annotation-api-2.1.1.jar">
+	<classpathentry kind="lib" path="libs/Jakarta/jakarta.annotation-api-3.0.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/Jakarta/jakarta.validation-api-3.1.1.jar">
 		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/Protobuf/protobuf-java-4.34.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:libs/Protobuf/protobuf-java-4.34.0-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/Protobuf/protobuf-java-util-4.34.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:libs/libs/Protobuf/protobuf-java-util-4.34.0-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>

@@ -1,9 +1,0 @@
-module:sedapexpress
-de.bundeswehr.uniity.sedapexpress
-de.bundeswehr.uniity.sedapexpress.controls
-de.bundeswehr.uniity.sedapexpress.json
-de.bundeswehr.uniity.sedapexpress.messages
-de.bundeswehr.uniity.sedapexpress.network
-de.bundeswehr.uniity.sedapexpress.processing
-de.bundeswehr.uniity.sedapexpress.protobuf
-de.bundeswehr.uniity.sedapexpress.utils
