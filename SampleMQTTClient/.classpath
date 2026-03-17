@@ -17,8 +17,9 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/SEDAPExpress/dist/SEDAPExpress-1.3.0.jar" sourcepath="/SEDAPExpress/dist/SEDAPExpress-1.3.0-sources.jar">
+	<classpathentry kind="lib" path="/SEDAPExpress/dist/sedapexpress-1.3.0.jar" sourcepath="/SEDAPExpress/dist/sedapexpress-1.3.0-sources.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/dist/sedapexpress-1.3.0-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
@@ -56,19 +57,19 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/SEDAPExpress/libs/Protobuf/protobuf-java-4.33.5.jar">
+	<classpathentry kind="lib" path="/SEDAPExpress/libs/Protobuf/protobuf-java-4.34.0.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Protobuf/protobuf-java-4.33.5-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Protobuf/protobuf-java-4.34.0-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/SEDAPExpress/libs/Protobuf/protobuf-java-util-4.33.5.jar">
+	<classpathentry kind="lib" path="/SEDAPExpress/libs/Protobuf/protobuf-java-util-4.34.0.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Protobuf/protobuf-java-util-4.33.5-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Protobuf/protobuf-java-util-4.34.0-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/SEDAPExpress/libs/Jakarta/jakarta.annotation-api-2.1.1.jar">
+	<classpathentry kind="lib" path="/SEDAPExpress/libs/Jakarta/jakarta.annotation-api-3.0.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
