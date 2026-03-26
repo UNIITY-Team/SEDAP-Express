@@ -710,22 +710,22 @@ public class POINT extends SEDAPExpressMessage {
 
 		.append(this.pointID).append(";")
 
-		.append((this.deleteFlag != null) ? this.deleteFlag : "").append(";")
+		.append((this.deleteFlag != null && this.deleteFlag != DeleteFlag.FALSE) ? this.deleteFlag : "").append(";")
 
-		.append((this.latitude != null) ? SEDAPExpressMessage.numberFormatter.format(this.latitude) : "").append(";").append(this.longitude != null ? SEDAPExpressMessage.numberFormatter.format(this.longitude) : "").append(";")
-		.append(this.altitude != null ? SEDAPExpressMessage.numberFormatter.format(this.altitude) : "").append(";")
+		.append((this.latitude != null) ? SEDAPExpressMessage.NumberFormatter.format(this.latitude) : "").append(";").append(this.longitude != null ? SEDAPExpressMessage.NumberFormatter.format(this.longitude) : "").append(";")
+		.append(this.altitude != null ? SEDAPExpressMessage.NumberFormatter.format(this.altitude) : "").append(";")
 
-		.append(this.relativeXDistance != null ? SEDAPExpressMessage.numberFormatter.format(this.relativeXDistance) : "").append(";")
-		.append(this.relativeYDistance != null ? SEDAPExpressMessage.numberFormatter.format(this.relativeYDistance) : "").append(";")
-		.append(this.relativeZDistance != null ? SEDAPExpressMessage.numberFormatter.format(this.relativeZDistance) : "").append(";")
+		.append(this.relativeXDistance != null ? SEDAPExpressMessage.NumberFormatter.format(this.relativeXDistance) : "").append(";")
+		.append(this.relativeYDistance != null ? SEDAPExpressMessage.NumberFormatter.format(this.relativeYDistance) : "").append(";")
+		.append(this.relativeZDistance != null ? SEDAPExpressMessage.NumberFormatter.format(this.relativeZDistance) : "").append(";")
 
-		.append(this.speed != null ? SEDAPExpressMessage.numberFormatter.format(this.speed) : "").append(";").append(this.course != null ? SEDAPExpressMessage.numberFormatter.format(this.course) : "").append(";")
+		.append(this.speed != null ? SEDAPExpressMessage.NumberFormatter.format(this.speed) : "").append(";").append(this.course != null ? SEDAPExpressMessage.NumberFormatter.format(this.course) : "").append(";")
 
-		.append(this.heading != null ? SEDAPExpressMessage.numberFormatter.format(this.heading) : "").append(";").append(this.roll != null ? SEDAPExpressMessage.numberFormatter.format(this.roll) : "").append(";")
-		.append(this.pitch != null ? SEDAPExpressMessage.numberFormatter.format(this.pitch) : "").append(";")
+		.append(this.heading != null ? SEDAPExpressMessage.NumberFormatter.format(this.heading) : "").append(";").append(this.roll != null ? SEDAPExpressMessage.NumberFormatter.format(this.roll) : "").append(";")
+		.append(this.pitch != null ? SEDAPExpressMessage.NumberFormatter.format(this.pitch) : "").append(";")
 
-		.append(this.width != null ? SEDAPExpressMessage.numberFormatter.format(this.width) : "").append(";").append(this.length != null ? SEDAPExpressMessage.numberFormatter.format(this.length) : "").append(";")
-		.append(this.height != null ? SEDAPExpressMessage.numberFormatter.format(this.height) : "").append(";")
+		.append(this.width != null ? SEDAPExpressMessage.NumberFormatter.format(this.width) : "").append(";").append(this.length != null ? SEDAPExpressMessage.NumberFormatter.format(this.length) : "").append(";")
+		.append(this.height != null ? SEDAPExpressMessage.NumberFormatter.format(this.height) : "").append(";")
 
 		.append(this.name != null ? this.name : "").append(";")
 

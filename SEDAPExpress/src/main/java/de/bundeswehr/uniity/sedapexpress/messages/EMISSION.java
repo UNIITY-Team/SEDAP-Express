@@ -607,7 +607,7 @@ public class EMISSION extends SEDAPExpressMessage {
 
 	}
 
-// Bandwidth
+	// Bandwidth
 	if (message.hasNext()) {
 	    value = message.next();
 	    if (value.isBlank()) {
@@ -752,20 +752,20 @@ public class EMISSION extends SEDAPExpressMessage {
 
 		.append((this.emissionID != null) ? this.emissionID : "").append(";")
 
-		.append(this.deleteFlag != null ? this.deleteFlag : "").append(";")
+		.append((this.deleteFlag != null && this.deleteFlag != DeleteFlag.FALSE) ? this.deleteFlag : "").append(";")
 
-		.append(this.sensorLatitude != null ? SEDAPExpressMessage.numberFormatter.format(this.sensorLatitude) : "").append(";")
-		.append(this.sensorLongitude != null ? SEDAPExpressMessage.numberFormatter.format(this.sensorLongitude) : "").append(";")
-		.append(this.sensorAltitude != null ? SEDAPExpressMessage.numberFormatter.format(this.sensorAltitude) : "").append(";")
+		.append(this.sensorLatitude != null ? SEDAPExpressMessage.NumberFormatter.format(this.sensorLatitude) : "").append(";")
+		.append(this.sensorLongitude != null ? SEDAPExpressMessage.NumberFormatter.format(this.sensorLongitude) : "").append(";")
+		.append(this.sensorAltitude != null ? SEDAPExpressMessage.NumberFormatter.format(this.sensorAltitude) : "").append(";")
 
-		.append(this.emitterLatitude != null ? SEDAPExpressMessage.numberFormatter.format(this.emitterLatitude) : "").append(";")
-		.append(this.emitterLongitude != null ? SEDAPExpressMessage.numberFormatter.format(this.emitterLongitude) : "").append(";")
-		.append(this.emitterAltitude != null ? SEDAPExpressMessage.numberFormatter.format(this.emitterAltitude) : "").append(";")
+		.append(this.emitterLatitude != null ? SEDAPExpressMessage.NumberFormatter.format(this.emitterLatitude) : "").append(";")
+		.append(this.emitterLongitude != null ? SEDAPExpressMessage.NumberFormatter.format(this.emitterLongitude) : "").append(";")
+		.append(this.emitterAltitude != null ? SEDAPExpressMessage.NumberFormatter.format(this.emitterAltitude) : "").append(";")
 
-		.append(this.bearing != null ? SEDAPExpressMessage.numberFormatter.format(this.bearing) : "").append(";")
+		.append(this.bearing != null ? SEDAPExpressMessage.NumberFormatter.format(this.bearing) : "").append(";")
 
-		.append(this.frequencies != null ? getStringFromList(this.frequencies) : "").append(";").append(this.bandwidth != null ? SEDAPExpressMessage.numberFormatter.format(this.bandwidth) : "").append(";")
-		.append(this.power != null ? SEDAPExpressMessage.numberFormatter.format(this.power) : "").append(";").append(this.freqAgility != null ? this.freqAgility : "").append(";")
+		.append(this.frequencies != null ? getStringFromList(this.frequencies) : "").append(";").append(this.bandwidth != null ? SEDAPExpressMessage.NumberFormatter.format(this.bandwidth) : "").append(";")
+		.append(this.power != null ? SEDAPExpressMessage.NumberFormatter.format(this.power) : "").append(";").append(this.freqAgility != null ? this.freqAgility : "").append(";")
 		.append(this.prfAgility != null ? this.prfAgility : "").append(";")
 
 		.append(this.function != null ? this.function : "").append(";")

@@ -90,4 +90,15 @@ class RESENDTest {
 	Assertions.assertEquals((byte) 0x33, resend.getNumberOfTheMissingMessage());
 
     }
+
+    @Test
+    final void testSamplesFromDocu() {
+
+	String[] messages = new String[] {
+		"RESEND;20;0195238E25AD;129E;R;;;FE2A;TEXT;5D"
+	};
+
+	Arrays.asList(messages).forEach(msg -> Assertions.assertEquals(msg, new RESEND(msg).toString()));
+
+    }
 }

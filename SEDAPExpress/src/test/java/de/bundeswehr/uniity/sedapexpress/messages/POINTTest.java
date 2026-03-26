@@ -304,4 +304,16 @@ class POINTTest {
 		org.bouncycastle.util.encoders.Base64.toBase64String(point.getMultimediaData()));
 	Assertions.assertEquals("This is a test track", point.getComment());
     }
+
+    @Test
+    final void testSamplesFromDocu() {
+
+	String[] messages = new String[] {
+		"POINT;6A;0013E45956BE;59CE;U;;FFAA327B;1000;;;;;100;130;0;2;30;;;;;;;Person in water;gfopep---------",
+		"POINT;5E;0000661D4410;66A3;R;;;100;;53.32;8.11;0;;;;120;275;;;;;;;Target Alpha;gffppt---------;;VGFyZ2V0IHBvaW50"
+	};
+
+	Arrays.asList(messages).forEach(msg -> Assertions.assertEquals(msg, new POINT(msg).toString()));
+
+    }
 }

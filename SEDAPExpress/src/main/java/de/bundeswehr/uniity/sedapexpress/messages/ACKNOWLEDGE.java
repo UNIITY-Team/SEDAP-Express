@@ -185,7 +185,7 @@ public class ACKNOWLEDGE extends SEDAPExpressMessage {
     public String toString() {
 
 	return SEDAPExpressMessage.removeSemicolons(serializeHeader().append((this.recipient != null) ? this.recipient : "").append(";").append((this.typeOfTheMessage != null) ? this.typeOfTheMessage : "").append(";")
-		.append((this.numberOfTheMessage != null) ? this.numberOfTheMessage : "").toString());
+		.append((this.numberOfTheMessage != null) ? SEDAPExpressMessage.HexFormater.toHexDigits(this.numberOfTheMessage) : "").toString());
     }
 
 }

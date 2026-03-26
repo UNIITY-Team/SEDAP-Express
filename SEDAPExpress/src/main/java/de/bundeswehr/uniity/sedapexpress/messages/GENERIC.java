@@ -161,10 +161,10 @@ public class GENERIC extends SEDAPExpressMessage {
 	    value = message.next();
 	    if (value.isEmpty()) {
 		SEDAPExpressMessage.logger.logp(Level.SEVERE, "GENERIC", "GENERIC(Iterator<String> message)", "Mandatory field \"content\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.NUMBER_MATCHER, value)) {
-		this.content = value;
-	    } else if (!value.isBlank()) {
+	    } else if (value.isBlank()) {
 		SEDAPExpressMessage.logger.logp(Level.SEVERE, "GENERIC", "GENERIC(Iterator<String> message)", "Mandatory field \"content\" contains invalid value!", value);
+	    } else {
+		this.content = value;
 	    }
 	}
     }
@@ -196,7 +196,9 @@ public class GENERIC extends SEDAPExpressMessage {
     public String toString() {
 
 	return SEDAPExpressMessage.removeSemicolons(
-		serializeHeader().append((this.contentType != null) ? this.contentType : "").append(";").append((this.encoding != null) ? this.encoding : "").append(";").append((this.content != null) ? this.content : "").toString());
+		serializeHeader().append((this.contentType != null) ? this.contentType : "").append(";")
+			.append((this.encoding != null) ? this.encoding : "").append(";")
+			.append((this.content != null) ? this.content : "").toString());
     }
 
 }

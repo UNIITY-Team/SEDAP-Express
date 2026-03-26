@@ -76,7 +76,7 @@ class STATUSTest {
     @Test
     final void testConstructorString() {
 
-	String message = "STATUS;41;50505050;BB91;C;TRUE;93B37ACC;2;1;#20.3;#30.4;#40.5;;;MTAuOC4wLjY=;cnRzcDovLzEwLjguMC42L3N0cmVhbTE=;U2FtcGxlVGV4dCE=";
+	String message = "STATUS;41;50505050;BB91;C;TRUE;93B37ACC;2;1;#20.3;#30.4;#40.5;#75;;;MTAuOC4wLjY=;cnRzcDovLzEwLjguMC42L3N0cmVhbTE=;U2FtcGxlVGV4dCE=";
 
 	STATUS status = new STATUS(message);
 
@@ -94,13 +94,15 @@ class STATUSTest {
 	Assertions.assertEquals(30.4, status.getFuelLevels().get(0));
 	Assertions.assertEquals("", status.getBatterieLevelNames().get(0));
 	Assertions.assertEquals(40.5, status.getBatterieLevels().get(0));
+	Assertions.assertEquals("", status.getStorageLevelNames().get(0));
+	Assertions.assertEquals(75, status.getStorageLevels().get(0));
 	Assertions.assertNull(status.getCmdId());
 	Assertions.assertNull(status.getCmdState());
 	Assertions.assertEquals("10.8.0.6", status.getHostname());
 	Assertions.assertArrayEquals(new String[] { "rtsp://10.8.0.6/stream1" }, status.getMediaUrls().toArray());
 	Assertions.assertEquals("SampleText!", status.getFreeText());
 
-	message = "STATUS;15;66e2d520;LASSY;C;;;3;2;;;MainBattery#100;;;MTkyLjE2OC4xNjguMTA1;aHR0cDovLzE5Mi4xNjguMTY4LjEwNTo4MDgwL3N0cmVhbT90b3BpYz0vYXJndXMvYXIwMjM0X2Zyb250X2xlZnQvaW1hZ2VfcmF3";
+	message = "STATUS;15;66e2d520;LASSY;C;;;3;2;;;MainBattery#100;;;;MTkyLjE2OC4xNjguMTA1;aHR0cDovLzE5Mi4xNjguMTY4LjEwNTo4MDgwL3N0cmVhbT90b3BpYz0vYXJndXMvYXIwMjM0X2Zyb250X2xlZnQvaW1hZ2VfcmF3";
 
 	status = new STATUS(message);
 
@@ -118,6 +120,8 @@ class STATUSTest {
 	Assertions.assertNull(status.getFuelLevels());
 	Assertions.assertEquals("MainBattery", status.getBatterieLevelNames().get(0));
 	Assertions.assertEquals(100.0, status.getBatterieLevels().get(0));
+	Assertions.assertNull(status.getStorageLevelNames());
+	Assertions.assertNull(status.getStorageLevels());
 	Assertions.assertNull(status.getCmdId());
 	Assertions.assertNull(status.getCmdState());
 	Assertions.assertEquals("192.168.168.105", status.getHostname());
@@ -130,7 +134,8 @@ class STATUSTest {
     final void testConstructorIterator() {
 
 	Iterator<String> it = Arrays
-		.asList("41", "A0B0C0D0", "BB91", "C", "TRUE", "93B37ACC", "2", "1", "#20.3", "#30.4", "#40.5", "", "", "MTAuOC4wLjY=", "cnRzcDovLzEwLjguMC42L3N0cmVhbTE=#cnRzcDovLzEwLjguMC42L3N0cmVhbTI=", "U2FtcGxlVGV4dCE=").iterator();
+		.asList("41", "A0B0C0D0", "BB91", "C", "TRUE", "93B37ACC", "2", "1", "#20.3", "#30.4", "#40.5", "#88.2", "", "", "MTAuOC4wLjY=", "cnRzcDovLzEwLjguMC42L3N0cmVhbTE=#cnRzcDovLzEwLjguMC42L3N0cmVhbTI=", "U2FtcGxlVGV4dCE=")
+		.iterator();
 
 	final STATUS status = new STATUS(it);
 
@@ -148,9 +153,23 @@ class STATUSTest {
 	Assertions.assertEquals(30.4, status.getFuelLevels().get(0));
 	Assertions.assertEquals("", status.getBatterieLevelNames().get(0));
 	Assertions.assertEquals(40.5, status.getBatterieLevels().get(0));
+	Assertions.assertEquals("", status.getStorageLevelNames().get(0));
+	Assertions.assertEquals(88.2, status.getStorageLevels().get(0));
 	Assertions.assertEquals("10.8.0.6", status.getHostname());
 	Assertions.assertArrayEquals(new String[] { "rtsp://10.8.0.6/stream1", "rtsp://10.8.0.6/stream2" }, status.getMediaUrls().toArray());
 	Assertions.assertEquals("SampleText!", status.getFreeText());
+
+    }
+
+    @Test
+    final void testSamplesFromDocu() {
+
+	String[] messages = new String[] {
+		"STATUS;15;0195238E25AD;75DA;U;;;4;2;MLG#20;;Akku1#50;;443D;1;MTAuMC4wLjEzMg==;;RnVsbHkgb3BlcmF0aW9uYWw=",
+		"STATUS;16;0195238E25AD;129E;R;;;2;2;BMG#10;;;;ED32;3;;aHR0cDovLzEwLjAuMC4xL2ltYWdlLnBuZw==;T3V0IG9mIGZ1ZWwh"
+	};
+
+	Arrays.asList(messages).forEach(msg -> Assertions.assertEquals(msg, new STATUS(msg).toString()));
 
     }
 }

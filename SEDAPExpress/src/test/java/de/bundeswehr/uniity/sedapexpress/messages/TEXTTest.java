@@ -144,4 +144,19 @@ class TEXTTest {
 	Assertions.assertNull(text.getReference());
 
     }
+
+    @Test
+    final void testSamplesFromDocu() {
+
+	String[] messages = new String[] {
+		"TEXT;78;0195238E25AD;324E;S;TRUE;;;1;NONE;\"This is an alert!\";1000",
+		"TEXT;79;0195238E25CC;324E;C;TRUE;;;2;NONE;\"This is a warning!\"",
+		"TEXT;7A;0195238E25EF;324E;R;;;;3;NONE;\"This is a notice!\"",
+		"TEXT;7B;0195238E285B;324E;U;;;ORKA;4;BASE64;IlRoaXMgaXMgYSBjaGF0IG1lc3NhZ2UhIg=="
+	};
+
+	Arrays.asList(messages).forEach(msg -> Assertions.assertEquals(msg, new TEXT(msg).toString()));
+
+    }
+
 }

@@ -28,6 +28,7 @@ package de.bundeswehr.uniity.sedapexpress.messages;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.RecordComponent;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -41,6 +42,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import de.bundeswehr.uniity.sedapexpress.messages.COMMAND.PowerState;
 
 /**
  * @author Volker Voß
@@ -62,8 +66,6 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	    return MessageType.valueOf(type.toUpperCase());
 	}
     }
-
-    public static final NumberFormat numberFormatter = new DecimalFormat("##.############", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 
     public enum DeleteFlag {
 
@@ -147,6 +149,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
     }
 
     public static final HexFormat HexFormater = HexFormat.of().withUpperCase();
+    public static final NumberFormat NumberFormatter = new DecimalFormat("##.############", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 
     public static final Pattern NAME_MATCHER = Pattern.compile("^[a-zA-Z]+$"); // Name
     public static final Pattern NUMBER_MATCHER = Pattern.compile("^[0-7][0-9A-F]$"); // Number 00-7F
@@ -172,7 +175,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
     public static final Pattern SOURCE_MATCHER = Pattern.compile("^[R,A,I,S,E,O,Y,M]+$"); // Source type
     public static final Pattern CMDTYPE_MATCHER = Pattern.compile("^[A-Fa-f0-9]+$"); // Command type
     public static final Pattern GRAPHICTYPE_MATCHER = Pattern.compile("^[0-9]$"); // Graphic type
-    public static final Pattern RGBA_MATCHER = Pattern.compile("^[0-9A-F]{8}$"); // RGBA Format
+    public static final Pattern RGBA_MATCHER = Pattern.compile("^[0-9A-F]{6,8}$"); // RGBA Format
     public static final Pattern TECSTATUS_MATCHER = Pattern.compile("^[0-5]$"); // TecStatus
     public static final Pattern OPSSTATUS_MATCHER = Pattern.compile("^[0-4]$"); // OpsStatus
     public static final Pattern PERCENT_MATCHER = Pattern.compile("^([A-Za-z0-9]*#(100(\\\\.0+)?|(\\d{1,2}(.\\d+)*))#*)+$"); // Percent
@@ -408,7 +411,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
     }
 
     /**
-     * Split a serialized SEDAP-Express message into a list if values.
+     * Split a serialized SEDAP-Express message into a list of values.
      *
      * @param message SEDAP-Express message
      * @return Array with the content of the SEDAP-Express message
@@ -442,7 +445,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
     }
 
     /**
-     * Splits a #-list in a serialized SEDAP-Express message into a list if string values.
+     * Splits a #-list in a serialized SEDAP-Express message into a list of string values.
      *
      * @param list #-list
      * @return Array with the content of the #-list
@@ -475,7 +478,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
     }
 
     /**
-     * Splits a #-list in a serialized SEDAP-Express message into a list if integer values.
+     * Splits a #-list in a serialized SEDAP-Express message into a list of integer values.
      *
      * @param list #-list
      * @return Array with the content of the #-list
@@ -508,7 +511,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
     }
 
     /**
-     * Splits a #-list in a serialized SEDAP-Express message into a list if double values.
+     * Splits a #-list in a serialized SEDAP-Express message into a list of double values.
      *
      * @param list #-list
      * @return Array with the content of the #-list
@@ -541,6 +544,71 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
     }
 
     /**
+     * Splits a #-list in a serialized SEDAP-Express message into a list of double arrays.
+     *
+     * @param list #-list
+     * @return Array with the content of the #-list
+     */
+    public static List<double[]> splitDoubleArrayDataHashTag(final String list) {
+
+	final var sb = new StringBuilder();
+	final var words = new ArrayList<double[]>();
+	final var strArray = list.toCharArray();
+	for (final char c : strArray) {
+	    if (c == '#') {
+		if (sb.length() != 0) {
+		    words.add(SEDAPExpressMessage.splitDoubleData(sb.toString()));
+		    sb.delete(0, sb.length());
+		} else {
+		    words.add(null);
+		}
+	    } else {
+		sb.append(c);
+	    }
+	}
+
+	// Last element
+	if (sb.length() != 0) {
+	    words.add(SEDAPExpressMessage.splitDoubleData(sb.toString()));
+	} else {
+	    words.add(null);
+	}
+
+	return words;
+    }
+
+    /**
+     * Split a comma separated list of double values into an array
+     * 
+     * @param sb Comma separated list of double values
+     * @return Array of doubles
+     */
+    protected static double[] splitDoubleData(String sb) {
+
+	int count = 1;
+	for (int i = 0; i < sb.length(); i++) {
+	    if (sb.charAt(i) == ',')
+		count++;
+	}
+
+	double[] result = new double[count];
+
+	int start = 0;
+	int currentIdx = 0;
+
+	for (int i = 0; i < sb.length(); i++) {
+	    if (sb.charAt(i) == ',') {
+		result[currentIdx++] = Double.parseDouble(sb.substring(start, i));
+		start = i + 1;
+	    }
+	}
+	// Last element
+	result[currentIdx] = Double.parseDouble(sb.substring(start));
+
+	return result;
+    }
+
+    /**
      *
      * @param list List of elements
      * @return String with #-separated list elements
@@ -552,6 +620,52 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	str.deleteCharAt(0);
 
 	return str.toString();
+    }
+
+    public static String objectToCSV(Object obj) {
+
+	if (obj == null)
+	    return "";
+
+	// Holt alle Record-Komponenten (Attribute) automatisch
+	RecordComponent[] components = obj.getClass().getRecordComponents();
+
+	if (components == null || components.length == 0) {
+	    return ""; // Für Records ohne Parameter (wie Restart)
+	}
+
+	return Arrays.stream(components)
+		.map(c -> {
+		    try {
+			Object value = c.getAccessor().invoke(obj);
+
+			if (value == null)
+			    return "";
+			else if (value instanceof ArrayList<?> list) {
+			    return list.stream()
+				    .map(arrayObj -> {
+					double[] array = (double[]) arrayObj;
+					return Arrays.stream(array)
+						.mapToObj(String::valueOf)
+						.collect(Collectors.joining(","));
+				    })
+				    .collect(Collectors.joining("#"));
+			} else if (value instanceof PowerState ps) {
+			    return ps.name();
+			} else if (value instanceof Long longValue) {
+			    return Long.toHexString(longValue).toUpperCase();
+			} else if (value instanceof Double doubleValue) {
+			    return SEDAPExpressMessage.NumberFormatter.format(doubleValue).toUpperCase();
+			} else if (value instanceof Float floatValue) {
+			    return SEDAPExpressMessage.NumberFormatter.format(floatValue).toUpperCase();
+			}
+
+			return String.valueOf(value);
+		    } catch (Exception e) {
+			return "";
+		    }
+		})
+		.collect(Collectors.joining(";"));
     }
 
     /**
@@ -580,7 +694,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 			\n
 		***************************************************
 		***************************************************
-		** SEDAP-Express v1.2.1 (February 23th, 2026)    **
+		** SEDAP-Express v1.4.0 (March 26th, 2026)    **
 		** Licensed under the BSD-2-clause License       **
 		** (C)2024-2026, Federal Armed Forces of Germany **
 		***************************************************
@@ -797,4 +911,5 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	}
 	return message;
     }
+
 }

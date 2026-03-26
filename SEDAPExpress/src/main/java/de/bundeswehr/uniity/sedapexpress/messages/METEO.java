@@ -470,21 +470,22 @@ public class METEO extends SEDAPExpressMessage {
 
 	return SEDAPExpressMessage.removeSemicolons(serializeHeader()
 
-		.append((this.speedThroughWater != null) ? SEDAPExpressMessage.numberFormatter.format(this.speedThroughWater) : "").append(";")
-		.append(this.waterSpeed != null ? SEDAPExpressMessage.numberFormatter.format(this.waterSpeed) : "").append(";").append(this.waterDirection != null ? SEDAPExpressMessage.numberFormatter.format(this.waterDirection) : "")
-		.append(";").append(this.waterTemperature != null ? SEDAPExpressMessage.numberFormatter.format(this.waterTemperature) : "").append(";")
-		.append(this.waterDepth != null ? SEDAPExpressMessage.numberFormatter.format(this.waterDepth) : "").append(";")
+		.append((this.speedThroughWater != null) ? SEDAPExpressMessage.NumberFormatter.format(this.speedThroughWater) : "").append(";")
+		.append(this.waterSpeed != null ? SEDAPExpressMessage.NumberFormatter.format(this.waterSpeed) : "").append(";").append(this.waterDirection != null ? SEDAPExpressMessage.NumberFormatter.format(this.waterDirection) : "")
+		.append(";").append(this.waterTemperature != null ? SEDAPExpressMessage.NumberFormatter.format(this.waterTemperature) : "").append(";")
+		.append(this.waterDepth != null ? SEDAPExpressMessage.NumberFormatter.format(this.waterDepth) : "").append(";")
 
-		.append(this.airTemperature != null ? SEDAPExpressMessage.numberFormatter.format(this.airTemperature) : "").append(";").append(this.dewPoint != null ? SEDAPExpressMessage.numberFormatter.format(this.dewPoint) : "")
-		.append(";").append(this.humidityRel != null ? SEDAPExpressMessage.numberFormatter.format(this.humidityRel) : "").append(";").append(this.pressure != null ? SEDAPExpressMessage.numberFormatter.format(this.pressure) : "")
+		.append(this.airTemperature != null ? SEDAPExpressMessage.NumberFormatter.format(this.airTemperature) : "").append(";").append(this.dewPoint != null ? SEDAPExpressMessage.NumberFormatter.format(this.dewPoint) : "")
+		.append(";").append(this.humidityRel != null ? SEDAPExpressMessage.NumberFormatter.format(this.humidityRel) : "").append(";").append(this.pressure != null ? SEDAPExpressMessage.NumberFormatter.format(this.pressure) : "")
 		.append(";")
 
-		.append(this.windSpeed != null ? SEDAPExpressMessage.numberFormatter.format(this.windSpeed) : "").append(";").append(this.windDirection != null ? SEDAPExpressMessage.numberFormatter.format(this.windDirection) : "")
+		.append(this.windSpeed != null ? SEDAPExpressMessage.NumberFormatter.format(this.windSpeed) : "").append(";").append(this.windDirection != null ? SEDAPExpressMessage.NumberFormatter.format(this.windDirection) : "")
 		.append(";")
 
-		.append(this.visibility != null ? SEDAPExpressMessage.numberFormatter.format(this.visibility) : "").append(";").append(this.cloudHeight != null ? SEDAPExpressMessage.numberFormatter.format(this.cloudHeight) : "").append(";")
-		.append(this.cloudCover != null ? SEDAPExpressMessage.numberFormatter.format(this.cloudCover) : "")
-		
+		.append(this.visibility != null ? SEDAPExpressMessage.NumberFormatter.format(this.visibility) : "").append(";")
+		.append(this.cloudHeight != null ? SEDAPExpressMessage.NumberFormatter.format(this.cloudHeight) : "").append(";")
+		.append(this.cloudCover != null ? SEDAPExpressMessage.NumberFormatter.format(this.cloudCover) : "")
+
 		.append((this.reference != null) ? ";" + this.reference : "").toString());
     }
 

@@ -134,4 +134,16 @@ class OWNUNITTest {
 	Assertions.assertEquals("Ownunit", ownunit.getName());
 	Assertions.assertArrayEquals("SFGPIB----H----".toCharArray(), ownunit.getSIDC());
     }
+
+    @Test
+    final void testSamplesFromDocu() {
+
+	String[] messages = new String[] {
+		"OWNUNIT;5E;0191C643A8AF;DRONEONE;R;;;53.32;8.11;0;5.5;21;22;;;FGS Bayern;SFSPCLFF-------",
+		"OWNUNIT;11;0191C643A8AF;22AA;U;;4389F10D;77.88;-10.12;5577;33.44;55.66;1.1;-2.2;3.3;Ownunit;SFGPIB----H----"
+	};
+
+	Arrays.asList(messages).forEach(msg -> Assertions.assertEquals(msg, new OWNUNIT(msg).toString()));
+
+    }
 }

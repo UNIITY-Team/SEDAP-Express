@@ -26,9 +26,9 @@
 package de.bundeswehr.uniity.sedapexpress.messages;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 import org.bouncycastle.util.encoders.Base64;
@@ -105,7 +105,7 @@ public class CONTACT extends SEDAPExpressMessage {
     private Double height;
 
     private String name;
-    private Set<Source> source;
+    private TreeSet<Source> source;
     private char[] sidc;
     private String mmsi;
     private String icao;
@@ -113,6 +113,13 @@ public class CONTACT extends SEDAPExpressMessage {
     private byte[] multimediaData;
 
     private String comment;
+
+    private Comparator<Source> sourceComparator = new Comparator<Source>() {
+	@Override
+	public int compare(Source o1, Source o2) {
+	    return Integer.compare(o1.source, o2.source);
+	}
+    };
 
     public String getContactID() {
 	return this.contactID;
@@ -250,11 +257,11 @@ public class CONTACT extends SEDAPExpressMessage {
 	this.name = name;
     }
 
-    public Set<Source> getSource() {
+    public TreeSet<Source> getSource() {
 	return this.source;
     }
 
-    public void setSource(Set<Source> source) {
+    public void setSource(TreeSet<Source> source) {
 	this.source = source;
     }
 
@@ -428,7 +435,7 @@ public class CONTACT extends SEDAPExpressMessage {
 	this.length = length;
 	this.height = height;
 	this.name = name;
-	this.source = new HashSet<Source>();
+	this.source = new TreeSet<Source>(this.sourceComparator);
 	source.chars().forEach(ch -> this.source.add(Source.valueOfSource((char) ch)));
 	this.sidc = sidc;
 	this.mmsi = mmsi;
@@ -746,7 +753,7 @@ public class CONTACT extends SEDAPExpressMessage {
 	    if (value.isBlank()) {
 		SEDAPExpressMessage.logger.logp(Level.INFO, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"source\" is empty!");
 	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.SOURCE_MATCHER, value)) {
-		this.source = new HashSet<>();
+		this.source = new TreeSet<>(this.sourceComparator);
 		value.chars().forEach(ch -> this.source.add(Source.valueOfSource((char) ch)));
 	    } else {
 		SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"source\" contains invalid value!", value);
@@ -878,24 +885,25 @@ public class CONTACT extends SEDAPExpressMessage {
 
 		.append(this.contactID).append(";")
 
-		.append((this.deleteFlag != null) ? this.deleteFlag : "").append(";")
+		.append((this.deleteFlag != null && this.deleteFlag != DeleteFlag.FALSE) ? this.deleteFlag : "").append(";")
 
-		.append((this.latitude != null) ? SEDAPExpressMessage.numberFormatter.format(this.latitude) : "").append(";").append(this.longitude != null ? SEDAPExpressMessage.numberFormatter.format(this.longitude) : "").append(";")
-		.append(this.altitude != null ? SEDAPExpressMessage.numberFormatter.format(this.altitude) : "").append(";")
+		.append((this.latitude != null) ? SEDAPExpressMessage.NumberFormatter.format(this.latitude) : "").append(";").append(this.longitude != null ? SEDAPExpressMessage.NumberFormatter.format(this.longitude) : "").append(";")
+		.append(this.altitude != null ? SEDAPExpressMessage.NumberFormatter.format(this.altitude) : "").append(";")
 
-		.append(this.relativeXDistance != null ? SEDAPExpressMessage.numberFormatter.format(this.relativeXDistance) : "").append(";")
-		.append(this.relativeYDistance != null ? SEDAPExpressMessage.numberFormatter.format(this.relativeYDistance) : "").append(";")
-		.append(this.relativeZDistance != null ? SEDAPExpressMessage.numberFormatter.format(this.relativeZDistance) : "").append(";")
+		.append(this.relativeXDistance != null ? SEDAPExpressMessage.NumberFormatter.format(this.relativeXDistance) : "").append(";")
+		.append(this.relativeYDistance != null ? SEDAPExpressMessage.NumberFormatter.format(this.relativeYDistance) : "").append(";")
+		.append(this.relativeZDistance != null ? SEDAPExpressMessage.NumberFormatter.format(this.relativeZDistance) : "").append(";")
 
-		.append(this.speed != null ? SEDAPExpressMessage.numberFormatter.format(this.speed) : "").append(";").append(this.course != null ? SEDAPExpressMessage.numberFormatter.format(this.course) : "").append(";")
+		.append(this.speed != null ? SEDAPExpressMessage.NumberFormatter.format(this.speed) : "").append(";").append(this.course != null ? SEDAPExpressMessage.NumberFormatter.format(this.course) : "").append(";")
 
-		.append(this.heading != null ? SEDAPExpressMessage.numberFormatter.format(this.heading) : "").append(";").append(this.roll != null ? SEDAPExpressMessage.numberFormatter.format(this.roll) : "").append(";")
-		.append(this.pitch != null ? SEDAPExpressMessage.numberFormatter.format(this.pitch) : "").append(";")
+		.append(this.heading != null ? SEDAPExpressMessage.NumberFormatter.format(this.heading) : "").append(";").append(this.roll != null ? SEDAPExpressMessage.NumberFormatter.format(this.roll) : "").append(";")
+		.append(this.pitch != null ? SEDAPExpressMessage.NumberFormatter.format(this.pitch) : "").append(";")
 
-		.append(this.width != null ? SEDAPExpressMessage.numberFormatter.format(this.width) : "").append(";").append(this.length != null ? SEDAPExpressMessage.numberFormatter.format(this.length) : "").append(";")
-		.append(this.height != null ? SEDAPExpressMessage.numberFormatter.format(this.height) : "").append(";")
+		.append(this.width != null ? SEDAPExpressMessage.NumberFormatter.format(this.width) : "").append(";").append(this.length != null ? SEDAPExpressMessage.NumberFormatter.format(this.length) : "").append(";")
+		.append(this.height != null ? SEDAPExpressMessage.NumberFormatter.format(this.height) : "").append(";")
 
-		.append(this.name != null ? this.name : "").append(";").append(!sourceStr.isEmpty() ? sourceStr.toString() : "").append(";")
+		.append(this.name != null ? this.name : "").append(";")
+		.append(!sourceStr.isEmpty() ? sourceStr.toString() : "").append(";")
 
 		.append(this.sidc != null ? String.valueOf(this.sidc) : "").append(";").append(this.mmsi != null ? this.mmsi : "").append(";").append(this.icao != null ? this.icao : "").append(";")
 

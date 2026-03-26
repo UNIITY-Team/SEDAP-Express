@@ -146,10 +146,12 @@ public class STATUS extends SEDAPExpressMessage {
     private List<Double> ammunitionLevels;
     private List<Double> fuelLevels;
     private List<Double> batterieLevels;
+    private List<Double> storageLevels;
 
     private List<String> ammunitionLevelNames;
     private List<String> fuelLevelNames;
     private List<String> batterieLevelNames;
+    private List<String> storageLevelNames;
 
     private Integer cmdId;
     private CommandState cmdState;
@@ -222,6 +224,22 @@ public class STATUS extends SEDAPExpressMessage {
 
     public void setBatterieLevelNames(List<String> batterieLevelNames) {
 	this.batterieLevelNames = batterieLevelNames;
+    }
+
+    public List<Double> getStorageLevels() {
+	return this.storageLevels;
+    }
+
+    public void setStorageLevels(List<Double> storageLevels) {
+	this.storageLevels = storageLevels;
+    }
+
+    public List<String> getStorageLevelNames() {
+	return this.storageLevelNames;
+    }
+
+    public void setStorageLevelNames(List<String> storageLevelNames) {
+	this.storageLevelNames = storageLevelNames;
     }
 
     public Integer getCmdId() {
@@ -484,6 +502,24 @@ public class STATUS extends SEDAPExpressMessage {
 	    }
 	}
 
+	// StorageLevel
+	if (message.hasNext()) {
+	    value = message.next();
+	    if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.PERCENT_MATCHER, value)) {
+
+		Iterator<String> it = Arrays.asList(value.split("#")).iterator();
+		this.storageLevelNames = new LinkedList<>();
+		this.storageLevels = new LinkedList<>();
+		while (it.hasNext()) {
+		    this.storageLevelNames.add(it.next());
+		    this.storageLevels.add(Double.parseDouble(it.next()));
+		}
+
+	    } else if (!value.isBlank()) {
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"storageLevels\" contains not a valid number!", value);
+	    }
+	}
+
 	// CmdID
 	if (message.hasNext()) {
 	    value = message.next();
@@ -491,7 +527,7 @@ public class STATUS extends SEDAPExpressMessage {
 		SEDAPExpressMessage.logger.logp(Level.INFO, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"cmdId\" is empty!");
 	    } else {
 		try {
-		    this.cmdId = Integer.valueOf(value);
+		    this.cmdId = Integer.parseInt(value, 16);
 		} catch (DecoderException e) {
 		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"cmdId\" contains not a valid number!" + value);
 		}
@@ -599,7 +635,7 @@ public class STATUS extends SEDAPExpressMessage {
 	    Iterator<String> itString = this.ammunitionLevelNames.iterator();
 	    Iterator<Double> itDouble = this.ammunitionLevels.iterator();
 	    while (itString.hasNext()) {
-		ammunitionStr = "#" + itString.next() + "#" + itDouble.next();
+		ammunitionStr = "#" + itString.next() + "#" + SEDAPExpressMessage.NumberFormatter.format(itDouble.next());
 	    }
 	}
 
@@ -608,7 +644,7 @@ public class STATUS extends SEDAPExpressMessage {
 	    Iterator<String> itString = this.fuelLevelNames.iterator();
 	    Iterator<Double> itDouble = this.fuelLevels.iterator();
 	    while (itString.hasNext()) {
-		fuelStr = "#" + itString.next() + "#" + itDouble.next();
+		fuelStr = "#" + itString.next() + "#" + SEDAPExpressMessage.NumberFormatter.format(itDouble.next());
 	    }
 	}
 
@@ -617,7 +653,16 @@ public class STATUS extends SEDAPExpressMessage {
 	    Iterator<String> itString = this.batterieLevelNames.iterator();
 	    Iterator<Double> itDouble = this.batterieLevels.iterator();
 	    while (itString.hasNext()) {
-		batterieStr = "#" + itString.next() + "#" + itDouble.next();
+		batterieStr = "#" + itString.next() + "#" + SEDAPExpressMessage.NumberFormatter.format(itDouble.next());
+	    }
+	}
+
+	String storageStr = "";
+	if (this.storageLevelNames != null) {
+	    Iterator<String> itString = this.storageLevelNames.iterator();
+	    Iterator<Double> itDouble = this.storageLevels.iterator();
+	    while (itString.hasNext()) {
+		storageStr = "#" + itString.next() + "#" + SEDAPExpressMessage.NumberFormatter.format(itDouble.next());
 	    }
 	}
 
@@ -628,9 +673,15 @@ public class STATUS extends SEDAPExpressMessage {
 
 	return SEDAPExpressMessage.removeSemicolons(serializeHeader()
 
-		.append((this.tecState != null) ? this.tecState : "").append(";").append((this.opsState != null) ? this.opsState : "").append(";").append(ammunitionStr.isBlank() ? "" : ammunitionStr.substring(2)).append(";")
-		.append(fuelStr.isBlank() ? "" : fuelStr.substring(2)).append(";").append(batterieStr.isBlank() ? "" : batterieStr.substring(2)).append(";").append((this.cmdId != null) ? this.cmdId : "").append(";")
-		.append((this.cmdState != null) ? this.cmdState : "").append(";").append((this.hostname != null) ? Base64.toBase64String(this.hostname.getBytes()) : "").append(";")
-		.append((this.mediaUrls != null) ? urls.subSequence(0, urls.length() - 1) : "").append(";").append((this.freeText != null) ? Base64.toBase64String(this.freeText.getBytes()) : "").toString());
+		.append((this.tecState != null) ? this.tecState : "").append(";").append((this.opsState != null) ? this.opsState : "").append(";")
+		.append(ammunitionStr.isBlank() ? "" : ammunitionStr.substring(1)).append(";")
+		.append(fuelStr.isBlank() ? "" : fuelStr.substring(1)).append(";")
+		.append(batterieStr.isBlank() ? "" : batterieStr.substring(1)).append(";")
+		.append(storageStr.isBlank() ? "" : storageStr.substring(1)).append(";")
+		.append((this.cmdId != null) ? Integer.toHexString(this.cmdId).toUpperCase() : "").append(";")
+		.append((this.cmdState != null) ? this.cmdState : "").append(";")
+		.append((this.hostname != null) ? Base64.toBase64String(this.hostname.getBytes()) : "").append(";")
+		.append((this.mediaUrls != null && !this.mediaUrls.isEmpty()) ? urls.subSequence(0, urls.length() - 1) : "").append(";")
+		.append((this.freeText != null) ? Base64.toBase64String(this.freeText.getBytes()) : "").toString());
     }
 }

@@ -96,4 +96,15 @@ class ACKNOWLEDGETest {
 	Assertions.assertEquals((byte) 0x2B, status.getNumberOfTheMessage());
 
     }
+
+    @Test
+    final void testSamplesFromDocu() {
+
+	String[] messages = new String[] {
+		"ACKNOWLEDGE;18;0195238E25AD;129E;R;;;LASSY;COMMAND;2B"
+	};
+
+	Arrays.asList(messages).forEach(msg -> Assertions.assertEquals(msg, new ACKNOWLEDGE(msg).toString()));
+
+    }
 }

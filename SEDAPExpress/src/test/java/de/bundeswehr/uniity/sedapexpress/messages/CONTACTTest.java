@@ -334,4 +334,18 @@ class CONTACTTest {
 		org.bouncycastle.util.encoders.Base64.toBase64String(contact.getMultimediaData()));
 	Assertions.assertEquals("This is a test track", contact.getComment());
     }
+
+    @Test
+    final void testSamplesFromDocu() {
+
+	String[] messages = new String[] {
+		"CONTACT;5E;0191C643A8AF;83C5;R;;;100;;53.32;8.11;0;;;;120;275;;;;;;;FGS Bayern;AR;SFSPCLFF-------;;;;VXNlIENIMjI=",
+		"CONTACT;5F;0191C643A8AF;83C5;U;;;101;;36.32;12.11;2000;;;;44;;;;;;;;Unknown;O;;221333201;;;UG9zcyBOZXRoZXJsYW5kcw==",
+		"CONTACT;;0191C643A8AF;4371;S;;;102;;53.32;8.11;;;;;;;;;;;;;PossTank;;;;;XFxzcnZcc25kXDU0aDJoLndhdg==;cGxzIGhlYXI="
+
+	};
+
+	Arrays.asList(messages).forEach(msg -> Assertions.assertEquals(msg, new CONTACT(msg).toString()));
+
+    }
 }
