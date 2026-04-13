@@ -67,15 +67,15 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Protobuf/protobuf-java-4.34.0.jar">
+	<classpathentry kind="lib" path="libs/Protobuf/protobuf-java-4.34.1.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:libs/Protobuf/protobuf-java-4.34.0-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:libs/Protobuf/protobuf-java-4.34.1-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Protobuf/protobuf-java-util-4.34.0.jar">
+	<classpathentry kind="lib" path="libs/Protobuf/protobuf-java-util-4.34.1.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:libs/libs/Protobuf/protobuf-java-util-4.34.0-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:libs/libs/Protobuf/protobuf-java-util-4.34.1-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
