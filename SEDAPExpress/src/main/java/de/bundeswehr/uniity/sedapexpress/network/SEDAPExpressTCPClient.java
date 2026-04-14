@@ -151,6 +151,8 @@ public class SEDAPExpressTCPClient extends SEDAPExpressCommunicator implements R
 
 		if (this.socket.isConnected()) {
 		    SEDAPExpressTCPClient.logger.logp(Level.INFO, "SEDAPExpressTCPClient", "run()", "Connected to " + this.socket.getRemoteAddress());
+		    logInput("Connected to " + this.host);
+
 		    this.lastException = null;
 
 		    if (this.ownThread == null) {
@@ -161,6 +163,8 @@ public class SEDAPExpressTCPClient extends SEDAPExpressCommunicator implements R
 		    return true;
 		} else {
 		    SEDAPExpressTCPClient.logger.logp(Level.INFO, "SEDAPExpressTCPClient", "run()", "Disconnected");
+		    logInput("Disconnected from " + this.host);
+
 		    return false;
 		}
 	    }

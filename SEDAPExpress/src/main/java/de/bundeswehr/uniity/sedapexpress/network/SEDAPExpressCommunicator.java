@@ -69,7 +69,7 @@ public abstract class SEDAPExpressCommunicator {
      * 
      * @param subscriber The class which should process the logging message
      */
-    public void subscripeForInputLogging(SEDAPExpressInputLoggingSubscriber subscriber) {
+    public void subscribeForInputLogging(SEDAPExpressInputLoggingSubscriber subscriber) {
 	this.inputLogger.add(subscriber);
     }
 
@@ -78,7 +78,7 @@ public abstract class SEDAPExpressCommunicator {
      * 
      * @param subscriber The class which should NOT process the logging message anymore
      */
-    public void unsubscripeForInputLogging(SEDAPExpressInputLoggingSubscriber subscriber) {
+    public void unsubscribeForInputLogging(SEDAPExpressInputLoggingSubscriber subscriber) {
 	this.inputLogger.remove(subscriber);
     }
 
@@ -87,7 +87,7 @@ public abstract class SEDAPExpressCommunicator {
      * 
      * @param subscriber The class which should process the logging message
      */
-    public void subscripeForOutputLogging(SEDAPExpressOutputLoggingSubscriber subscriber) {
+    public void subscribeForOutputLogging(SEDAPExpressOutputLoggingSubscriber subscriber) {
 	this.outputLogger.add(subscriber);
     }
 
@@ -96,7 +96,7 @@ public abstract class SEDAPExpressCommunicator {
      * 
      * @param subscriber The class which should NOT process the logging message anymore
      */
-    public void unsubscripeForOutputLogging(SEDAPExpressOutputLoggingSubscriber subscriber) {
+    public void unsubscribeForOutputLogging(SEDAPExpressOutputLoggingSubscriber subscriber) {
 	this.outputLogger.remove(subscriber);
     }
 
