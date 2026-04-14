@@ -70,8 +70,8 @@ public class SampleRESTClient implements SEDAPExpressSubscriber {
 
 	// Let's subscribe simple logging adapter for output via console
 	SEDAPExpressSimpleLoggingAdapter loggingAdapter = new SEDAPExpressSimpleLoggingAdapter();
-	this.communicator.subscripeForInputLogging(loggingAdapter);
-	this.communicator.subscripeForOutputLogging(loggingAdapter);
+	this.communicator.subscribeForInputLogging(loggingAdapter);
+	this.communicator.subscribeForOutputLogging(loggingAdapter);
 
 	this.communicator.subscribeMessages(this, MessageType.OWNUNIT, MessageType.CONTACT, MessageType.POINT, MessageType.EMISSION, MessageType.HEARTBEAT, MessageType.STATUS);
 	this.senderId = this.communicator.createSenderId();
