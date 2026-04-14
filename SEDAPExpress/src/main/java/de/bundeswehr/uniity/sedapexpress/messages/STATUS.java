@@ -557,7 +557,7 @@ public class STATUS extends SEDAPExpressMessage {
 		try {
 		    this.hostname = new String(Base64.decode(value));
 		} catch (DecoderException e) {
-		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"hostname\" could not be decoded from Base64!");
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"hostname\" could not be decoded from Base64 - > \"" + value + "\"!");
 		}
 	    }
 	}
@@ -576,7 +576,7 @@ public class STATUS extends SEDAPExpressMessage {
 			this.mediaUrls.add(new String(Base64.decode(url)));
 		    }
 		} catch (DecoderException e) {
-		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"mediaUrls\" could not be decoded from Base64!");
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"mediaUrls\" could not be decoded from Base64 - > \"" + value + "\"!");
 		}
 	    }
 	}
@@ -590,7 +590,7 @@ public class STATUS extends SEDAPExpressMessage {
 		try {
 		    this.freeText = new String(Base64.decode(value));
 		} catch (DecoderException e) {
-		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"freeText\" could not be decoded from Base64!");
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"freeText\" could not be decoded from Base64 - > \"" + value + "\"!");
 		}
 	    }
 	}

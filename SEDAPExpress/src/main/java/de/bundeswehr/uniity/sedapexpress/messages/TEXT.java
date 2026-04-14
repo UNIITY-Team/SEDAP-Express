@@ -234,7 +234,7 @@ public class TEXT extends SEDAPExpressMessage {
 		    try {
 			this.textContent = new String(Base64.decode(value));
 		    } catch (DecoderException e) {
-			SEDAPExpressMessage.logger.logp(Level.SEVERE, "TEXT", "TEXT(Iterator<String> message)", "Mandatory field \"text\" could not be decoded from Base64!");
+			SEDAPExpressMessage.logger.logp(Level.SEVERE, "TEXT", "TEXT(Iterator<String> message)", "Mandatory field \"text\" could not be decoded from Base64 - > \"" + value + "\"!");
 		    }
 
 		} else {

@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.uniity-team</groupId>
 	<artifactId>sedapexpress</artifactId>
-	<version>1.4.0</version>
+	<version>1.4.1</version>
 	<packaging>jar</packaging>
 	<name>SEDAP-Express</name>
 	<licenses>
@@ -18,8 +18,8 @@
 	<url>https://github.com/UNIITY-Team/SEDAP-Express</url>
 	<description>SEDAP-Express is an exceptionally fast path/lightweight
 		protocol to integrate new applications, sensors, effectors or other
-		similar things especially into the ecosystem of MESE/UNIITY but not
-		only! There are already a bunch of companies and individuals who use
+		similar things especially into the ecosystem of MESE/UNIITY command and control
+		system, but not only! There are already a bunch of companies and individuals who use
 		that internally for their own projects to exchange GPS, contact and
 		other information.</description>
 	<developers>
@@ -84,13 +84,13 @@
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
-			<version>4.34.0</version>
+			<version>4.34.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java-util</artifactId>
-			<version>4.34.0</version>
+			<version>4.34.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

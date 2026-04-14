@@ -808,7 +808,7 @@ public class CONTACT extends SEDAPExpressMessage {
 			SEDAPExpressMessage.logger.logp(Level.WARNING, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"multimediaData\" exceeds 65000 bytes!");
 		    }
 		} catch (DecoderException e) {
-		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"multimediaData\" could not be decoded from Base64!");
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"multimediaData\" could not be decoded from Base64 -> \"" + value + "\"!");
 		}
 	    }
 	}
@@ -822,7 +822,7 @@ public class CONTACT extends SEDAPExpressMessage {
 		try {
 		    this.comment = new String(Base64.decode(value));
 		} catch (DecoderException e) {
-		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"comment\" could not be decoded from Base64!");
+		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "CONTACT", "CONTACT(Iterator<String> message)", "Optional field \"comment\" could not be decoded from Base64 -> \"" + value + "\"!");
 		}
 	    }
 	}

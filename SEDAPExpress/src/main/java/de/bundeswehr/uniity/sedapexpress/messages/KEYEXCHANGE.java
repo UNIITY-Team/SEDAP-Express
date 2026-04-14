@@ -383,9 +383,9 @@ public class KEYEXCHANGE extends SEDAPExpressMessage {
 		} catch (DecoderException e) {
 
 		    if (this.phase == 1) {
-			SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Madatory (phase 1) field \"PublicKey\" could not be decoded from Base64!");
+			SEDAPExpressMessage.logger.logp(Level.SEVERE, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Madatory (phase 1) field \"PublicKey\" could not be decoded from Base64 - > \"" + value + "\"!");
 		    } else {
-			SEDAPExpressMessage.logger.logp(Level.WARNING, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional (not in phase 1) field \"PublicKey\" could not be decoded from Base64!");
+			SEDAPExpressMessage.logger.logp(Level.WARNING, "KEYEXCHANGE", "KEYEXCHANGE(Iterator<String> message)", "Optional (not in phase 1) field \"PublicKey\" could not be decoded from Base64 - > \"" + value + "\"!");
 		    }
 		}
 	    }
