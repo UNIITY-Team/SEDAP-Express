@@ -1,4 +1,4 @@
-set "version=1.4.2"
+set "version=1.4.3"
 
 certutil -hashfile "sedapexpress-%version%.pom" MD5 | findstr /v "CertUtil:" | findstr /v "Hash" > sedapexpress-%version%.pom.md5
 certutil -hashfile "sedapexpress-%version%.pom" SHA1 | findstr /v "CertUtil:" | findstr /v "Hash" > sedapexpress-%version%.pom.sha1
