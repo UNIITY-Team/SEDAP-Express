@@ -11,15 +11,38 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Gson/gson-2.13.2.jar">
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFx">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:libs/Gson/gson-2.13.2-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Jssc/jssc-2.10.2.jar">
+	<classpathentry kind="lib" path="libs/Bouncycastle/bcpkix-jdk18on-1.85.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:libs/Jssc/jssc-2.10.2-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bcpkix-jdk18on-1.85-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/Bouncycastle/bcprov-jdk18on-1.85.2.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bcprov-jdk18on-1.85.2-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/Bouncycastle/bcutil-jdk18on-1.85.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bcutil-jdk18on-1.85-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/MQTT/org.eclipse.paho.mqttv5.client-1.2.5.jar" sourcepath="libs/MQTT/org.eclipse.paho.mqttv5.client-1.2.5-sources.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/Jssc/jssc-2.10.4.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Jssc/jssc-2.10.4-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
@@ -28,35 +51,18 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFx">
+	<classpathentry kind="lib" path="libs/Protobuf/protobuf-java-4.36.0.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Protobuf/protobuf-java-4.36.0-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Bouncycastle/bcpkix-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcpkix-jdk18on-1.82-sources.jar">
+	<classpathentry kind="lib" path="libs/Protobuf/protobuf-java-util-4.36.0.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:libs/Bouncycastle/bcpkix-jdk18on-1.83-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Protobuf/protobuf-java-util-4.36.0-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Bouncycastle/bcprov-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcprov-jdk18on-1.82-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:libs/Bouncycastle/bcprov-jdk18on-1.83-javadoc.jar!/"/>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="libs/Bouncycastle/bcutil-jdk18on-1.83.jar" sourcepath="libs/Bouncycastle/bcutil-jdk18on-1.82-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:libs/Bouncycastle/bcutil-jdk18on-1.83-javadoc.jar!/"/>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="libs/MQTT/org.eclipse.paho.mqttv5.client-1.2.5.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JUnit"/>
 	<classpathentry kind="lib" path="libs/Jakarta/jakarta.annotation-api-3.0.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
@@ -67,15 +73,9 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Protobuf/protobuf-java-4.34.1.jar">
+	<classpathentry kind="lib" path="libs/Gson/gson-2.14.0.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:libs/Protobuf/protobuf-java-4.34.1-javadoc.jar!/"/>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="libs/Protobuf/protobuf-java-util-4.34.1.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:libs/libs/Protobuf/protobuf-java-util-4.34.1-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Gson/gson-2.14.0-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>

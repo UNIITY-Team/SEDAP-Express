@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
-Created-By: 26+35-2893 (Oracle Corporation)
+Created-By: 26.0.1+8-34 (Oracle Corporation)
 Built-By: Volker Voss (volker.v@gmx.net)
-Build-Jdk: 26+35-2893
+Build-Jdk: 26.0.1+8-34
 Sealed: true
 Specification-Title: SEDAP-Express Framework
-Specification-Version: 1.4.3
+Specification-Version: 1.5
 Specification-Vendor: Federal Armed Forces of Germany
-Implementation-Title: de.bundeswehr.mese.sedapexpress
-Implementation-Version: 1.4.3
+Implementation-Title: SEDAP-Express Framework
+Implementation-Version: 1.5
 Implementation-Vendor: Federal Armed Forces of Germany
 Main-Class: de.bundeswehr.mese.sedapexpress.ReleaseInfo
 Class-Path: . 

@@ -349,7 +349,7 @@ public class POINT extends SEDAPExpressMessage {
 
 	// DeleteFlag
 	if (message.hasNext()) {
-	    value = message.next();
+	    value = message.next().toUpperCase();
 	    if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.YES_NO_FLAG_MATCHER, value)) {
 		this.deleteFlag = DeleteFlag.valueOf(value);
 	    } else if (value.isBlank()) {
