@@ -1,7 +1,7 @@
 /**
  * Note: This license has also been called the “Simplified BSD License” and the “FreeBSD License”.
  *
- * Copyright 2024-2025 UNIITY POC: Volker Voß, Federal Armed Forces of Germany
+ * Copyright 2024-2026 UNIITY POC: Volker Voß, Federal Armed Forces of Germany
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -142,13 +142,14 @@ public class GRAPHICPanelController extends MessagePanelController {
     @Override
     public GRAPHIC createMessage(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
 
-	GRAPHIC graphic = new GRAPHIC(number, time, sender, classification, acknowledgement, mac,
-		this.graficTypeComboBox.getValue(),
-		this.lineWidthTextField.getText() != null ? Double.parseDouble(this.lineWidthTextField.getText()) : null,
-		!this.lineColorTextField.getText().equals("") ? Integer.parseInt(this.lineColorTextField.getText()) : null,
-		!this.fillColorTextField.getText().equals("") ? Integer.parseInt(this.fillColorTextField.getText()) : null,
-		!this.textColorTextField.getText().equals("") ? Integer.parseInt(this.textColorTextField.getText()) : null,
-		this.encodingComboBox.getValue(), this.annotationTextArea.getText());
+	GRAPHIC graphic = new GRAPHIC();
+//	GRAPHIC graphic = new GRAPHIC(number, time, sender, classification, acknowledgement, mac,
+//		this.graficTypeComboBox.getValue(),
+//		this.lineWidthTextField.getText() != null ? Double.parseDouble(this.lineWidthTextField.getText()) : null,
+//		!this.lineColorTextField.getText().equals("") ? Integer.parseInt(this.lineColorTextField.getText()) : null,
+//		!this.fillColorTextField.getText().equals("") ? Integer.parseInt(this.fillColorTextField.getText()) : null,
+//		!this.textColorTextField.getText().equals("") ? Integer.parseInt(this.textColorTextField.getText()) : null,
+//		this.encodingComboBox.getValue(), this.annotationTextArea.getText());
 
 	return graphic;
     }

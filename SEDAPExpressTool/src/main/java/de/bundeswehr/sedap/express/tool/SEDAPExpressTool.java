@@ -1,7 +1,7 @@
 /**
  * Note: This license has also been called the “Simplified BSD License” and the “FreeBSD License”.
  *
- * Copyright 2024-2025 UNIITY POC: Volker Voß, Federal Armed Forces of Germany
+ * Copyright 2024-2026 UNIITY POC: Volker Voß, Federal Armed Forces of Germany
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted
  * provided that the following conditions are met:
@@ -28,6 +28,7 @@ package de.bundeswehr.sedap.express.tool;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
@@ -36,6 +37,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
+import de.bundeswehr.sedap.express.tool.simulators.contact.ContactSimController;
+import de.bundeswehr.sedap.express.tool.simulators.ownunit.OwnunitSimController;
 import de.bundeswehr.uniity.sedapexpress.controls.SEDAPExpressLoggingArea;
 import de.bundeswehr.uniity.sedapexpress.messages.ACKNOWLEDGE;
 import de.bundeswehr.uniity.sedapexpress.messages.COMMAND;
@@ -55,6 +58,7 @@ import de.bundeswehr.uniity.sedapexpress.messages.STATUS;
 import de.bundeswehr.uniity.sedapexpress.messages.TEXT;
 import de.bundeswehr.uniity.sedapexpress.messages.TIMESYNC;
 import de.bundeswehr.uniity.sedapexpress.network.SEDAPExpressCommunicator;
+import de.bundeswehr.uniity.sedapexpress.network.SEDAPExpressMQTTClient;
 import de.bundeswehr.uniity.sedapexpress.network.SEDAPExpressTCPClient;
 import de.bundeswehr.uniity.sedapexpress.network.SEDAPExpressTCPServer;
 import de.bundeswehr.uniity.sedapexpress.network.SEDAPExpressUDPClient;
@@ -86,6 +90,7 @@ import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -93,6 +98,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -162,6 +171,30 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
     private Button udpDeactivateButton;
 
     @FXML
+    private TextField mqttClientURLTextField;
+
+    @FXML
+    private TextField mqttUserTextField;
+
+    @FXML
+    private PasswordField mqttPasswordTextField;
+
+    @FXML
+    private TextField mqttCACertTextField;
+
+    @FXML
+    private TextField mqttClientCertTextField;
+
+    @FXML
+    private TextField mqttClientKeyTextField;
+
+    @FXML
+    private Button mqttClientActivateButton;
+
+    @FXML
+    private Button mqttClientDeactivateButton1;
+
+    @FXML
     private TitledPane tcpClientPane;
 
     @FXML
@@ -171,7 +204,34 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
     private TitledPane udpPane;
 
     @FXML
+    private TitledPane mqttClientPane;
+
+    @FXML
+    private TableView<?> textLogTableView;
+
+    @FXML
+    private TextArea promptTextField;
+
+    @FXML
     private SwingNode mapPane;
+
+    @FXML
+    private Tab timeSyncTab;
+
+    @FXML
+    private Tab keyExchangeTab;
+
+    @FXML
+    private Tab messageCreatorTab;
+
+    @FXML
+    private Tab ownunitSimTab;
+
+    @FXML
+    private TabPane contactSimTabPane;
+
+    @FXML
+    private Tab emissionSimTab;
 
     protected WorldWindowGLJPanel wwPanel;
 
@@ -220,11 +280,26 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
     @FXML
     void initialize() {
 	assert this.authenticationCheckBox != null : "fx:id=\"authenticationCheckBox\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.contactSimTabPane != null : "fx:id=\"contactSimTabPane\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.emissionSimTab != null : "fx:id=\"emissionSimTab\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.encryptedCheckBox != null : "fx:id=\"encryptedCheckBox\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.inputLoggingArea != null : "fx:id=\"inputLoggingArea\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.keyExchangeTab != null : "fx:id=\"keyExchangeTab\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.keyTextField != null : "fx:id=\"keyTextField\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.mapPane != null : "fx:id=\"mapPane\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.messageCreatorTab != null : "fx:id=\"messageCreatorTab\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.mqttCACertTextField != null : "fx:id=\"mqttCACertTextField\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.mqttClientActivateButton != null : "fx:id=\"mqttClientActivateButton\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.mqttClientCertTextField != null : "fx:id=\"mqttClientCertTextField\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.mqttClientDeactivateButton1 != null : "fx:id=\"mqttClientDeactivateButton1\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.mqttClientKeyTextField != null : "fx:id=\"mqttClientKeyTextField\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.mqttClientPane != null : "fx:id=\"mqttClientPane\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.mqttClientURLTextField != null : "fx:id=\"mqttClientURLTextField\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.mqttPasswordTextField != null : "fx:id=\"mqttPasswordTextField\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.mqttUserTextField != null : "fx:id=\"mqttUserTextField\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.outputLoggingArea != null : "fx:id=\"outputLoggingArea\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.ownunitSimTab != null : "fx:id=\"ownunitSimTab\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.promptTextField != null : "fx:id=\"promptTextField\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.protobufCheckBox != null : "fx:id=\"protobufCheckBox\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.tcpActivateButton != null : "fx:id=\"tcpActivateButton\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.tcpClientActivateButton != null : "fx:id=\"tcpClientActivateButton\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
@@ -236,6 +311,8 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 	assert this.tcpInterfaceComboBox != null : "fx:id=\"tcpInterfaceComboBox\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.tcpPane != null : "fx:id=\"tcpPane\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.tcpPortTextField != null : "fx:id=\"tcpPortTextField\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.textLogTableView != null : "fx:id=\"textLogTableView\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
+	assert this.timeSyncTab != null : "fx:id=\"timeSyncTab\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.udpActivateButton != null : "fx:id=\"udpActivateButton\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.udpDeactivateButton != null : "fx:id=\"udpDeactivateButton\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
 	assert this.udpIPTextField != null : "fx:id=\"udpIPTextField\" was not injected: check your FXML file 'SEDAPExpressTool.fxml'.";
@@ -392,14 +469,67 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 	model.getLayers().addLast(this.emissionsLayer);
 
 	this.mapPane.setContent(this.wwPanel);
+
+	// Ownunit Tab
+	try {
+	    final FXMLLoader loader = new FXMLLoader(OwnunitSimController.class.getResource("OwnunitSimView.fxml"));
+	    loader.setController(new OwnunitSimController(this));
+	    loader.setClassLoader(getClass().getClassLoader());
+
+	    Node node = (Node) loader.load();
+	    this.ownunitSimTab.setContent(node);
+
+	} catch (final IOException e) {
+	    e.printStackTrace();
+	    System.err.println("Could not load corresponding FXML file for fragment " + this.getClass().getSimpleName() + "!");
+	    System.exit(1);
+	}
+
+	// Contact TabPane
+	for (int i = 0; i < 5; i++) {
+
+	    try {
+		final FXMLLoader loader = new FXMLLoader(ContactSimController.class.getResource("ContactSimView.fxml"));
+		loader.setController(new ContactSimController(this, String.valueOf(1000 + i)));
+		loader.setClassLoader(getClass().getClassLoader());
+
+		Node node = (Node) loader.load();
+
+		Tab tab = new Tab(String.valueOf(i));
+		tab.setContent(node);
+		this.contactSimTabPane.getTabs().add(tab);
+
+	    } catch (final IOException e) {
+		e.printStackTrace();
+		System.err.println("Could not load corresponding FXML file for fragment " + this.getClass().getSimpleName() + "!");
+		System.exit(1);
+	    }
+
+	}
+
+    }
+
+    @FXML
+    void selectCACert(ActionEvent event) {
+
+    }
+
+    @FXML
+    void selectClientCert(ActionEvent event) {
+
+    }
+
+    @FXML
+    void selectClientKey(ActionEvent event) {
+
     }
 
     @FXML
     void tcpClientConnect(ActionEvent event) {
 
 	this.communicator = new SEDAPExpressTCPClient(this.tcpClientIPTextField.getText(), Integer.parseInt(this.tcpClientPortTextField.getText()));
-	this.communicator.subscripeForInputLogging(this);
-	this.communicator.subscripeForOutputLogging(this);
+	this.communicator.subscribeForInputLogging(this);
+	this.communicator.subscribeForOutputLogging(this);
 
 	if (this.communicator.connect()) {
 	    this.tcpClientPane.setCollapsible(false);
@@ -410,8 +540,8 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 
 	    this.communicator.subscribeMessages(this, MessageType.values());
 	} else {
-	    this.communicator.unsubscripeForInputLogging(this);
-	    this.communicator.unsubscripeForOutputLogging(this);
+	    this.communicator.unsubscribeForInputLogging(this);
+	    this.communicator.unsubscribeForOutputLogging(this);
 	}
     }
 
@@ -421,8 +551,10 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 	this.communicator.stopCommunicator();
 
 	this.communicator.unsubscribeAll(this);
-	this.communicator.unsubscripeForInputLogging(this);
-	this.communicator.unsubscripeForOutputLogging(this);
+	this.communicator.unsubscribeForInputLogging(this);
+	this.communicator.unsubscribeForOutputLogging(this);
+
+	this.communicator = null;
 
 	this.tcpClientPane.setCollapsible(true);
 	this.tcpPane.setCollapsible(true);
@@ -435,8 +567,8 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
     void tcpConnect(ActionEvent event) {
 
 	this.communicator = new SEDAPExpressTCPServer(this.tcpInterfaceComboBox.getSelectionModel().getSelectedItem().getInetAddresses().nextElement().getHostAddress(), Integer.parseInt(this.tcpClientPortTextField.getText()));
-	this.communicator.subscripeForInputLogging(this);
-	this.communicator.subscripeForOutputLogging(this);
+	this.communicator.subscribeForInputLogging(this);
+	this.communicator.subscribeForOutputLogging(this);
 
 	if (this.communicator.connect()) {
 	    this.tcpClientPane.setCollapsible(false);
@@ -447,8 +579,8 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 
 	    this.communicator.subscribeMessages(this, MessageType.values());
 	} else {
-	    this.communicator.unsubscripeForInputLogging(this);
-	    this.communicator.unsubscripeForOutputLogging(this);
+	    this.communicator.unsubscribeForInputLogging(this);
+	    this.communicator.unsubscribeForOutputLogging(this);
 	}
     }
 
@@ -458,8 +590,10 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 	this.communicator.stopCommunicator();
 
 	this.communicator.unsubscribeAll(this);
-	this.communicator.unsubscripeForInputLogging(this);
-	this.communicator.unsubscripeForOutputLogging(this);
+	this.communicator.unsubscribeForInputLogging(this);
+	this.communicator.unsubscribeForOutputLogging(this);
+
+	this.communicator = null;
 
 	this.tcpClientPane.setCollapsible(true);
 	this.tcpPane.setCollapsible(true);
@@ -472,8 +606,8 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
     void udpConnect(ActionEvent event) {
 
 	this.communicator = new SEDAPExpressUDPClient(this.udpIPTextField.getText(), Integer.parseInt(this.udpPortTextField.getText()));
-	this.communicator.subscripeForInputLogging(this);
-	this.communicator.subscripeForOutputLogging(this);
+	this.communicator.subscribeForInputLogging(this);
+	this.communicator.subscribeForOutputLogging(this);
 
 	if (this.communicator.connect()) {
 	    this.tcpClientPane.setCollapsible(false);
@@ -485,8 +619,8 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 	    this.communicator.subscribeMessages(this, MessageType.values());
 
 	} else {
-	    this.communicator.unsubscripeForInputLogging(this);
-	    this.communicator.unsubscripeForOutputLogging(this);
+	    this.communicator.unsubscribeForInputLogging(this);
+	    this.communicator.unsubscribeForOutputLogging(this);
 	}
     }
 
@@ -496,8 +630,63 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 	this.communicator.stopCommunicator();
 
 	this.communicator.unsubscribeAll(this);
-	this.communicator.unsubscripeForInputLogging(this);
-	this.communicator.unsubscripeForOutputLogging(this);
+	this.communicator.unsubscribeForInputLogging(this);
+	this.communicator.unsubscribeForOutputLogging(this);
+
+	this.communicator = null;
+
+	this.tcpClientPane.setCollapsible(true);
+	this.tcpPane.setCollapsible(true);
+	this.udpPane.setCollapsible(true);
+	this.udpActivateButton.setDisable(false);
+	this.udpDeactivateButton.setDisable(true);
+    }
+
+    @FXML
+    void mqttClientConnect(ActionEvent event) {
+
+	try {
+	    this.communicator = new SEDAPExpressMQTTClient(
+		    this.mqttClientURLTextField.getText(),
+		    "SEDAPExpressTestTool",
+		    this.mqttUserTextField.getText(),
+		    this.mqttPasswordTextField.getText(),
+		    this.mqttCACertTextField.getText(),
+		    this.mqttClientCertTextField.getText(),
+		    this.mqttClientKeyTextField.getText());
+	} catch (FileNotFoundException e) {
+
+	    e.printStackTrace();
+	}
+
+	this.communicator.subscribeForInputLogging(this);
+	this.communicator.subscribeForOutputLogging(this);
+
+	if (this.communicator.connect()) {
+	    this.tcpClientPane.setCollapsible(false);
+	    this.tcpPane.setCollapsible(false);
+	    this.udpPane.setCollapsible(false);
+	    this.udpActivateButton.setDisable(true);
+	    this.udpDeactivateButton.setDisable(false);
+
+	    this.communicator.subscribeMessages(this, MessageType.values());
+
+	} else {
+	    this.communicator.unsubscribeForInputLogging(this);
+	    this.communicator.unsubscribeForOutputLogging(this);
+	}
+    }
+
+    @FXML
+    void mqttClientDisconnect(ActionEvent event) {
+
+	this.communicator.stopCommunicator();
+
+	this.communicator.unsubscribeAll(this);
+	this.communicator.unsubscribeForInputLogging(this);
+	this.communicator.unsubscribeForOutputLogging(this);
+
+	this.communicator = null;
 
 	this.tcpClientPane.setCollapsible(true);
 	this.tcpPane.setCollapsible(true);
@@ -516,7 +705,21 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 	this.outputLoggingArea.log(message);
     }
 
+    private MilStd2525TacticalSymbol ownunit;
     private ConcurrentHashMap<String, MilStd2525TacticalSymbol> contacts = new ConcurrentHashMap<>();
+
+    public void sendSEDAPExpressMessage(SEDAPExpressMessage message) {
+
+	try {
+	    if (this.communicator != null)
+		this.communicator.sendSEDAPExpressMessage(message);
+
+	    // Intern ebenfalls verarbeiten
+	    processSEDAPExpressMessage(message);
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+    }
 
     @Override
     public void processSEDAPExpressMessage(SEDAPExpressMessage message) {
@@ -527,13 +730,105 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 	else if (message instanceof COMMAND _) {
 	}
 
+	else if (message instanceof OWNUNIT contact) {
+
+	    MilStd2525TacticalSymbol pp = null;
+
+	    if (this.ownunit != null) {
+
+		pp = this.ownunit;
+
+	    } else {
+
+		// Create new symbol with some default attributes
+		if (contact.getSIDC() != null)
+		    pp = new MilStd2525TacticalSymbol(String.valueOf(contact.getSIDC()), Position.fromDegrees(0.0, 0.0, 0.0));
+		else
+		    pp = new MilStd2525TacticalSymbol(SEDAPExpressTool.standardSIDC, Position.fromDegrees(0.0, 0.0, 0.0));
+		pp.setAltitudeMode(WorldWind.ABSOLUTE);
+		pp.setShowLocation(false);
+		pp.setShowGraphicModifiers(true);
+		pp.setShowTextModifiers(true);
+		pp.setModifier(SymbologyConstants.SHOW_FILL, true);
+		pp.setModifier(SymbologyConstants.UNIQUE_DESIGNATION, "Ownunit");
+
+		final TacticalSymbolAttributes attrs = new BasicTacticalSymbolAttributes();
+		attrs.setTextModifierFont(this.labelFont);
+		attrs.setTextModifierMaterial(this.labelMaterial);
+		attrs.setScale(0.5);
+		pp.setAttributes(attrs);
+
+		final TacticalSymbolAttributes highAttrs = new BasicTacticalSymbolAttributes();
+		highAttrs.setTextModifierFont(this.labelFont);
+		highAttrs.setTextModifierMaterial(this.labelMaterial);
+
+		pp.setHighlightAttributes(attrs);
+
+		this.contactsLayer.addRenderable(pp);
+		this.ownunit = pp;
+
+	    }
+
+	    if (contact.getSIDC() != null)
+		pp.setIdentifier(String.valueOf(contact.getSIDC()));
+
+	    pp.setModifier(SymbologyConstants.DATE_TIME_GROUP, SEDAPExpressTool.sdf.format(contact.getTime()).toUpperCase());
+
+	    Position pos;
+	    if (contact.getAltitude() != null)
+		pos = Position.fromDegrees(contact.getLatitude(), contact.getLongitude(), contact.getAltitude());
+	    else
+		pos = Position.fromDegrees(contact.getLatitude(), contact.getLongitude());
+	    pp.setPosition(pos);
+
+	    if ((pos.getLatitude().getDegrees() >= 0) && (pos.getLongitude().getDegrees() >= 0)) {
+		pp.setModifier(SymbologyConstants.HIGHER_FORMATION, (Math.round(pos.getLatitude().getDegrees() * 100d) / 100d) + "N" + (Math.round(pos.getLongitude().getDegrees() * 100d) / 100d) + "E");
+	    } else if ((pos.getLatitude().getDegrees() >= 0) && (pos.getLongitude().getDegrees() < 0)) {
+		pp.setModifier(SymbologyConstants.HIGHER_FORMATION, (Math.round(pos.getLatitude().getDegrees() * 100d) / 100d) + "N" + (Math.round(pos.getLongitude().getDegrees() * 100d) / 100d) + "W");
+	    } else if ((pos.getLatitude().getDegrees() < 0) && (pos.getLongitude().getDegrees() >= 0)) {
+		pp.setModifier(SymbologyConstants.HIGHER_FORMATION, (Math.round(pos.getLatitude().getDegrees() * 100d) / 100d) + "S" + (Math.round(pos.getLongitude().getDegrees() * 100d) / 100d) + "E");
+	    } else {
+		pp.setModifier(SymbologyConstants.HIGHER_FORMATION, (Math.round(pos.getLatitude().getDegrees() * 100d) / 100d) + "S" + (Math.round(pos.getLongitude().getDegrees() * 100d) / 100d) + "W");
+	    }
+
+	    if (contact.getAltitude() != null) {
+		if (pos.getAltitude() < -1.0) {
+		    pp.setModifier(SymbologyConstants.ALTITUDE_DEPTH, Math.round(pos.getAltitude()) + "m");
+		} else if (Math.round(pos.getAltitude()) == 0) {
+		    pp.setModifier(SymbologyConstants.ALTITUDE_DEPTH, null);
+		} else if (pos.getAltitude() > 500) {
+		    pp.setModifier(SymbologyConstants.ALTITUDE_DEPTH, Math.round((pos.getAltitude() / 100d) * SEDAPExpressTool.meterToFeet) + "hft");
+		} else {
+		    pp.setModifier(SymbologyConstants.ALTITUDE_DEPTH, Math.round(pos.getAltitude() * SEDAPExpressTool.meterToFeet) + "ft");
+		}
+	    }
+
+	    if (contact.getSpeed() != null && contact.getSpeed() > 1) {
+		pp.setModifier(SymbologyConstants.SPEED, Math.round(contact.getSpeed() * SEDAPExpressTool.metersPerSecondToKnots));
+		pp.setModifier(SymbologyConstants.SPEED_LEADER_SCALE, Math.log10(contact.getSpeed()) / 1.5);
+	    } else if (contact.getSpeed() > 0) {
+		pp.setModifier(SymbologyConstants.SPEED, Math.round(contact.getSpeed() * SEDAPExpressTool.metersPerSecondToKnots));
+		pp.setModifier(SymbologyConstants.SPEED_LEADER_SCALE, 1);
+	    } else {
+		pp.setModifier(SymbologyConstants.SPEED, null);
+		pp.setModifier(SymbologyConstants.SPEED_LEADER_SCALE, 0);
+	    }
+
+	    if (contact.getCourse() != null)
+		pp.setModifier(SymbologyConstants.DIRECTION_OF_MOVEMENT, Angle.fromDegrees(contact.getCourse()));
+
+	    if (contact.getName() != null)
+		pp.setModifier(SymbologyConstants.TYPE, contact.getName());
+
+	}
+
 	else if (message instanceof CONTACT contact) {
 
 	    MilStd2525TacticalSymbol pp = null;
 
 	    if (this.contacts.containsKey(contact.getContactID())) {
 
-		if (contact.getDeleteFlag() == DeleteFlag.FALSE) {
+		if (contact.getDeleteFlag() == null || contact.getDeleteFlag() == DeleteFlag.FALSE) {
 
 		    // Get existing symbol and just updating it
 		    pp = this.contacts.get(contact.getContactID());
@@ -546,7 +841,7 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 		    return;
 		}
 
-	    } else if (contact.getDeleteFlag() == DeleteFlag.FALSE) {
+	    } else if (contact.getDeleteFlag() == null || contact.getDeleteFlag() == DeleteFlag.FALSE) {
 
 		// Create new symbol with some default attributes
 		if (contact.getSIDC() != null)
@@ -563,7 +858,7 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 		final TacticalSymbolAttributes attrs = new BasicTacticalSymbolAttributes();
 		attrs.setTextModifierFont(this.labelFont);
 		attrs.setTextModifierMaterial(this.labelMaterial);
-		attrs.setScale(0.2);
+		attrs.setScale(0.5);
 		pp.setAttributes(attrs);
 
 		final TacticalSymbolAttributes highAttrs = new BasicTacticalSymbolAttributes();
@@ -577,7 +872,7 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 
 	    } else {
 
-		// Unknow and should be deleted, so no further actions have to be done
+		// Unknown and should be deleted, so no further actions have to be done
 		return;
 	    }
 
@@ -654,7 +949,6 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 	} else if (message instanceof HEARTBEAT _) {
 	} else if (message instanceof KEYEXCHANGE _) {
 	} else if (message instanceof METEO _) {
-	} else if (message instanceof OWNUNIT _) {
 	} else if (message instanceof RESEND _) {
 	} else if (message instanceof STATUS _) {
 	} else if (message instanceof TEXT _) {
@@ -675,7 +969,7 @@ public class SEDAPExpressTool extends Application implements SEDAPExpressSubscri
 	    Parent root = loader.load();
 	    Scene scene = new Scene(root);
 
-	    primaryStage.setTitle("SEDAP-Express Tool v1.0 - (C)2024-2025, Federal Armed Forces of Germany");
+	    primaryStage.setTitle("SEDAP-Express Tool v1.0 - (C)2024-2026, Federal Armed Forces of Germany");
 	    primaryStage.setScene(scene);
 	    primaryStage.show();
 

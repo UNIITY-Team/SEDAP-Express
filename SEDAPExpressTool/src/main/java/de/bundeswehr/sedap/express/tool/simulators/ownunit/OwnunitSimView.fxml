@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<BorderPane xmlns="http://javafx.com/javafx/26.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <GridPane hgap="5.0" vgap="5.0" BorderPane.alignment="CENTER">
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints minWidth="10.0" />
+            <ColumnConstraints maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+            <ColumnConstraints />
+            <ColumnConstraints minWidth="10.0" />
+            <ColumnConstraints minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
+            <RowConstraints valignment="TOP" vgrow="ALWAYS" />
+         </rowConstraints>
+         <children>
+            <Label text="Position" GridPane.rowIndex="1" />
+            <Label text="Latitude [°]:" GridPane.rowIndex="2" />
+            <Label text="Longitude [°]:" GridPane.rowIndex="3" />
+            <Label text="Altitude [m]:" GridPane.rowIndex="4" />
+            <TextField fx:id="altTextField" prefColumnCount="8" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="lonTextField" prefColumnCount="8" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+            <TextField fx:id="latTextField" prefColumnCount="8" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Kinetics" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnSpan="4" GridPane.rowIndex="5">
+               <children>
+                  <Label maxWidth="1.7976931348623157E308" text="Mode:" />
+                  <RadioButton fx:id="staticToggleButton" selected="true" text="Static">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="veloToggleGroup" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="orbitToggleButton" text="Orbiting" toggleGroup="$veloToggleGroup" />
+               </children>
+            </HBox>
+            <Label text="Course [°]:" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Label fx:id="speedUnitLabel" text="Speed [m/s]:" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <Label text="Heading [°]:" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+			<TextField fx:id="hdgTextField" disable="true" prefColumnCount="8" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+            <TextField fx:id="spdTextField" prefColumnCount="8" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+            <TextField fx:id="crsTextField" prefColumnCount="8" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+            <CheckBox fx:id="hdgCrsCheckBox" selected="true" text="HDG=CRS" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+            <ComboBox fx:id="spdUnitChooseBox" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+            <GridPane>
+               <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints hgrow="ALWAYS" />
+                  <ColumnConstraints />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+               </rowConstraints>
+            </GridPane>
+            <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnSpan="2147483647">
+               <children>
+                  <Label text="Preset:" />
+                  <ComboBox fx:id="presetComboBox" maxWidth="250.0" prefWidth="250.0" />
+               </children>
+            </HBox>
+            <ToggleButton fx:id="simToggleButton" onAction="#simToggleButtonAction" text="Start simulation" GridPane.rowIndex="6" />
+         </children>
+      </GridPane>
+   </center>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</BorderPane>
