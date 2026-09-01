@@ -218,12 +218,12 @@ public class STATUS extends SEDAPExpressMessage {
 	this.fuelLevelNames = fuelLevelNames;
     }
 
-    public List<String> getBatterieLevelNames() {
+    public List<String> getBatteryLevelNames() {
 	return this.batteryLevelNames;
     }
 
-    public void setBatterieLevelNames(List<String> batterieLevelNames) {
-	this.batteryLevelNames = batterieLevelNames;
+    public void setBatteryLevelNames(List<String> batteryLevelNames) {
+	this.batteryLevelNames = batteryLevelNames;
     }
 
     public List<Double> getStorageLevels() {

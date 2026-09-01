@@ -63,7 +63,7 @@ class STATUSTest {
 	Assertions.assertEquals(50.0, status.getAmmunitionLevels().get(0));
 	Assertions.assertEquals("Tank1", status.getFuelLevelNames().get(0));
 	Assertions.assertEquals(75.3, status.getFuelLevels().get(0));
-	Assertions.assertEquals("MainAkku", status.getBatterieLevelNames().get(0));
+	Assertions.assertEquals("MainAkku", status.getBatteryLevelNames().get(0));
 	Assertions.assertEquals(10.8, status.getBatteryLevels().get(0));
 	Assertions.assertEquals(34, status.getCmdId());
 	Assertions.assertEquals(CommandState.Executed_successfully, status.getCmdState());
@@ -92,7 +92,7 @@ class STATUSTest {
 	Assertions.assertEquals(20.3, status.getAmmunitionLevels().get(0));
 	Assertions.assertEquals("", status.getFuelLevelNames().get(0));
 	Assertions.assertEquals(30.4, status.getFuelLevels().get(0));
-	Assertions.assertEquals("", status.getBatterieLevelNames().get(0));
+	Assertions.assertEquals("", status.getBatteryLevelNames().get(0));
 	Assertions.assertEquals(40.5, status.getBatteryLevels().get(0));
 	Assertions.assertEquals("", status.getStorageLevelNames().get(0));
 	Assertions.assertEquals(75, status.getStorageLevels().get(0));
@@ -118,7 +118,7 @@ class STATUSTest {
 	Assertions.assertNull(status.getAmmunitionLevels());
 	Assertions.assertNull(status.getFuelLevelNames());
 	Assertions.assertNull(status.getFuelLevels());
-	Assertions.assertEquals("MainBattery", status.getBatterieLevelNames().get(0));
+	Assertions.assertEquals("MainBattery", status.getBatteryLevelNames().get(0));
 	Assertions.assertEquals(100.0, status.getBatteryLevels().get(0));
 	Assertions.assertNull(status.getStorageLevelNames());
 	Assertions.assertNull(status.getStorageLevels());
@@ -151,7 +151,7 @@ class STATUSTest {
 	Assertions.assertEquals(20.3, status.getAmmunitionLevels().get(0));
 	Assertions.assertEquals("", status.getFuelLevelNames().get(0));
 	Assertions.assertEquals(30.4, status.getFuelLevels().get(0));
-	Assertions.assertEquals("", status.getBatterieLevelNames().get(0));
+	Assertions.assertEquals("", status.getBatteryLevelNames().get(0));
 	Assertions.assertEquals(40.5, status.getBatteryLevels().get(0));
 	Assertions.assertEquals("", status.getStorageLevelNames().get(0));
 	Assertions.assertEquals(88.2, status.getStorageLevels().get(0));
