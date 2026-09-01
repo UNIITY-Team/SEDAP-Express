@@ -17,9 +17,9 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/SEDAPExpress/dist/sedapexpress-1.4.5.jar" sourcepath="/SEDAPExpress/dist/sedapexpress-1.4.5-sources.jar">
+	<classpathentry kind="lib" path="/SEDAPExpress/dist/sedapexpress-1.4.6.jar" sourcepath="/SEDAPExpress/dist/sedapexpress-1.4.6-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/dist/sedapexpress-1.4.5-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/dist/sedapexpress-1.4.6-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
