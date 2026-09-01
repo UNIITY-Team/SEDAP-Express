@@ -64,7 +64,7 @@ class STATUSTest {
 	Assertions.assertEquals("Tank1", status.getFuelLevelNames().get(0));
 	Assertions.assertEquals(75.3, status.getFuelLevels().get(0));
 	Assertions.assertEquals("MainAkku", status.getBatterieLevelNames().get(0));
-	Assertions.assertEquals(10.8, status.getBatterieLevels().get(0));
+	Assertions.assertEquals(10.8, status.getBatteryLevels().get(0));
 	Assertions.assertEquals(34, status.getCmdId());
 	Assertions.assertEquals(CommandState.Executed_successfully, status.getCmdState());
 	Assertions.assertEquals("10.8.0.6", status.getHostname());
@@ -93,7 +93,7 @@ class STATUSTest {
 	Assertions.assertEquals("", status.getFuelLevelNames().get(0));
 	Assertions.assertEquals(30.4, status.getFuelLevels().get(0));
 	Assertions.assertEquals("", status.getBatterieLevelNames().get(0));
-	Assertions.assertEquals(40.5, status.getBatterieLevels().get(0));
+	Assertions.assertEquals(40.5, status.getBatteryLevels().get(0));
 	Assertions.assertEquals("", status.getStorageLevelNames().get(0));
 	Assertions.assertEquals(75, status.getStorageLevels().get(0));
 	Assertions.assertNull(status.getCmdId());
@@ -119,7 +119,7 @@ class STATUSTest {
 	Assertions.assertNull(status.getFuelLevelNames());
 	Assertions.assertNull(status.getFuelLevels());
 	Assertions.assertEquals("MainBattery", status.getBatterieLevelNames().get(0));
-	Assertions.assertEquals(100.0, status.getBatterieLevels().get(0));
+	Assertions.assertEquals(100.0, status.getBatteryLevels().get(0));
 	Assertions.assertNull(status.getStorageLevelNames());
 	Assertions.assertNull(status.getStorageLevels());
 	Assertions.assertNull(status.getCmdId());
@@ -152,7 +152,7 @@ class STATUSTest {
 	Assertions.assertEquals("", status.getFuelLevelNames().get(0));
 	Assertions.assertEquals(30.4, status.getFuelLevels().get(0));
 	Assertions.assertEquals("", status.getBatterieLevelNames().get(0));
-	Assertions.assertEquals(40.5, status.getBatterieLevels().get(0));
+	Assertions.assertEquals(40.5, status.getBatteryLevels().get(0));
 	Assertions.assertEquals("", status.getStorageLevelNames().get(0));
 	Assertions.assertEquals(88.2, status.getStorageLevels().get(0));
 	Assertions.assertEquals("10.8.0.6", status.getHostname());

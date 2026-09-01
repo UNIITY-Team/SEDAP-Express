@@ -1,6 +1,0 @@
-gpg --list-keys
-
-gpg --list-secret-keys
-
-
-gpg --batch --yes -u "uniity@bundeswehr.org" -ab -o sedapexpress-1.4.0.jar.asc sedapexpress-1.4.0.jar

@@ -145,12 +145,12 @@ public class STATUS extends SEDAPExpressMessage {
 
     private List<Double> ammunitionLevels;
     private List<Double> fuelLevels;
-    private List<Double> batterieLevels;
+    private List<Double> batteryLevels;
     private List<Double> storageLevels;
 
     private List<String> ammunitionLevelNames;
     private List<String> fuelLevelNames;
-    private List<String> batterieLevelNames;
+    private List<String> batteryLevelNames;
     private List<String> storageLevelNames;
 
     private Integer cmdId;
@@ -194,12 +194,12 @@ public class STATUS extends SEDAPExpressMessage {
 	this.fuelLevels = fuelLevels;
     }
 
-    public List<Double> getBatterieLevels() {
-	return this.batterieLevels;
+    public List<Double> getBatteryLevels() {
+	return this.batteryLevels;
     }
 
-    public void setBatterieLevels(List<Double> batterieLevels) {
-	this.batterieLevels = batterieLevels;
+    public void setBatteryLevels(List<Double> batteryLevels) {
+	this.batteryLevels = batteryLevels;
     }
 
     public List<String> getAmmunitionLevelNames() {
@@ -219,11 +219,11 @@ public class STATUS extends SEDAPExpressMessage {
     }
 
     public List<String> getBatterieLevelNames() {
-	return this.batterieLevelNames;
+	return this.batteryLevelNames;
     }
 
     public void setBatterieLevelNames(List<String> batterieLevelNames) {
-	this.batterieLevelNames = batterieLevelNames;
+	this.batteryLevelNames = batterieLevelNames;
     }
 
     public List<Double> getStorageLevels() {
@@ -293,10 +293,10 @@ public class STATUS extends SEDAPExpressMessage {
 	this.opsState = null;
 	this.ammunitionLevels = null;
 	this.fuelLevels = null;
-	this.batterieLevels = null;
+	this.batteryLevels = null;
 	this.ammunitionLevelNames = null;
 	this.fuelLevelNames = null;
-	this.batterieLevelNames = null;
+	this.batteryLevelNames = null;
 	this.cmdId = null;
 	this.cmdState = null;
 	this.hostname = null;
@@ -397,10 +397,10 @@ public class STATUS extends SEDAPExpressMessage {
 	this.opsState = opsState;
 	this.ammunitionLevels = ammunitionLevels;
 	this.fuelLevels = fuelLevels;
-	this.batterieLevels = batterieLevels;
+	this.batteryLevels = batterieLevels;
 	this.ammunitionLevelNames = ammunitionLevelNames;
 	this.fuelLevelNames = fuelLevelNames;
-	this.batterieLevelNames = batterieLevelNames;
+	this.batteryLevelNames = batterieLevelNames;
 	this.cmdId = cmdId;
 	this.cmdState = cmdState;
 	this.hostname = hostname;
@@ -484,21 +484,21 @@ public class STATUS extends SEDAPExpressMessage {
 	    }
 	}
 
-	// BatterieLevel
+	// BatteryLevel
 	if (message.hasNext()) {
 	    value = message.next();
 	    if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.PERCENT_MATCHER, value)) {
 
 		Iterator<String> it = Arrays.asList(value.split("#")).iterator();
-		this.batterieLevelNames = new LinkedList<>();
-		this.batterieLevels = new LinkedList<>();
+		this.batteryLevelNames = new LinkedList<>();
+		this.batteryLevels = new LinkedList<>();
 		while (it.hasNext()) {
-		    this.batterieLevelNames.add(it.next());
-		    this.batterieLevels.add(Double.parseDouble(it.next()));
+		    this.batteryLevelNames.add(it.next());
+		    this.batteryLevels.add(Double.parseDouble(it.next()));
 		}
 
 	    } else if (!value.isBlank()) {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"batterieLevels\" contains not a valid number!", value);
+		SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"batteryLevels\" contains not a valid number!", value);
 	    }
 	}
 
@@ -609,9 +609,9 @@ public class STATUS extends SEDAPExpressMessage {
 
 		    (this.tecState == ((STATUS) obj).tecState) && (this.opsState == ((STATUS) obj).opsState) &&
 
-		    (this.ammunitionLevelNames.equals(((STATUS) obj).ammunitionLevelNames)) && (this.fuelLevelNames.equals(((STATUS) obj).fuelLevelNames)) && (this.batterieLevelNames.equals(((STATUS) obj).batterieLevelNames)) &&
+		    (this.ammunitionLevelNames.equals(((STATUS) obj).ammunitionLevelNames)) && (this.fuelLevelNames.equals(((STATUS) obj).fuelLevelNames)) && (this.batteryLevelNames.equals(((STATUS) obj).batteryLevelNames)) &&
 
-		    (this.ammunitionLevels.equals(((STATUS) obj).ammunitionLevels)) && (this.fuelLevels.equals(((STATUS) obj).fuelLevels)) && (this.batterieLevels.equals(((STATUS) obj).batterieLevels)) &&
+		    (this.ammunitionLevels.equals(((STATUS) obj).ammunitionLevels)) && (this.fuelLevels.equals(((STATUS) obj).fuelLevels)) && (this.batteryLevels.equals(((STATUS) obj).batteryLevels)) &&
 
 		    (((this.hostname == null) && (((STATUS) obj).hostname == null)) || ((this.hostname != null) && this.hostname.equals(((STATUS) obj).hostname))) &&
 
@@ -649,9 +649,9 @@ public class STATUS extends SEDAPExpressMessage {
 	}
 
 	String batterieStr = "";
-	if (this.batterieLevelNames != null) {
-	    Iterator<String> itString = this.batterieLevelNames.iterator();
-	    Iterator<Double> itDouble = this.batterieLevels.iterator();
+	if (this.batteryLevelNames != null) {
+	    Iterator<String> itString = this.batteryLevelNames.iterator();
+	    Iterator<Double> itDouble = this.batteryLevels.iterator();
 	    while (itString.hasNext()) {
 		batterieStr = "#" + itString.next() + "#" + SEDAPExpressMessage.NumberFormatter.format(itDouble.next());
 	    }
