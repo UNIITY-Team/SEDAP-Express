@@ -30,6 +30,9 @@ import java.util.Iterator;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import de.bundeswehr.uniity.sedapexpress.messages.COMMAND.GenericAction;
 import de.bundeswehr.uniity.sedapexpress.messages.COMMAND.HoldEngagement;
@@ -45,6 +48,34 @@ import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage.Classifica
  *
  */
 class COMMANDTest {
+
+    @ParameterizedTest
+    @CsvSource({ "DL, DayLight", "IR, InfraRed", "LI, LightIntensifier" })
+    void cameraModesAcceptDocumentedNamesAndLegacyAliases(String alias, String canonical) {
+	COMMAND.CameraMode expected = COMMAND.CameraMode.valueOf(alias);
+	Assertions.assertEquals(canonical, expected.toString());
+	for (String input : new String[] { canonical, canonical.toLowerCase(java.util.Locale.ROOT),
+		canonical.toUpperCase(java.util.Locale.ROOT), alias, alias.toLowerCase(java.util.Locale.ROOT) }) {
+	    COMMAND command = new COMMAND(cameraMessage(input));
+	    COMMAND.SetCameraParameters camera = Assertions.assertInstanceOf(COMMAND.SetCameraParameters.class, command.getCmdObject());
+	    Assertions.assertEquals("CAM1", camera.cameraId());
+	    Assertions.assertEquals(2.5, camera.zoom());
+	    Assertions.assertEquals(expected, camera.mode());
+	    Assertions.assertEquals(cameraMessage(canonical), command.toString());
+	    COMMAND roundTrip = new COMMAND(command.toString());
+	    Assertions.assertEquals(camera, roundTrip.getCmdObject());
+	}
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "unknown", "Day", "IR2", " DayLight" })
+    void rejectsUnknownCameraModes(String mode) {
+	Assertions.assertThrows(IllegalArgumentException.class, () -> new COMMAND(cameraMessage(mode)));
+    }
+
+    private static String cameraMessage(String mode) {
+	return "COMMAND;01;0195238E35AD;unit;U;;;recipient;0001;00;;36;CAM1;2.5;" + mode;
+    }
 
     @Test
     final void testConstructorValues() {

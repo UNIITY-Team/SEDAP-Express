@@ -190,9 +190,30 @@ public class COMMAND extends SEDAPExpressMessage {
     }
 
     public enum CameraMode {
-	DL, // Day Light
-	IR, // Infra Red
-	LI // Light Intensifier
+	DL("DayLight"),
+	IR("InfraRed"),
+	LI("LightIntensifier");
+
+	private final String wireValue;
+
+	CameraMode(String wireValue) {
+	    this.wireValue = wireValue;
+	}
+
+	/** Accepts ICD names and legacy enum aliases, case-insensitively. */
+	public static CameraMode fromWireValue(String value) {
+	    for (CameraMode mode : values()) {
+		if (mode.wireValue.equalsIgnoreCase(value) || mode.name().equalsIgnoreCase(value)) {
+		    return mode;
+		}
+	    }
+	    throw new IllegalArgumentException("Invalid camera mode: " + value);
+	}
+
+	@Override
+	public String toString() {
+	    return this.wireValue;
+	}
     }
 
     public interface CommandObject {
@@ -875,7 +896,7 @@ public class COMMAND extends SEDAPExpressMessage {
 		}
 		case SetCameraParameters -> {
 		    if (parts.length >= 3)
-			this.cmdObject = new SetCameraParameters(parts[0], Double.parseDouble(parts[1]), CameraMode.valueOf(parts[2].toUpperCase()));
+			this.cmdObject = new SetCameraParameters(parts[0], Double.parseDouble(parts[1]), CameraMode.fromWireValue(parts[2]));
 		    else
 			SEDAPExpressMessage.logger.logp(Level.SEVERE, "COMMAND", "COMMAND(Iterator<String> message)", "Incomplete SetCameraParameters values!");
 		}
