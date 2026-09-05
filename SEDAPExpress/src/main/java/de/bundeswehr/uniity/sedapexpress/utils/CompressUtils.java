@@ -58,7 +58,7 @@ public class CompressUtils {
 	synchronized (CompressUtils.deflater) {
 	    CompressUtils.deflater.reset();
 	    try {
-		return Base64.toBase64String(new DeflaterInputStream(new ByteArrayInputStream(message.toString().getBytes(StandardCharsets.US_ASCII)), CompressUtils.deflater).readAllBytes());
+		return Base64.toBase64String(new DeflaterInputStream(new ByteArrayInputStream(message.toString().getBytes(StandardCharsets.ISO_8859_1)), CompressUtils.deflater).readAllBytes());
 	    } catch (final IOException e) {
 		return null;
 	    }
@@ -76,7 +76,7 @@ public class CompressUtils {
 	synchronized (CompressUtils.inflater) {
 	    CompressUtils.inflater.reset();
 	    try {
-		return SEDAPExpressMessage.deserialize(new String(new InflaterInputStream(new ByteArrayInputStream(Base64.decode(compressedMessage)), CompressUtils.inflater).readAllBytes(), StandardCharsets.US_ASCII));
+		return SEDAPExpressMessage.deserialize(new String(new InflaterInputStream(new ByteArrayInputStream(Base64.decode(compressedMessage)), CompressUtils.inflater).readAllBytes(), StandardCharsets.ISO_8859_1));
 	    } catch (final IOException e) {
 		return null;
 	    }

@@ -25,6 +25,7 @@
  */
 package de.bundeswehr.uniity.sedapexpress.messages;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -464,7 +465,7 @@ public class GRAPHIC extends SEDAPExpressMessage {
 	    } else {
 		if (this.encoding == DataEncoding.BASE64) {
 		    try {
-			this.annotation = new String(Base64.decode(value));
+			this.annotation = new String(Base64.decode(value), StandardCharsets.ISO_8859_1);
 		    } catch (DecoderException e) {
 			SEDAPExpressMessage.logger.logp(Level.SEVERE, "GRAPHIC", "GRAPHIC(Iterator<String> message)", "Optional field \"annotation\" could not be decoded from Base64!");
 		    }
@@ -645,7 +646,7 @@ public class GRAPHIC extends SEDAPExpressMessage {
 			.append((this.fillColor != null) ? Long.toHexString(this.fillColor).toUpperCase() : "").append(";")
 			.append((this.textColor != null) ? Long.toHexString(this.textColor).toUpperCase() : "").append(";")
 			.append((this.encoding != null && this.encoding == DataEncoding.BASE64) ? this.encoding : "").append(";")
-			.append((this.annotation != null) ? ((this.encoding == DataEncoding.BASE64) ? Base64.toBase64String(this.annotation.getBytes()) : this.annotation) : "").append(";")
+			.append((this.annotation != null) ? ((this.encoding == DataEncoding.BASE64) ? Base64.toBase64String(this.annotation.getBytes(StandardCharsets.ISO_8859_1)) : this.annotation) : "").append(";")
 			.append((this.graphicObject != null) ? SEDAPExpressMessage.objectToCSV(this.graphicObject) : "").toString());
 
     }
