@@ -25,6 +25,7 @@
  */
 package de.bundeswehr.uniity.sedapexpress.messages;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -555,7 +556,7 @@ public class STATUS extends SEDAPExpressMessage {
 		SEDAPExpressMessage.logger.logp(Level.INFO, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"hostname\" is empty!");
 	    } else {
 		try {
-		    this.hostname = new String(Base64.decode(value));
+		    this.hostname = new String(Base64.decode(value), StandardCharsets.ISO_8859_1);
 		} catch (DecoderException e) {
 		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"hostname\" could not be decoded from Base64 - > \"" + value + "\"!");
 		}
@@ -573,7 +574,7 @@ public class STATUS extends SEDAPExpressMessage {
 		    this.mediaUrls = new LinkedList<>();
 		    String[] urls = value.split("#");
 		    for (String url : urls) {
-			this.mediaUrls.add(new String(Base64.decode(url)));
+			this.mediaUrls.add(new String(Base64.decode(url), StandardCharsets.ISO_8859_1));
 		    }
 		} catch (DecoderException e) {
 		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"mediaUrls\" could not be decoded from Base64 - > \"" + value + "\"!");
@@ -588,7 +589,7 @@ public class STATUS extends SEDAPExpressMessage {
 		SEDAPExpressMessage.logger.logp(Level.INFO, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"freeText\" is empty!");
 	    } else {
 		try {
-		    this.freeText = new String(Base64.decode(value));
+		    this.freeText = new String(Base64.decode(value), StandardCharsets.ISO_8859_1);
 		} catch (DecoderException e) {
 		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "STATUS", "STATUS(Iterator<String> message)", "Optional field \"freeText\" could not be decoded from Base64 - > \"" + value + "\"!");
 		}
@@ -668,7 +669,7 @@ public class STATUS extends SEDAPExpressMessage {
 
 	StringBuilder urls = new StringBuilder();
 	if (this.mediaUrls != null) {
-	    this.mediaUrls.forEach(entry -> urls.append(Base64.toBase64String(entry.getBytes()) + "#"));
+	    this.mediaUrls.forEach(entry -> urls.append(Base64.toBase64String(entry.getBytes(StandardCharsets.ISO_8859_1)) + "#"));
 	}
 
 	return SEDAPExpressMessage.removeSemicolons(serializeHeader()
@@ -680,8 +681,8 @@ public class STATUS extends SEDAPExpressMessage {
 		.append(storageStr.isBlank() ? "" : storageStr.substring(1)).append(";")
 		.append((this.cmdId != null) ? Integer.toHexString(this.cmdId).toUpperCase() : "").append(";")
 		.append((this.cmdState != null) ? this.cmdState : "").append(";")
-		.append((this.hostname != null) ? Base64.toBase64String(this.hostname.getBytes()) : "").append(";")
+		.append((this.hostname != null) ? Base64.toBase64String(this.hostname.getBytes(StandardCharsets.ISO_8859_1)) : "").append(";")
 		.append((this.mediaUrls != null && !this.mediaUrls.isEmpty()) ? urls.subSequence(0, urls.length() - 1) : "").append(";")
-		.append((this.freeText != null) ? Base64.toBase64String(this.freeText.getBytes()) : "").toString());
+		.append((this.freeText != null) ? Base64.toBase64String(this.freeText.getBytes(StandardCharsets.ISO_8859_1)) : "").toString());
     }
 }
