@@ -174,7 +174,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
     public static final Pattern ICAO_MATCHER = Pattern.compile("^[A-F0-9]{1,6}$"); // ICAO
     public static final Pattern SOURCE_MATCHER = Pattern.compile("^[R,A,I,S,E,O,Y,M]+$"); // Source type
     public static final Pattern CMDTYPE_MATCHER = Pattern.compile("^[A-Fa-f0-9]+$"); // Command type
-    public static final Pattern GRAPHICTYPE_MATCHER = Pattern.compile("^[0-9]$"); // Graphic type
+    public static final Pattern GRAPHICTYPE_MATCHER = Pattern.compile("^(?:0[0-9A-Ba-b]|[0-9]|1[01])$"); // ICD 00-0B and legacy decimal 0-11
     public static final Pattern RGBA_MATCHER = Pattern.compile("^[0-9A-F]{6,8}$"); // RGBA Format
     public static final Pattern TECSTATUS_MATCHER = Pattern.compile("^[0-5]$"); // TecStatus
     public static final Pattern OPSSTATUS_MATCHER = Pattern.compile("^[0-4]$"); // OpsStatus

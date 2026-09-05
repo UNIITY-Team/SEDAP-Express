@@ -77,17 +77,33 @@ public class GRAPHIC extends SEDAPExpressMessage {
 	}
 
 	/**
-	 * Sucht den GraphicType anhand des Integer-Werts.
+	 * Returns the graphic type for its numeric value.
 	 * 
-	 * @return Der passende Typ oder Point als Standardwert.
+	 * @throws IllegalArgumentException if the type is unknown
 	 */
 	public static GraphicType valueOfGraphicType(int type) {
-	    return GraphicType.LOOKUP.getOrDefault(type, Point);
+	    GraphicType result = GraphicType.LOOKUP.get(type);
+	    if (result == null) {
+		throw new IllegalArgumentException("Unknown graphic type: " + type);
+	    }
+	    return result;
+	}
+
+	/**
+	 * Accepts ICD hexadecimal codes 00-0B and legacy decimal codes 0-11.
+	 * Legacy 10 and 11 are unambiguous because the ICD range ends at 0B.
+	 */
+	public static GraphicType fromWireValue(String value) {
+	    if (value == null || !SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.GRAPHICTYPE_MATCHER, value)) {
+		throw new IllegalArgumentException("Invalid graphic type: " + value);
+	    }
+	    int radix = value.equals("10") || value.equals("11") ? 10 : 16;
+	    return valueOfGraphicType(Integer.parseInt(value, radix));
 	}
 
 	@Override
 	public String toString() {
-	    return String.valueOf(this.type);
+	    return SEDAPExpressMessage.HexFormater.toHexDigits((byte) this.type);
 	}
     }
 
@@ -389,14 +405,7 @@ public class GRAPHIC extends SEDAPExpressMessage {
 
 	// GraphicType
 	if (message.hasNext()) {
-	    value = message.next();
-	    if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.GRAPHICTYPE_MATCHER, value)) {
-		this.graphicType = GraphicType.valueOfGraphicType(Integer.parseInt(value));
-	    } else if (value.isBlank()) {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "GRAPHIC", "GRAPHIC(Iterator<String> message)", "Mandatory field \"graphicType\" is empty!", value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "GRAPHIC", "GRAPHIC(Iterator<String> message)", "Mandatory field \"graphicType\" contains invalid value!", value);
-	    }
+	    this.graphicType = GraphicType.fromWireValue(message.next());
 	} else {
 	    SEDAPExpressMessage.logger.logp(Level.SEVERE, "GRAPHIC", "GRAPHIC(Iterator<String> message)", "Incomplete message!");
 	}
