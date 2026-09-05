@@ -25,6 +25,7 @@
  */
 package de.bundeswehr.uniity.sedapexpress.utils;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Security;
 import java.util.HexFormat;
 import java.util.zip.Adler32;
@@ -99,7 +100,7 @@ public class MACUtils {
 
     public static String calcAdler32Checksum(String str) {
 	Adler32 adler = new Adler32();
-	adler.update(str.getBytes());
+	adler.update(str.getBytes(StandardCharsets.ISO_8859_1));
 	return MACUtils.hexFormatter.toHexDigits(adler.getValue(), 8);
     }
 
@@ -119,7 +120,7 @@ public class MACUtils {
 
 	message.setMAC("0000");
 
-	final byte[] content = message.toString().getBytes();
+	final byte[] content = message.toString().getBytes(StandardCharsets.ISO_8859_1);
 
 	HMac hmac = new HMac(new SHA256Digest());
 	hmac.init(new KeyParameter(key));
@@ -146,7 +147,7 @@ public class MACUtils {
 
 	message.setMAC("0000");
 
-	final byte[] content = message.toString().getBytes();
+	final byte[] content = message.toString().getBytes(StandardCharsets.ISO_8859_1);
 
 	final CipherParameters cipherParameters = new KeyParameter(key);
 	final CMac cmac = new CMac(new AESLightEngine(), 32);
@@ -175,7 +176,7 @@ public class MACUtils {
 
 	message.setMAC("0000");
 
-	final byte[] content = message.toString().getBytes();
+	final byte[] content = message.toString().getBytes(StandardCharsets.ISO_8859_1);
 
 	final CipherParameters cipherParameters = new KeyParameter(key);
 	final ParametersWithIV cipherParametersWithInitVector = new ParametersWithIV(cipherParameters, initVector);

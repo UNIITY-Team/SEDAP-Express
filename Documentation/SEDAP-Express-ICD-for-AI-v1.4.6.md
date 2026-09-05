@@ -73,8 +73,8 @@ Units/geodesy (apply to all messages):
 - Only effective if message > ~140 chars (because of BASE64 overhead).
 - Compressed data must be BASE64-encoded; the **whole message incl. header** is compressed.
 - Receiver rule: if first bytes of a received message don't match a message name, test for compression.
-- Sample plain: `TEXT;53;01952381E21B;324E;S;TRUE;;;1;NONE;"This is an alert!"`
-- Sample compressed: `C3GNCLE2NbY2MLQ0NTK2MHQ1MnSyNjYycbUOtg4JCnW1trY2tPbz93O1VgrJyCxWAKLEPIXEnNSiEkUlAA==`
+- Sample plain: `TEXT;53;01952381E21B;324E;S;TRUE;;;;1;NONE;"This is an alert!"`
+- Sample compressed: `C3GNCLE2NbY2MLQ0NTK2MHQ1MnSyNjYycbUOtg4JCnW1BgJDaz9/P1drpZCMzGIFIErMU0jMSS0qUVQCAA==`
 
 ## 4. Connection methods
 
@@ -97,7 +97,7 @@ Everything except Name is basically optional; some messages require specific hea
 | Field | Meaning |
 |---|---|
 | Name | Message purpose/topic. |
-| Number | Hex string of a 7-bit sequential counter (wraps to 0 after 127/0x7F). Each message TYPE has its own counter; reconnect does NOT reset counters. 7-bit limit avoids signed/unsigned byte issues. |
+| Number | A two-digit uppercase hexadecimal string (00-7F) represents a 7-bit sequential counter (wraps to 0 after 127/0x7F). Each message TYPE has its own counter; reconnect does NOT reset counters. 7-bit limit avoids signed/unsigned byte issues. |
 | Time | Hex string of 64-bit Unix timestamp in ms. |
 | Sender | Free textual identifier (e.g. "OKRA"). Never changed on forward/relay. Chosen by participants or assigned centrally. When forwarding sub-system info (e.g. drones in a swarm), Sender = original source (the sub-system). |
 | Classification | P=public, U=unclassified, R=restricted, C=confidential, S=secret, T=top secret |
@@ -517,8 +517,8 @@ KEYEXCHANGE;<HDR>;<Recipient>;<AlgorithmType>(M);<Phase>(M);
 
 Samples (fields shortened for readability):
 ```
-KEYEXCHANGE;0;0191C643A8AF;89AD;U;;;FE2A;0;128;1024;7FFFFFFF;822460DE
-KEYEXCHANGE;0;0191C643A8AF;FE2A;U;;;89AD;1;128;2048;;6E6026EFF9D9EBEB9D4A973CB5C287DBD77D75EDDD2
+KEYEXCHANGE;00;0191C643A8AF;89AD;U;;;FE2A;0;128;1024;7FFFFFFF;822460DE
+KEYEXCHANGE;00;0191C643A8AF;FE2A;U;;;89AD;1;128;2048;;6E6026EFF9D9EBEB9D4A973CB5C287DBD77D75EDDD2
 ```
 (The ICD additionally shows DH-, ECDH- and Kyber/FrodoKEM sequence diagrams — graphics, not reproduced here.)
 
@@ -561,10 +561,12 @@ Host: sample.host
 Content-Type: application/json
 
 {
-   "messages":[
-      {"message":"OWNUNIT;5E;0191C643A8AF;66A3;R;TRUE;;42.32;-123.11;10000;50.23;297;;33.3;-0.15;Aircraft;SFAPMF---------"},
-      {"message":"TEXT;2E;0191C643A8AF;374E;S;;;E4F1;4;NONE;This is a chat message!"}
-   ]
+"messages":[
+{
+"message":" OWNUNIT;5E;0191C643A8AF;66A3;R;TRUE;;42.32;-123.11;10000;50.23;297;;;33.3;-0.15;sfapmf---------"
+"message":"TEXT;2E;0191C643A8AF;374E;S;;3;This is a chat message!;E4F1"
+}
+]
 }
 ```
 Sample POST answer:

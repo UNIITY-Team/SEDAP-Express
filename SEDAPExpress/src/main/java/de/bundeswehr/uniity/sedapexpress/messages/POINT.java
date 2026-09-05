@@ -25,6 +25,7 @@
  */
 package de.bundeswehr.uniity.sedapexpress.messages;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -655,7 +656,7 @@ public class POINT extends SEDAPExpressMessage {
 		SEDAPExpressMessage.logger.logp(Level.INFO, "POINT", "POINT(Iterator<String> message)", "Optional field \"comment\" is empty!");
 	    } else {
 		try {
-		    this.comment = new String(Base64.decode(value));
+		    this.comment = new String(Base64.decode(value), StandardCharsets.ISO_8859_1);
 		} catch (DecoderException e) {
 		    SEDAPExpressMessage.logger.logp(Level.SEVERE, "POINT", "POINT(Iterator<String> message)", "Optional field \"comment\" could not be decoded from Base64 - > \"" + value + "\"!");
 		}
@@ -733,7 +734,7 @@ public class POINT extends SEDAPExpressMessage {
 
 		.append(this.multimediaData != null ? Base64.toBase64String(this.multimediaData) : "").append(";")
 
-		.append((this.comment != null) ? Base64.toBase64String(this.comment.getBytes()) : "").toString());
+		.append((this.comment != null) ? Base64.toBase64String(this.comment.getBytes(StandardCharsets.ISO_8859_1)) : "").toString());
     }
 
 }

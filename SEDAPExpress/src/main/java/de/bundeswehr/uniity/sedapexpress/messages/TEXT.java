@@ -25,6 +25,7 @@
  */
 package de.bundeswehr.uniity.sedapexpress.messages;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -232,7 +233,7 @@ public class TEXT extends SEDAPExpressMessage {
 	    } else {
 		if (this.encoding == DataEncoding.BASE64) {
 		    try {
-			this.textContent = new String(Base64.decode(value));
+			this.textContent = new String(Base64.decode(value), StandardCharsets.ISO_8859_1);
 		    } catch (DecoderException e) {
 			SEDAPExpressMessage.logger.logp(Level.SEVERE, "TEXT", "TEXT(Iterator<String> message)", "Mandatory field \"text\" could not be decoded from Base64 - > \"" + value + "\"!");
 		    }
@@ -291,7 +292,7 @@ public class TEXT extends SEDAPExpressMessage {
 			.append((this.recipient != null) ? this.recipient : "").append(";")
 			.append((this.type != null) ? this.type : "").append(";")
 			.append((this.encoding != null) ? this.encoding : "").append(";")
-			.append((this.textContent != null) ? ((this.encoding == DataEncoding.BASE64) ? Base64.toBase64String(this.textContent.getBytes()) : this.textContent) : "")
+			.append((this.textContent != null) ? ((this.encoding == DataEncoding.BASE64) ? Base64.toBase64String(this.textContent.getBytes(StandardCharsets.ISO_8859_1)) : this.textContent) : "")
 			.append((this.reference != null) ? ";" + this.reference : "").toString());
     }
 
