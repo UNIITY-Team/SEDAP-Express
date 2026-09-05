@@ -73,8 +73,8 @@ Units/geodesy (apply to all messages):
 - Only effective if message > ~140 chars (because of BASE64 overhead).
 - Compressed data must be BASE64-encoded; the **whole message incl. header** is compressed.
 - Receiver rule: if first bytes of a received message don't match a message name, test for compression.
-- Sample plain: `TEXT;D3;01952381E21B;324E;S;TRUE;;;;1;NONE;"This is an alert!"`
-- Sample compressed: `C3GNCLF2MbY2MLQ0NTK2MHQ1MnSyNjYycbUOtg4JCnW1BgJDaz9/P1drpZCMzGIFIErMU0jMSS0qUVQCAA==`
+- Sample plain: `TEXT;53;01952381E21B;324E;S;TRUE;;;1;NONE;"This is an alert!"`
+- Sample compressed: `C3GNCLE2NbY2MLQ0NTK2MHQ1MnSyNjYycbUOtg4JCnW1trY2tPbz93O1VgrJyCxWAKLEPIXEnNSiEkUlAA==`
 
 ## 4. Connection methods
 
@@ -372,8 +372,8 @@ CmdType + parameters:
 
 Samples:
 ```
-COMMAND;55;0195238E25AD;5BCD;S;TRUE;4389F10D;ORKA;1111;01;54;bomb;1000
-COMMAND;29;0195238E35AD;E4B3;C;TRUE;;Drone1;;FF;00;OPEN_BAY
+COMMAND;55;0195238E25AD;5BCD;S;TRUE;;ORKA;1111;01;;24;53.32;8.11;1000;5
+COMMAND;29;0195238E35AD;E4B3;C;TRUE;;Drone1;;00;;FF;OPEN_BAY
 COMMAND;29;0195238F55AD;E4B3;C;TRUE;;Drone2;0000;03          (cancel all last commands)
 ```
 Sample 4 — complex "move to" with loitering at the end (drone computes speed/course itself from the last move's timestamp):
@@ -543,32 +543,28 @@ Sample GET answer:
 ```
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 380
+Content-Length: 399
 
 {
-"messages":[
-{
-"message":"CONTACT;60;0191C643A8AF;66A3;S;TRUE;102;TRUE;53.32;8.11",
-"message":"METEO;AC;0191C643A8AF;74BE;U;;15.4;15.5;;;10.2;72;20.3;;55;1005;25;;;2500;33",
-"message":"TEXT;D6;0191C643A8AF;324E;S;;3;This is a chat message!;E4F1",
-"message":"GRAPHIC;79;0191C643A8AF;910E;U;;8;1;FF8000;Area A;10000;53.43;9.45"
-}
-]
+   "messages":[
+      {"message":"CONTACT;60;0191C643A8AF;66A3;S;TRUE;;102;TRUE;53.32;8.11"},
+      {"message":"METEO;2C;0191C643A8AF;74BE;U;;;15.4;15.5;;;;;10.2;72;1005;25;111;50;2500;33;RefPoint1"},
+      {"message":"TEXT;56;0191C643A8AF;324E;S;;;E4F1;4;NONE;This is a chat message!"},
+      {"message":"GRAPHIC;79;0191C643A8AF;910E;U;;;AreaA;;08;1;FF8000FF;;;;Area A;53.43;9.45;0;10000"}
+   ]
 }
 ```
 Sample POST request:
 ```
 POST /SEDAPEXPRESS HTTP/1.1
 Host: sample.host
-Accept: application/json
+Content-Type: application/json
 
 {
-"messages":[
-{
-"message":" OWNUNIT;5E;0191C643A8AF;66A3;R;TRUE;;42.32;-123.11;10000;50.23;297;;;33.3;-0.15;sfapmf---------"
-"message":"TEXT;AE;0191C643A8AF;374E;S;;3;This is a chat message!;E4F1"
-}
-]
+   "messages":[
+      {"message":"OWNUNIT;5E;0191C643A8AF;66A3;R;TRUE;;42.32;-123.11;10000;50.23;297;;33.3;-0.15;Aircraft;SFAPMF---------"},
+      {"message":"TEXT;2E;0191C643A8AF;374E;S;;;E4F1;4;NONE;This is a chat message!"}
+   ]
 }
 ```
 Sample POST answer:
