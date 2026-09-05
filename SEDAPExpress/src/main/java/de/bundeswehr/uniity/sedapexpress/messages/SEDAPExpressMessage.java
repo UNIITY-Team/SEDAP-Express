@@ -154,9 +154,10 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
     public static final Pattern NAME_MATCHER = Pattern.compile("^[a-zA-Z]+$"); // Name
     public static final Pattern NUMBER_MATCHER = Pattern.compile("^[0-7][0-9A-F]$"); // Number 00-7F
     public static final Pattern TIME_MATCHER = Pattern.compile("^[A-Fa-f0-9]{8,16}$"); // Time
-    public static final Pattern MAC_MATCHER = Pattern.compile("^[A-Fa-f0-9]{1,32}$"); // HexNumber
+    // Documented tag lengths, plus the placeholder used while constructing the authenticated message.
+    public static final Pattern MAC_MATCHER = Pattern.compile("^(?:0000|[A-Fa-f0-9]{8}|[A-Fa-f0-9]{32}|[A-Fa-f0-9]{64})$");
     public static final Pattern CLASSIFICATION_MATCHER = Pattern.compile("^[P,U,R,C,S,T]{1}$");
-    public static final Pattern HEXNUMBER_MATCHER = SEDAPExpressMessage.MAC_MATCHER;
+    public static final Pattern HEXNUMBER_MATCHER = Pattern.compile("^[A-Fa-f0-9]{1,32}$"); // Generic hexadecimal field
     public static final Pattern TEXTTYPE_MATCHER = Pattern.compile("^[0-4]$"); // Text type
 
     public static final Pattern DOUBLE_MATCHER = Pattern.compile("^-?\\d+.?\\d*$"); // Double
@@ -796,7 +797,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 		if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.MAC_MATCHER, value)) {
 		    this.mac = value;
 		} else if (!value.isBlank()) {
-		    SEDAPExpressMessage.logger.logp(Level.INFO, "SEDAPExpressMessage", "SEDAPExpressMessage(Iterator<String> message)", "Optional field \"mac\" contains not a valid 32bit mac number!", value);
+		    SEDAPExpressMessage.logger.logp(Level.INFO, "SEDAPExpressMessage", "SEDAPExpressMessage(Iterator<String> message)", "Optional field \"mac\" must contain 8, 32 or 64 hexadecimal digits, or the construction placeholder 0000!", value);
 		}
 	    } else if (this instanceof HEARTBEAT) {
 		// incomplete message allowed

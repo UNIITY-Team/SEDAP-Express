@@ -97,15 +97,19 @@ public class MACUtils {
 	return message;
     }
 
+    /**
+     * General-purpose checksum retained for API compatibility; not a MAC or MAC truncation.
+     */
     public static String calcAdler32Checksum(String str) {
 	Adler32 adler = new Adler32();
 	adler.update(str.getBytes());
 	return MACUtils.hexFormatter.toHexDigits(adler.getValue(), 8);
     }
 
+    /** Returns the first four bytes of the full HMAC-SHA-256 tag as eight hex digits. */
     public static String calc32BitHMAC(final byte[] key, final SEDAPExpressMessage message) {
 
-	return MACUtils.calcAdler32Checksum(MACUtils.calcHMAC(key, message));
+	return MACUtils.calcHMAC(key, message).substring(0, 8);
     }
 
     /**
@@ -113,7 +117,7 @@ public class MACUtils {
      * @param key
      * @param message
      *
-     * @return the HMAC of the message
+     * @return the full 256-bit HMAC-SHA-256 tag as 64 hex digits
      */
     public static String calcHMAC(final byte[] key, final SEDAPExpressMessage message) {
 
@@ -130,9 +134,10 @@ public class MACUtils {
 
     }
 
+    /** Returns the first four bytes of the full AES-CMAC tag as eight hex digits. */
     public static String calc32BitCMAC(final byte[] key, final SEDAPExpressMessage message) {
 
-	return MACUtils.calcAdler32Checksum(MACUtils.calcCMAC(key, message));
+	return MACUtils.calcCMAC(key, message).substring(0, 8);
     }
 
     /**
@@ -140,7 +145,7 @@ public class MACUtils {
      * @param key
      * @param message
      *
-     * @return the CMAC of the messaga
+     * @return the full 128-bit AES-CMAC tag as 32 hex digits
      */
     public static String calcCMAC(final byte[] key, final SEDAPExpressMessage message) {
 
@@ -149,7 +154,7 @@ public class MACUtils {
 	final byte[] content = message.toString().getBytes();
 
 	final CipherParameters cipherParameters = new KeyParameter(key);
-	final CMac cmac = new CMac(new AESLightEngine(), 32);
+	final CMac cmac = new CMac(new AESLightEngine(), 128);
 	cmac.init(cipherParameters);
 	cmac.update(content, 0, content.length);
 	final byte[] generatedCMac = new byte[cmac.getMacSize()];
@@ -158,9 +163,10 @@ public class MACUtils {
 	return MACUtils.hexFormatter.formatHex(generatedCMac);
     }
 
+    /** Returns the first four bytes of the full AES-GMAC tag as eight hex digits. */
     public static String calc32BitGMAC(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
 
-	return MACUtils.calcAdler32Checksum(MACUtils.calcGMAC(key, initVector, message));
+	return MACUtils.calcGMAC(key, initVector, message).substring(0, 8);
     }
 
     /**
@@ -169,7 +175,7 @@ public class MACUtils {
      * @param initVector
      * @param message
      *
-     * @return the GMAC of the message
+     * @return the full 128-bit AES-GMAC tag as 32 hex digits
      */
     public static String calcGMAC(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
 
@@ -180,7 +186,7 @@ public class MACUtils {
 	final CipherParameters cipherParameters = new KeyParameter(key);
 	final ParametersWithIV cipherParametersWithInitVector = new ParametersWithIV(cipherParameters, initVector);
 
-	final GMac gmac = new GMac(GCMBlockCipher.newInstance(new AESLightEngine()), 32);
+	final GMac gmac = new GMac(GCMBlockCipher.newInstance(new AESLightEngine()), 128);
 	gmac.init(cipherParametersWithInitVector);
 	gmac.update(content, 0, content.length);
 	final byte[] generatedGMac = new byte[gmac.getMacSize()];

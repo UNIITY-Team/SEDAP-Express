@@ -53,7 +53,7 @@ Units/geodesy (apply to all messages):
   - 32/128-bit GMAC with AES128 (NIST SP 800-38D)
 - Recommended: MAC DRBG (NIST SP 800-90A/B).
 - Sample (32-bit CMAC, password `expressexpressex`):
-  `OWNUNIT;5E;0195236D151A;66A3;R;;089A01E7;53.32;8.11;0;5.5;21;22;;;FGS Bayern`
+  `OWNUNIT;5E;0195236D151A;66A3;R;;BD194FE7;53.32;8.11;0;5.5;21;22;;;FGS Bayern`
 
 ### 3.2 Encryption
 - Optional; prefer VPN. Minimum FIPS 140-2. Preferred:
