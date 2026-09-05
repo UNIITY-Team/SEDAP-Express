@@ -94,7 +94,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
      * @param name
      */
     public SEDAPExpressMQTTClient(final String mqttAddress, final String name) {
-	this(mqttAddress, name, null, null, new ArrayList<>(), "SEDAP-X");
+	this(mqttAddress, name, null, null, new ArrayList<>(), "UNIITY-X");
     }
 
     /**
@@ -105,7 +105,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
      * @param filterNames List of topics/path which should be filted
      */
     public SEDAPExpressMQTTClient(final String mqttAddress, final String name, final List<String> filterNames) {
-	this(mqttAddress, name, null, null, filterNames, "SEDAP-X");
+	this(mqttAddress, name, null, null, filterNames, "UNIITY-X");
     }
 
     /**
@@ -114,7 +114,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
      * @param mqttAddress
      * @param name
      * @param filterNames List of topics/path which should be filted
-     * @param rootPath    default "SEDAP-X"
+     * @param rootPath    default "UNIITY-X"
      */
     public SEDAPExpressMQTTClient(final String mqttAddress, final String name, final List<String> filterNames, String rootPath) {
 	this(mqttAddress, name, null, null, filterNames, rootPath);
@@ -131,7 +131,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
      */
     public SEDAPExpressMQTTClient(final String mqttAddress, final String name,
 	    final String clientUsername, final String clientPassword, final List<String> filterNames) {
-	this(mqttAddress, name, clientUsername, clientPassword, filterNames, "SEDAP-X");
+	this(mqttAddress, name, clientUsername, clientPassword, filterNames, "UNIITY-X");
     }
 
     /**
@@ -142,7 +142,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
      * @param clientUsername
      * @param clientPassword
      * @param filterNames    List of topics/path which should be filted
-     * @param rootPath       default "SEDAP-X"
+     * @param rootPath       default "UNIITY-X"
      */
     public SEDAPExpressMQTTClient(final String mqttAddress, final String name,
 	    final String clientUsername, final String clientPassword, final List<String> filterNames, String rootPath) {
@@ -195,7 +195,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 	    final String clientUsername, final String clientPassword,
 	    final InputStream caCertificateStream, final InputStream clientCertificateStream, InputStream clientKeyFileStream, final List<String> filterNames) {
 
-	this(mqttAddress, name, clientUsername, clientPassword, caCertificateStream, clientCertificateStream, clientKeyFileStream, filterNames, "SEDAP-X/");
+	this(mqttAddress, name, clientUsername, clientPassword, caCertificateStream, clientCertificateStream, clientKeyFileStream, filterNames, "UNIITY-X/");
     }
 
     /**
@@ -209,7 +209,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
      * @param clientCertificateStream
      * @param clientKeyFileStream
      * @param filterNames             List of topics/path which should be filted
-     * @param rootPath                default "SEDAP-X"
+     * @param rootPath                default "UNIITY-X"
      */
     public SEDAPExpressMQTTClient(final String mqttAddress, final String name,
 	    final String clientUsername, final String clientPassword,
@@ -248,7 +248,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 	this(mqttAddress, name, null, null,
 		new FileInputStream(caCertificateFile),
 		new FileInputStream(clientCertificateFile),
-		new FileInputStream(clientKeyFileFile), filterNames, "SEDAP-X");
+		new FileInputStream(clientKeyFileFile), filterNames, "UNIITY-X");
     }
 
     /**
@@ -260,7 +260,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
      * @param clientCertificateFile
      * @param clientKeyFileFile
      * @param filterNames           List of topics/path which should be filted
-     * @param rootPath              default "SEDAP-X"
+     * @param rootPath              default "UNIITY-X"
      * @throws FileNotFoundException
      */
     public SEDAPExpressMQTTClient(final String mqttAddress, final String name,
@@ -347,7 +347,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
      * @param clientCertificateFile
      * @param clientKeyFileFile
      * @param filterNames           List of topics/path which should be filted
-     * @param rootPath              default "SEDAP-X"
+     * @param rootPath              default "UNIITY-X"
      * @throws FileNotFoundException
      */
     public SEDAPExpressMQTTClient(final String mqttAddress, final String name,

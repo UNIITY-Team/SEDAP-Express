@@ -36,7 +36,9 @@ This is nearly the same project as the SampleTCPClient, except that in this case
 Almost the same client as the TCP variant, but for use cases in which only UDP can be used or is required for other reasons.
 
 ### SampleMQTTClient
-If you have for instance a central MQTT server and want to use that, this is an example of how to implement that. 
+If you have for instance a central MQTT server and want to use that, this is an example of how to implement that.
+
+The MQTT client defaults to `UNIITY-X/<senderid>/<messagetype>` as specified in ICD 1.4.6. Deployments using the previous `SEDAP-X` namespace can retain it by supplying `"SEDAP-X"` to a constructor with a `rootPath` parameter. Custom roots remain supported.
 
 ### SampleRESTClient
 If you want to implement a REST API client for SEDAP Express, you can use this sample client as a basis. It already contains everything you need for a smooth start.
