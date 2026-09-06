@@ -592,6 +592,6 @@ message SomeMessage {
 
 ## 9. Contact
 
-Report issues/suggestions via GitHub, email or phone.
+You are welcome to report issues/suggestions via GitHub or e-mail.
 - GitHub: https://github.com/UNIITY-Team
 - Internet: https://www.linkedin.com/in/volker-voss
