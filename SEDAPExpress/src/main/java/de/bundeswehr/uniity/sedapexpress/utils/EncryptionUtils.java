@@ -25,6 +25,7 @@
  */
 package de.bundeswehr.uniity.sedapexpress.utils;
 
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -102,7 +103,7 @@ public class EncryptionUtils {
 	CipherKeyGenerator generator = new CipherKeyGenerator();
 	generator.init(new KeyGenerationParameters(EncryptionUtils.random, bitLength.getIntValue()));
 
-	return new String(Base64.encode(generator.generateKey()));
+	return new String(Base64.encode(generator.generateKey()), StandardCharsets.US_ASCII);
 
     }
 
@@ -207,9 +208,9 @@ public class EncryptionUtils {
 	SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 	Cipher cipher = Cipher.getInstance("AES/ECB/PKCS7Padding");
 	cipher.init(Cipher.ENCRYPT_MODE, secretKey, EncryptionUtils.random);
-	byte[] encryptedBytes = cipher.doFinal(originalData.getBytes());
+	byte[] encryptedBytes = cipher.doFinal(originalData.getBytes(StandardCharsets.ISO_8859_1));
 
-	return new String(Base64.encode(encryptedBytes));
+	return new String(Base64.encode(encryptedBytes), StandardCharsets.US_ASCII);
     }
 
     /**
@@ -234,7 +235,7 @@ public class EncryptionUtils {
 	byte[] decodedBytes = Base64.decode(encryptedData);
 	byte[] decryptedBytes = cipher.doFinal(decodedBytes);
 
-	return new String(decryptedBytes);
+	return new String(decryptedBytes, StandardCharsets.ISO_8859_1);
     }
 
     /**
@@ -259,9 +260,9 @@ public class EncryptionUtils {
 	SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 	Cipher cipher = Cipher.getInstance("AES/CFB/NoPadding");
 	cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv), EncryptionUtils.random);
-	byte[] encryptedBytes = cipher.doFinal(originalData.getBytes());
+	byte[] encryptedBytes = cipher.doFinal(originalData.getBytes(StandardCharsets.ISO_8859_1));
 
-	return new String(Base64.encode(encryptedBytes));
+	return new String(Base64.encode(encryptedBytes), StandardCharsets.US_ASCII);
     }
 
     /**
@@ -289,7 +290,7 @@ public class EncryptionUtils {
 	byte[] decodedBytes = Base64.decode(encryptedData);
 	byte[] decryptedBytes = cipher.doFinal(decodedBytes);
 
-	return new String(decryptedBytes);
+	return new String(decryptedBytes, StandardCharsets.ISO_8859_1);
     }
 
     /**
@@ -314,9 +315,9 @@ public class EncryptionUtils {
 	SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 	Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 	cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv), EncryptionUtils.random);
-	byte[] encryptedBytes = cipher.doFinal(originalData.getBytes());
+	byte[] encryptedBytes = cipher.doFinal(originalData.getBytes(StandardCharsets.ISO_8859_1));
 
-	return new String(Base64.encode(encryptedBytes));
+	return new String(Base64.encode(encryptedBytes), StandardCharsets.US_ASCII);
     }
 
     /**
@@ -344,7 +345,7 @@ public class EncryptionUtils {
 	byte[] decodedBytes = Base64.decode(encryptedData);
 	byte[] decryptedBytes = cipher.doFinal(decodedBytes);
 
-	return new String(decryptedBytes);
+	return new String(decryptedBytes, StandardCharsets.ISO_8859_1);
     }
 
 }

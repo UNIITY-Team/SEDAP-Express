@@ -243,7 +243,7 @@ public class SEDAPExpressTCPClient extends SEDAPExpressCommunicator implements R
     public boolean sendSEDAPExpressMessage(SEDAPExpressMessage message) throws IOException {
 
 	try {
-	    if (this.socket.write(ByteBuffer.wrap(SEDAPExpressMessage.serialize(message).getBytes())) >= 0) {
+	    if (this.socket.write(ByteBuffer.wrap(SEDAPExpressMessage.serialize(message).getBytes(StandardCharsets.ISO_8859_1))) >= 0) {
 		return true;
 	    }
 	    return false;

@@ -405,7 +405,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 			final SEDAPExpressMessage msg = this.outQueue.take();
 
 			logInput(msg.toString());
-			mqttMmessage.setPayload(msg.toString().getBytes());
+			mqttMmessage.setPayload(msg.toString().getBytes(StandardCharsets.ISO_8859_1));
 
 			try {
 			    SEDAPExpressMQTTClient.this.client.publish(this.mqttRoot + "/" + msg.getClass().getSimpleName(), mqttMmessage);
@@ -470,7 +470,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 	    if (message != null) {
 
 		if (!this.filterTopics.contains(topic.substring(topic.lastIndexOf("/"))))
-		    distributeReceivedSEDAPExpressMessage(SEDAPExpressMessage.deserialize(new String(message.getPayload())));
+		    distributeReceivedSEDAPExpressMessage(SEDAPExpressMessage.deserialize(new String(message.getPayload(), StandardCharsets.ISO_8859_1)));
 	    }
 	} catch (Exception e) {
 

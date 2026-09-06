@@ -25,6 +25,7 @@
  */
 package de.bundeswehr.uniity.sedapexpress.network;
 
+import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 import java.net.BindException;
 import java.net.DatagramPacket;
@@ -158,7 +159,7 @@ public class SEDAPExpressUDPClient extends SEDAPExpressCommunicator implements R
 		    continue;
 		}
 
-		Arrays.asList(new String(packet.getData(), 0, packet.getLength()).split("\n")).forEach(message -> distributeReceivedSEDAPExpressMessage(SEDAPExpressMessage.deserialize(message)));
+		Arrays.asList(new String(packet.getData(), 0, packet.getLength(), StandardCharsets.ISO_8859_1).split("\n")).forEach(message -> distributeReceivedSEDAPExpressMessage(SEDAPExpressMessage.deserialize(message)));
 
 	    } catch (final Exception e) {
 		this.lastException = e;
@@ -179,7 +180,7 @@ public class SEDAPExpressUDPClient extends SEDAPExpressCommunicator implements R
     @Override
     public boolean sendSEDAPExpressMessage(SEDAPExpressMessage message) throws IOException {
 
-	byte[] data = SEDAPExpressMessage.serialize(message).getBytes();
+	byte[] data = SEDAPExpressMessage.serialize(message).getBytes(StandardCharsets.ISO_8859_1);
 	try {
 	    this.socket.send(new DatagramPacket(data, data.length, InetAddress.getByName(this.receiver), this.port));
 	} catch (IOException e) {

@@ -24,10 +24,7 @@ In this project you will find all the necessary documents such as the SEDAP Expr
 
 ### SEDAPExpress
 
-Here you can find everything you need to implement SEDAP-Express into your Application and to understand the protocol. In future, we will also provide SDKs in programming languages other than Java. However, these will then be available via separate repositories.
-
-### SEDAPExpressTool
-This mockup simulates the real SEDAP-Express connector of the UNIITY framework. That's why the main function of that tool is to be a mock up for the original UNIITY system. You can manually generate messages for test and debugging, analyse existing messages, receive messages form your system and validate them, etc.  Also, it's intended to be a simple kind of Command&Control (C2) system simulator by providing a simple map with MIL-STD-2525C icons. The engine uses the standard NASA WorldWind framework without our own multithread and other modifications. You can also use operational if you want to transfer messages via other channels ("sneakernet :D ). 
+Here you can find everything you need to implement SEDAP-Express into your Application and to understand the protocol. In future, we will also provide SDKs in programming languages other than Java. However, these will then be available via separate repositories. Use the Markdown (md) file if you want to use AI coding agents, as they can understand it better and it requires less context.
 
 ### SampleTCPClient
 For most cases, this sample client is the right way to get started with SEDAP Express development. TCP has some significant advantages over UDP, so if you are able to use it in your future use case, it is better to start with this one.

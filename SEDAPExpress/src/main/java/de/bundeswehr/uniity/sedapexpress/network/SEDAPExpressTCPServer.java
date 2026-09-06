@@ -88,9 +88,14 @@ public class SEDAPExpressTCPServer extends SEDAPExpressCommunicator implements R
 
 	    this.serverSocket = ServerSocketChannel.open();
 	    this.serverSocket.configureBlocking(true);
-	    this.serverSocket.bind(new InetSocketAddress(this.intf, this.port));
 
-	    SEDAPExpressTCPServer.logger.logp(Level.INFO, "SEDAPExpressTCPServer", "run()", "TCP server listening on port: " + this.port);
+	    if (this.intf == null || "0.0.0.0".equals(this.intf)) {
+		this.serverSocket.bind(new InetSocketAddress(this.port)); // Bind to 0.0.0.0
+	    } else {
+		this.serverSocket.bind(new InetSocketAddress(this.intf, this.port));
+	    }
+
+	    SEDAPExpressTCPServer.logger.logp(Level.INFO, "SEDAPExpressTCPServer", "connect()", "TCP server listening on port: " + this.port);
 	    logInput("TCP server listening on port: " + this.port);
 
 	    this.lastException = null;
@@ -101,6 +106,8 @@ public class SEDAPExpressTCPServer extends SEDAPExpressCommunicator implements R
 
 	} catch (Exception e) {
 	    this.lastException = e;
+	    SEDAPExpressTCPServer.logger.logp(Level.INFO, "SEDAPExpressTCPServer", "connect()", "Could not listening on port " + this.port + " - port is already in use?");
+	    logInput("Error: " + e.getLocalizedMessage());
 	    return false;
 	}
     }

@@ -63,7 +63,7 @@ public class SEDAPExpressMockUpServer {
 
 			this.clientChannel.read(buffer);
 
-			System.out.println(new String(buffer.array()));
+			System.out.println(new String(buffer.array(), StandardCharsets.ISO_8859_1));
 
 		    } else {
 			Thread.sleep(1);
