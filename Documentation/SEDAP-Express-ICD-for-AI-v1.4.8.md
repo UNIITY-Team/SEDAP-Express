@@ -112,7 +112,7 @@ Notes:
 - In samples, some fields are intentionally shortened (e.g. KEYEXCHANGE).
 
 ### 6.1 OWNUNIT
-Position, movement, identification data of the own unit (base station, C2 center, drone, vehicle, person, or host device). Sent by a client → converted to a contact and distributed to the UNIITY network. Multiple own units: Sender field mandatory to distinguish them (exceptionally different Names; that option must be explicitly configured in the SEC).
+Position, movement, identification data of the own unit (base station, C2 center, drone, vehicle, person, or host device). Sent by a client → converted to a contact and distributed to the UNIITY network. Multiple own units: Sender field mandatory to distinguish them (exceptionally different Names; that option must be explicitly configured in the SEC). Depending on the situation, it may also be advisable to represent the entire swarm from the ground control station as a “central position,” or to reduce the swarm to 2, 3, or 4 corner contacts instead of all individual contacts. This allows you to visualize in the situational overview how the swarm splits up or reunites and what its spatial dimensions are.
 
 ```
 OWNUNIT;<HDR with Sender(M?)>;
@@ -298,7 +298,7 @@ GRAPHIC;78;0195238E45AD;910E;U;;;A327;;01;1;80808000;;FFFF0000;;Transit;54.23,12
 ```
 
 ### 6.8 COMMAND
-Command for one specific or all possible recipients. Camera numbering/modes and Generic Action semantics are application/platform-specific (require a specific, user-defined connector — not the generic SEDAP-Express connector). Timestamps optional, in ms; no timestamp = execute instantly; Unix timestamps written as hex string. For "follow"/"engage" of e.g. a contact, the contact's position must be transmitted frequently via CONTACT. For submersibles, Depth ≡ Altitude and is always positive.
+Command for one specific or all possible recipients. Camera numbering/modes and Generic Action semantics are application/platform-specific (require a specific, user-defined connector — not the generic SEDAP-Express connector). Timestamps optional, in ms; no timestamp = execute instantly; Unix timestamps written as hex string. For "follow"/"engage" of e.g. a contact, the contact's position must be transmitted frequently via CONTACT. For submersibles, Depth ≡ Altitude and is always positive. As an exception, the “CmdId” field is not required for the “cancel all” command flag.
 
 ```
 COMMAND;<HDR>;
