@@ -12,7 +12,7 @@ Glossary:
 - CSV = Comma-Separated-Values
 - SEC = SEDAP-Express-Connector (part of UNIITY)
 - MockUp/TestTool = simulation of the real SEC + C2-like system (log, map, message creator)
-- SIDC = Symbol identification code (APP-6A/B / MIL-STD-2525B/C / STANAG 2019)
+- SIDC = Symbol identification code (APP-6A/B / MIL-STD-2525B/C / STANAG 2019, exact 15 characters long))
 - ASCII = here: ISO-8859-1 table
 - BASE64 = binary-to-text encoding, 64-char alphabet
 
@@ -213,8 +213,8 @@ EMISSION;<HDR>;
 
 Samples:
 ```
-EMISSION;5E;0195238E15AD;66A3;R;;;100;;53.32;8.11;0;;;;20;8725000.0#8735000.0;20000;3;0;2;6;10233;;SA-8
-EMISSION;5F;0195238E25AD;66A3;R;;;101;;54.86;9.32;0;52.12;9.8;50;233;25725.0;4000;1;5;2;0;;sngpesr--------
+EMISSION;5E;0195238E15AD;66A3;R;;;100;;53.32;8.11;0;;;;20;8725000.0#8735000.0;20000;3;00;02;06;10233;;U0EtOA==
+EMISSION;5F;0195238E25AD;66A3;R;;;101;;54.86;9.32;0;52.12;9.8;50;233;25725.0;4000;1;05;02;00;;sngpesr--------
 ```
 
 ### 6.5 METEO
@@ -249,10 +249,10 @@ TEXT;<HDR>;<Recipient>;<Type>;<Encoding>;<Text>(M);<Reference>
 
 Samples:
 ```
-TEXT;78;0195238E25AD;324E;S;TRUE;;;1;NONE;"This is an alert!";1000
-TEXT;79;0195238E25CC;324E;C;TRUE;;;2;NONE;"This is a warning!"
-TEXT;7A;0195238E25EF;324E;R;;;;3;;"This is a notice!"
-TEXT;7B;0195238E285B;324E;U;;;ORKA;4;BASE64;IlRoaXMgaXMgYSBjaGF0IG1lc3NhZ2UhIg==
+TEXT;78;0195238E25AD;324E;S;TRUE;;;01;NONE;"This is an alert!";1000
+TEXT;79;0195238E25CC;324E;C;TRUE;;;02;NONE;"This is a warning!"
+TEXT;7A;0195238E25EF;324E;R;;;;03;;"This is a notice!"
+TEXT;7B;0195238E285B;324E;U;;;ORKA;04;BASE64;IlRoaXMgaXMgYSBjaGF0IG1lc3NhZ2UhIg==
 ```
 
 ### 6.7 GRAPHIC
@@ -410,8 +410,8 @@ STATUS;<HDR>;<TecStatus>;<OpsStatus>;<AmmunitionLevels>*;
 
 Samples:
 ```
-STATUS;15;0195238E25AD;75DA;U;;;4;2;MLG#20;;Accu1#50;;443D;1;MTAuMC4wLjEzMg==;;RnVsbHkgb3BlcmF0aW9uYWw=
-STATUS;16;0195238E25AD;129E;R;;;2;2;BMG#10;;;;ED32;3;;aHR0cDovLzEwLjAuMC4xL2ltYWdlLnBuZw==;T3V0IG9mIGZ1ZWwh
+STATUS;15;0195238E25AD;75DA;U;;;4;2;MLG#20;;Accu1#50;;443D;01;MTAuMC4wLjEzMg==;;RnVsbHkgb3BlcmF0aW9uYWw=
+STATUS;16;0195238E25AD;129E;R;;;2;2;BMG#10;;;;ED32;03;;aHR0cDovLzEwLjAuMC4xL2ltYWdlLnBuZw==;T3V0IG9mIGZ1ZWwh
 ```
 
 ### 6.10 ACKNOWLEDGE
