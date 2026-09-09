@@ -41,9 +41,9 @@ import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.macs.HMac;
 import org.bouncycastle.crypto.prng.SP800SecureRandomBuilder;
 import org.bouncycastle.jcajce.SecretKeyWithEncapsulation;
+import org.bouncycastle.jcajce.spec.FrodoKEMParameterSpec;
 import org.bouncycastle.jcajce.spec.KEMExtractSpec;
 import org.bouncycastle.jcajce.spec.KEMGenerateSpec;
-import org.bouncycastle.pqc.jcajce.spec.FrodoParameterSpec;
 
 import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
 
@@ -55,72 +55,74 @@ import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
  */
 public class FrodoUtils {
 
-    private static SecureRandom random = new SP800SecureRandomBuilder().buildHMAC(new HMac(new SHA256Digest()), null, true);
-    static {
-	Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-	Security.addProvider(new org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider());
-    }
+	private static SecureRandom random = new SP800SecureRandomBuilder().buildHMAC(new HMac(new SHA256Digest()), null, true);
+	static {
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+		Security.addProvider(new org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider());
+	}
 
-    /**
-     * Generates a key pair for the FrodoKEM process
-     * 
-     * @param frodoParameterSpec
-     * 
-     * @return KeyPair for FrodoKEM
-     * 
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
-     * @throws InvalidAlgorithmParameterException
-     */
-    public static KeyPair generateKeyPair(FrodoParameterSpec frodoParameterSpec) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+	/**
+	 * Generates a key pair for the FrodoKEM process
+	 * 
+	 * @param frodoParameterSpec
+	 * 
+	 * @return KeyPair for FrodoKEM
+	 * 
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchProviderException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static KeyPair generateKeyPair(FrodoKEMParameterSpec frodoParameterSpec) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
-	KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("Frodo", "BCPQC");
-	keyPairGenerator.initialize(frodoParameterSpec, FrodoUtils.random);
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("Frodo", "BCPQC");
+		keyPairGenerator.initialize(frodoParameterSpec, FrodoUtils.random);
 
-	return keyPairGenerator.generateKeyPair();
-    }
+		return keyPairGenerator.generateKeyPair();
+	}
 
-    /**
-     * Calculates the shared secret key with encapsulation
-     * 
-     * @param publicKey The own public key
-     * @param keyLength Length of the shared secret key in bits
-     * 
-     * @return shared secret key with encapsulation
-     * 
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
-     * @throws InvalidAlgorithmParameterException
-     */
-    public static SecretKeyWithEncapsulation generateSharedSecretKeyWithEncapsulation(PublicKey publicKey, DHKEMKeyLength keyLength) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+	/**
+	 * Calculates the shared secret key with encapsulation
+	 * 
+	 * @param publicKey The own public key
+	 * @param keyLength Length of the shared secret key in bits
+	 * 
+	 * @return shared secret key with encapsulation
+	 * 
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchProviderException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static SecretKeyWithEncapsulation generateSharedSecretKeyWithEncapsulation(PublicKey publicKey, DHKEMKeyLength keyLength)
+			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
-	KeyGenerator keyGenerator = KeyGenerator.getInstance("Frodo", "BCPQC");
-	KEMGenerateSpec kemGenerateSpec = new KEMGenerateSpec(publicKey, "Secret", keyLength.getIntValue());
-	keyGenerator.init(kemGenerateSpec);
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("Frodo", "BCPQC");
+		KEMGenerateSpec kemGenerateSpec = new KEMGenerateSpec(publicKey, "Secret", keyLength.getIntValue());
+		keyGenerator.init(kemGenerateSpec);
 
-	return (SecretKeyWithEncapsulation) keyGenerator.generateKey();
-    }
+		return (SecretKeyWithEncapsulation) keyGenerator.generateKey();
+	}
 
-    /**
-     * Calculates the shared secret key from encapsulation
-     * 
-     * @param privateKey    The own private key
-     * @param encapsulation The encapsulation
-     * @param keyLength     The length of the key in bits
-     * 
-     * @return the shared secret key
-     * 
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
-     * @throws InvalidAlgorithmParameterException
-     */
-    public static byte[] generateSharedSecretKeyFromEncapsulation(PrivateKey privateKey, byte[] encapsulation, DHKEMKeyLength keyLength) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+	/**
+	 * Calculates the shared secret key from encapsulation
+	 * 
+	 * @param privateKey    The own private key
+	 * @param encapsulation The encapsulation
+	 * @param keyLength     The length of the key in bits
+	 * 
+	 * @return the shared secret key
+	 * 
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchProviderException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static byte[] generateSharedSecretKeyFromEncapsulation(PrivateKey privateKey, byte[] encapsulation, DHKEMKeyLength keyLength)
+			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
-	KEMExtractSpec kemExtractSpec = new KEMExtractSpec(privateKey, encapsulation, "Secret", keyLength.getIntValue());
-	KeyGenerator keyGenerator = KeyGenerator.getInstance("Frodo", "BCPQC");
-	keyGenerator.init(kemExtractSpec);
+		KEMExtractSpec kemExtractSpec = new KEMExtractSpec(privateKey, encapsulation, "Secret", keyLength.getIntValue());
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("Frodo", "BCPQC");
+		keyGenerator.init(kemExtractSpec);
 
-	return ((SecretKeyWithEncapsulation) keyGenerator.generateKey()).getEncoded();
-    }
+		return ((SecretKeyWithEncapsulation) keyGenerator.generateKey()).getEncoded();
+	}
 
 }

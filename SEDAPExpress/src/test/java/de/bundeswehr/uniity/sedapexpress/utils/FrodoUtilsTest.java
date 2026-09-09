@@ -35,7 +35,7 @@ import java.security.spec.InvalidParameterSpecException;
 import java.util.HexFormat;
 
 import org.bouncycastle.jcajce.SecretKeyWithEncapsulation;
-import org.bouncycastle.pqc.jcajce.spec.FrodoParameterSpec;
+import org.bouncycastle.jcajce.spec.FrodoKEMParameterSpec;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -43,69 +43,47 @@ import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
 
 class FrodoUtilsTest {
 
-    @Test
-    void testFrodoKEM640() throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
+	@Test
+	void testFrodoKEM976() throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
 
-	for (DHKEMKeyLength keyLength : DHKEMKeyLength.values()) {
+		for (DHKEMKeyLength keyLength : DHKEMKeyLength.values()) {
 
-	    KeyPair pairServer = FrodoUtils.generateKeyPair(FrodoParameterSpec.frodokem640aes);
+			KeyPair pairServer = FrodoUtils.generateKeyPair(FrodoKEMParameterSpec.frodokem976aes);
 
-	    SecretKeyWithEncapsulation encapsulation = FrodoUtils.generateSharedSecretKeyWithEncapsulation(pairServer.getPublic(), keyLength);
+			SecretKeyWithEncapsulation encapsulation = FrodoUtils.generateSharedSecretKeyWithEncapsulation(pairServer.getPublic(), keyLength);
 
-	    byte[] secretClient = encapsulation.getEncoded();
-	    byte[] encapsulatedKey = encapsulation.getEncapsulation();
+			byte[] secretClient = encapsulation.getEncoded();
+			byte[] encapsulatedKey = encapsulation.getEncapsulation();
 
-	    byte[] secretServer = FrodoUtils.generateSharedSecretKeyFromEncapsulation(pairServer.getPrivate(), encapsulatedKey, keyLength);
+			byte[] secretServer = FrodoUtils.generateSharedSecretKeyFromEncapsulation(pairServer.getPrivate(), encapsulatedKey, keyLength);
 
-	    Assertions.assertArrayEquals(secretClient, secretServer);
+			Assertions.assertArrayEquals(secretClient, secretServer);
 
-	    System.out.println("Shared secret client: " + HexFormat.of().withUpperCase().formatHex(secretClient));
-	    System.out.println("Shared secret sever:  " + HexFormat.of().withUpperCase().formatHex(secretServer));
+			System.out.println("Shared secret client: " + HexFormat.of().withUpperCase().formatHex(secretClient));
+			System.out.println("Shared secret sever:  " + HexFormat.of().withUpperCase().formatHex(secretServer));
+		}
+
 	}
 
-    }
+	@Test
+	void testFrodoKEM1344() throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
 
-    @Test
-    void testFrodoKEM976() throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
+		for (DHKEMKeyLength keyLength : DHKEMKeyLength.values()) {
 
-	for (DHKEMKeyLength keyLength : DHKEMKeyLength.values()) {
+			KeyPair pairServer = FrodoUtils.generateKeyPair(FrodoKEMParameterSpec.frodokem1344aes);
 
-	    KeyPair pairServer = FrodoUtils.generateKeyPair(FrodoParameterSpec.frodokem976aes);
+			SecretKeyWithEncapsulation encapsulation = FrodoUtils.generateSharedSecretKeyWithEncapsulation(pairServer.getPublic(), keyLength);
 
-	    SecretKeyWithEncapsulation encapsulation = FrodoUtils.generateSharedSecretKeyWithEncapsulation(pairServer.getPublic(), keyLength);
+			byte[] secretClient = encapsulation.getEncoded();
+			byte[] encapsulatedKey = encapsulation.getEncapsulation();
 
-	    byte[] secretClient = encapsulation.getEncoded();
-	    byte[] encapsulatedKey = encapsulation.getEncapsulation();
+			byte[] secretServer = FrodoUtils.generateSharedSecretKeyFromEncapsulation(pairServer.getPrivate(), encapsulatedKey, keyLength);
 
-	    byte[] secretServer = FrodoUtils.generateSharedSecretKeyFromEncapsulation(pairServer.getPrivate(), encapsulatedKey, keyLength);
+			Assertions.assertArrayEquals(secretClient, secretServer);
 
-	    Assertions.assertArrayEquals(secretClient, secretServer);
+			System.out.println("Shared secret client: " + HexFormat.of().withUpperCase().formatHex(secretClient));
+			System.out.println("Shared secret sever:  " + HexFormat.of().withUpperCase().formatHex(secretServer));
+		}
 
-	    System.out.println("Shared secret client: " + HexFormat.of().withUpperCase().formatHex(secretClient));
-	    System.out.println("Shared secret sever:  " + HexFormat.of().withUpperCase().formatHex(secretServer));
 	}
-
-    }
-
-    @Test
-    void testFrodoKEM1344() throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
-
-	for (DHKEMKeyLength keyLength : DHKEMKeyLength.values()) {
-
-	    KeyPair pairServer = FrodoUtils.generateKeyPair(FrodoParameterSpec.frodokem1344aes);
-
-	    SecretKeyWithEncapsulation encapsulation = FrodoUtils.generateSharedSecretKeyWithEncapsulation(pairServer.getPublic(), keyLength);
-
-	    byte[] secretClient = encapsulation.getEncoded();
-	    byte[] encapsulatedKey = encapsulation.getEncapsulation();
-
-	    byte[] secretServer = FrodoUtils.generateSharedSecretKeyFromEncapsulation(pairServer.getPrivate(), encapsulatedKey, keyLength);
-
-	    Assertions.assertArrayEquals(secretClient, secretServer);
-
-	    System.out.println("Shared secret client: " + HexFormat.of().withUpperCase().formatHex(secretClient));
-	    System.out.println("Shared secret sever:  " + HexFormat.of().withUpperCase().formatHex(secretServer));
-	}
-
-    }
 }

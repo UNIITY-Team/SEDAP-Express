@@ -37,6 +37,7 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/MQTT/org.eclipse.paho.mqttv5.client-1.2.5.jar" sourcepath="libs/MQTT/org.eclipse.paho.mqttv5.client-1.2.5-sources.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/MQTT/org.eclipse.paho.mqttv5.client-1.2.5.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
@@ -65,11 +66,13 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/Jakarta/jakarta.annotation-api-3.0.0.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Jakarta/jakarta.annotation-api-3.0.0.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/Jakarta/jakarta.validation-api-3.1.1.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Jakarta/jakarta.validation-api-3.1.1.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
