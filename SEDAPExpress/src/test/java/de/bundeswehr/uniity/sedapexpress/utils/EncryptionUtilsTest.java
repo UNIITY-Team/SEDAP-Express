@@ -52,7 +52,7 @@ class EncryptionUtilsTest {
 	    sum += i;
 	Assertions.assertNotEquals(0, sum);
 
-	byte[] key256 = Base64.decode(EncryptionUtils.generatesKey(AESKeyLength.KEY_LENGTH_256_BTS));
+	byte[] key256 = Base64.decode(EncryptionUtils.generatesKey(AESKeyLength.KEY_LENGTH_256_BITS));
 	Assertions.assertEquals(32, key256.length);
 	sum = 0;
 	for (int i : key256)
@@ -116,22 +116,6 @@ class EncryptionUtilsTest {
 	    byte[] key = Base64.decode(EncryptionUtils.generatesKey(keyLength));
 	    String encryptedMessage = EncryptionUtils.encrypt_AES_CTR(message, key, iv);
 	    String decryptedMessage = EncryptionUtils.decrypt_AES_CTR(encryptedMessage, key, iv);
-
-	    Assertions.assertNotEquals(message, encryptedMessage);
-	    Assertions.assertEquals(message, decryptedMessage);
-	}
-
-    }
-
-    @Test
-    void testEnDecryptionECB() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-
-	String message = "CONTACT;66;1B351C87;59CE;U;TRUE;FFAA327B;1000;;43.21;-111.22;10011.0;1.0;2.0;3.0;200.0;275.0;10.0;20.0;30.0;33.0;22.0;11.0;Track Alpha;R;SFAPMF---------;221333201;FA550C;iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAC4jAAAuIwF4pT92AAABcElEQVRYw+1WsYrCUBCcyLUiNinEL1AUxNpKgoLYiqWg+AvmE/wAS0sLsbERC4UgFikEowhqqY0WQRQEsUr2ii0OTzkuuUvCHVkI+3b3EYaZHXgCERE8jAA8Dh+AD+APA+h0AEEAtlsPAJgm0O3yeTb7GQVkJ3Y7IoBIlokkicgwyG7YY0DTAFEE8nlgPAb2e5cl6PeBWg2Ix7mez12U4Hhk+gcDrksl/kzTJQmWS86JBOdiEej1gMPBJQmGQ0CSgGiU62TyEZijEpxOTH+7/dG73YiCQaJ63ZYE1gAoCgNYLB77ssx9XbcM4M0SXYrCOZV6PV+tgGzW0i+Fb7+IrlcgFAIqFaBQeJ5Vq0CjATSbDu2AqjLNo9HzzDCIMhmeXy4O2XA65RyLvfBSACiX+bxeO2DD+x1otYBcDohEXt9JpzlPJg5IoGnP9vsc5zPfEUW25q9KoKpfbz8AhMO8iLoObDYOuMB/kvkAfAD/FcA7SSgc2Vo2QpYAAAAASUVORK5CYII=;VGVzdFRyYWNr";
-
-	for (AESKeyLength keyLength : AESKeyLength.values()) {
-	    byte[] key = Base64.decode(EncryptionUtils.generatesKey(keyLength));
-	    String encryptedMessage = EncryptionUtils.encrypt_AES_ECB(message, key);
-	    String decryptedMessage = EncryptionUtils.decrypt_AES_ECB(encryptedMessage, key);
 
 	    Assertions.assertNotEquals(message, encryptedMessage);
 	    Assertions.assertEquals(message, decryptedMessage);

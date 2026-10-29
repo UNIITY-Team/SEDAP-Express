@@ -43,7 +43,7 @@ import org.bouncycastle.crypto.prng.SP800SecureRandomBuilder;
 import org.bouncycastle.jcajce.SecretKeyWithEncapsulation;
 import org.bouncycastle.jcajce.spec.KEMExtractSpec;
 import org.bouncycastle.jcajce.spec.KEMGenerateSpec;
-import org.bouncycastle.pqc.jcajce.spec.KyberParameterSpec;
+import org.bouncycastle.jcajce.spec.MLKEMParameterSpec;
 
 import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
 
@@ -55,71 +55,73 @@ import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
  */
 public class KyberUtils {
 
-    private static SecureRandom random = new SP800SecureRandomBuilder().buildHMAC(new HMac(new SHA256Digest()), null, true);
-    static {
-	Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-	Security.addProvider(new org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider());
-    }
+	private static SecureRandom random = new SP800SecureRandomBuilder().buildHMAC(new HMac(new SHA256Digest()), null, true);
+	static {
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+		Security.addProvider(new org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider());
+	}
 
-    /**
-     * Generates a key pair for the KyberKEM process
-     * 
-     * @param kyberParameterSpec
-     * 
-     * @return KeyPair for KyberKEM
-     * 
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
-     * @throws InvalidAlgorithmParameterException
-     */
-    public static KeyPair generateKeyPair(KyberParameterSpec kyberParameterSpec) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+	/**
+	 * Generates a key pair for the KyberKEM process
+	 * 
+	 * @param kyberParameterSpec
+	 * 
+	 * @return KeyPair for KyberKEM
+	 * 
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchProviderException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static KeyPair generateKeyPair(MLKEMParameterSpec kyberParameterSpec) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
-	KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("Kyber", "BCPQC");
-	keyPairGenerator.initialize(kyberParameterSpec, KyberUtils.random);
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("ML-KEM", "BC");
+		keyPairGenerator.initialize(kyberParameterSpec, KyberUtils.random);
 
-	return keyPairGenerator.generateKeyPair();
-    }
+		return keyPairGenerator.generateKeyPair();
+	}
 
-    /**
-     * Calculates the shared secret key with encapsulation
-     * 
-     * @param publicKey The own public key
-     * @param keyLength The length of the key in bits
-     * 
-     * @return shared secret key with encapsulation
-     * 
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
-     * @throws InvalidAlgorithmParameterException
-     */
-    public static SecretKeyWithEncapsulation generateSharedSecretKeyWithEncapsulation(PublicKey publicKey, DHKEMKeyLength keyLength) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+	/**
+	 * Calculates the shared secret key with encapsulation
+	 * 
+	 * @param publicKey The own public key
+	 * @param keyLength The length of the key in bits
+	 * 
+	 * @return shared secret key with encapsulation
+	 * 
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchProviderException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static SecretKeyWithEncapsulation generateSharedSecretKeyWithEncapsulation(PublicKey publicKey, DHKEMKeyLength keyLength)
+			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
-	KeyGenerator keyGenerator = KeyGenerator.getInstance("Kyber", "BCPQC");
-	KEMGenerateSpec kemGenerateSpec = new KEMGenerateSpec(publicKey, "Secret", keyLength.getIntValue());
-	keyGenerator.init(kemGenerateSpec);
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("ML-KEM", "BC");
+		KEMGenerateSpec kemGenerateSpec = new KEMGenerateSpec(publicKey, "Secret", keyLength.getIntValue());
+		keyGenerator.init(kemGenerateSpec);
 
-	return (SecretKeyWithEncapsulation) keyGenerator.generateKey();
-    }
+		return (SecretKeyWithEncapsulation) keyGenerator.generateKey();
+	}
 
-    /**
-     * Calculates the shared secret key from encapsulation
-     * 
-     * @param privateKey    The own private key
-     * @param encapsulation The encapsulation
-     * 
-     * @return the shared secret key
-     * 
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
-     * @throws InvalidAlgorithmParameterException
-     */
-    public static byte[] generateSharedSecretKeyFromEncapsulation(PrivateKey privateKey, byte[] encapsulation, DHKEMKeyLength keyLength) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+	/**
+	 * Calculates the shared secret key from encapsulation
+	 * 
+	 * @param privateKey    The own private key
+	 * @param encapsulation The encapsulation
+	 * 
+	 * @return the shared secret key
+	 * 
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchProviderException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static byte[] generateSharedSecretKeyFromEncapsulation(PrivateKey privateKey, byte[] encapsulation, DHKEMKeyLength keyLength)
+			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
-	KEMExtractSpec kemExtractSpec = new KEMExtractSpec(privateKey, encapsulation, "Secret", keyLength.getIntValue());
-	KeyGenerator keyGenerator = KeyGenerator.getInstance("Kyber", "BCPQC");
-	keyGenerator.init(kemExtractSpec);
+		KEMExtractSpec kemExtractSpec = new KEMExtractSpec(privateKey, encapsulation, "Secret", keyLength.getIntValue());
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("ML-KEM", "BC");
+		keyGenerator.init(kemExtractSpec);
 
-	return ((SecretKeyWithEncapsulation) keyGenerator.generateKey()).getEncoded();
-    }
+		return ((SecretKeyWithEncapsulation) keyGenerator.generateKey()).getEncoded();
+	}
 
 }

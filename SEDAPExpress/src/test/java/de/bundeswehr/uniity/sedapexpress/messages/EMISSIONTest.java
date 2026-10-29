@@ -32,34 +32,32 @@ import org.junit.jupiter.api.Test;
 
 class EMISSIONTest {
 
-    @Test
-    final void testConstructorValues() {
+	@Test
+	final void testConstructorValues() {
 
-	// TODO
-    }
+		// TODO
+	}
 
-    @Test
-    final void testConstructorString() {
+	@Test
+	final void testConstructorString() {
 
-	// TODO
-    }
+		// TODO
+	}
 
-    @Test
-    final void testConstructorIterator() {
+	@Test
+	final void testConstructorIterator() {
 
-	// TODO
-    }
+		// TODO
+	}
 
-    @Test
-    final void testSamplesFromDocu() {
+	@Test
+	final void testSamplesFromDocu() {
 
-	String[] messages = new String[] {
-		"EMISSION;5E;0195238E15AD;66A3;R;;;100;;53.32;8.11;0;;;;20;8725000.0#8735000.0;20000;3;0;2;6;10233;;SA-8",
-		"EMISSION;5F;0195238E25AD;66A3;R;;;101;;54.86;9.32;0;52.12;9.8;50;233;25725.0;4000;1;5;2;0;;sngpesr--------"
-	};
+		String[] messages = new String[] { "EMISSION;5E;0195238E15AD;66A3;R;;;100;;53.32;8.11;0;;;;20;8725000.0#8735000.0;20000;3;0;2;6;10233;;SA-8",
+				"EMISSION;5F;0195238E25AD;66A3;R;;;101;;54.86;9.32;0;52.12;9.8;50;233;25725.0;4000;1;5;2;0;;SNGPESR--------" };
 
-	Arrays.asList(messages).forEach(msg -> Assertions.assertEquals(msg, new EMISSION(msg).toString()));
+		Arrays.asList(messages).forEach(msg -> Assertions.assertEquals(msg, new EMISSION(msg).toString()));
 
-    }
+	}
 
 }

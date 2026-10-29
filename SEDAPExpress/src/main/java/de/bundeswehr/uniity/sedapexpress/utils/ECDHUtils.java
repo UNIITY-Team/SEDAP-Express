@@ -34,11 +34,11 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Security;
+import java.security.spec.ECGenParameterSpec;
 
 import javax.crypto.KeyAgreement;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.bouncycastle.jcajce.spec.XDHParameterSpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.AESKeyLength;
@@ -51,47 +51,48 @@ import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.AESKeyLength;
  */
 public class ECDHUtils {
 
-    static {
-	Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-    }
+	static {
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+	}
 
-    /**
-     * Generates a key pair for the Elliptic-Curves-Diffie-Hellman-Merkle process
-     *
-     * @return Key pair
-     *
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
-     * @throws InvalidAlgorithmParameterException
-     */
-    public static KeyPair generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+	/**
+	 * Generates a key pair for the Elliptic-Curves-Diffie-Hellman-Merkle process
+	 *
+	 * @return Key pair
+	 *
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchProviderException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static KeyPair generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
-	KeyPairGenerator clientKeyPairGenerator = KeyPairGenerator.getInstance("X25519", BouncyCastleProvider.PROVIDER_NAME);
-	clientKeyPairGenerator.initialize(new XDHParameterSpec(XDHParameterSpec.X25519));
+		KeyPairGenerator clientKeyPairGenerator = KeyPairGenerator.getInstance("ECDH", BouncyCastleProvider.PROVIDER_NAME);
+		clientKeyPairGenerator.initialize(new ECGenParameterSpec("brainpoolP256r1"));
 
-	return clientKeyPairGenerator.generateKeyPair();
-    }
+		return clientKeyPairGenerator.generateKeyPair();
+	}
 
-    /**
-     * Calculates the shared secret key
-     *
-     * @param ownSecretKey          The own secret key
-     * @param otherPublicKey        The public key of the other side
-     * @param keyLengthSharedSecret The desired bit length of the shared secret key
-     * 
-     * @return the shared secret key
-     *
-     * @throws NoSuchProviderException
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
-     */
-    public static byte[] getSharedSecretKey(PrivateKey ownSecretKey, PublicKey otherPublicKey, AESKeyLength keyLengthSharedSecret) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
+	/**
+	 * Calculates the shared secret key
+	 *
+	 * @param ownSecretKey          The own secret key
+	 * @param otherPublicKey        The public key of the other side
+	 * @param keyLengthSharedSecret The desired bit length of the shared secret key
+	 * 
+	 * @return the shared secret key
+	 *
+	 * @throws NoSuchProviderException
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
+	 */
+	public static byte[] getSharedSecretKey(PrivateKey ownSecretKey, PublicKey otherPublicKey, AESKeyLength keyLengthSharedSecret)
+			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
 
-	KeyAgreement serverKeyAgreement = KeyAgreement.getInstance("X25519", BouncyCastleProvider.PROVIDER_NAME);
-	serverKeyAgreement.init(ownSecretKey);
-	serverKeyAgreement.doPhase(otherPublicKey, true);
+		KeyAgreement serverKeyAgreement = KeyAgreement.getInstance("ECDH", BouncyCastleProvider.PROVIDER_NAME);
+		serverKeyAgreement.init(ownSecretKey);
+		serverKeyAgreement.doPhase(otherPublicKey, true);
 
-	return new SecretKeySpec(serverKeyAgreement.generateSecret(), 0, keyLengthSharedSecret.getIntValue() / 8, "PBKDF2WithHmacSHA256").getEncoded();
-    }
+		return new SecretKeySpec(serverKeyAgreement.generateSecret(), 0, keyLengthSharedSecret.getIntValue() / 8, "PBKDF2WithHmacSHA256").getEncoded();
+	}
 
 }

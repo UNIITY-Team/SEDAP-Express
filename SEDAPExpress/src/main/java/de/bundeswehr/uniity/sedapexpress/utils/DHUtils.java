@@ -60,94 +60,95 @@ import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
  */
 public class DHUtils {
 
-    private static SecureRandom random = new SP800SecureRandomBuilder().buildHMAC(new HMac(new SHA256Digest()), null, true);
-    static {
-	Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-    }
+	private static SecureRandom random = new SP800SecureRandomBuilder().buildHMAC(new HMac(new SHA256Digest()), null, true);
+	static {
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+	}
 
-    /**
-     * Generate key generation Diffie-Hellman-Merkel parameters ("p" and "g" variables)
-     *
-     * @param keyLength
-     *
-     * @return Diffie-Hellman-Merkel parameters
-     * 
-     * @throws InvalidParameterSpecException
-     * @throws NoSuchProviderException
-     * @throws NoSuchAlgorithmException
-     */
-    public static DHParameterSpec generateVariables(DHKEMKeyLength keyLength) throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException {
+	/**
+	 * Generate key generation Diffie-Hellman-Merkel parameters ("p" and "g"
+	 * variables)
+	 *
+	 * @param keyLength
+	 *
+	 * @return Diffie-Hellman-Merkel parameters
+	 * 
+	 * @throws InvalidParameterSpecException
+	 * @throws NoSuchProviderException
+	 * @throws NoSuchAlgorithmException
+	 */
+	public static DHParameterSpec generateVariables(DHKEMKeyLength keyLength) throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException {
 
-	AlgorithmParameterGenerator algGen = AlgorithmParameterGenerator.getInstance("DH", BouncyCastleProvider.PROVIDER_NAME);
-	algGen.init(keyLength.getIntValue(), DHUtils.random);
+		AlgorithmParameterGenerator algGen = AlgorithmParameterGenerator.getInstance("DH", BouncyCastleProvider.PROVIDER_NAME);
+		algGen.init(keyLength.getIntValue(), DHUtils.random);
 
-	AlgorithmParameters algoParams = algGen.generateParameters();
+		AlgorithmParameters algoParams = algGen.generateParameters();
 
-	return algoParams.getParameterSpec(DHParameterSpec.class);
+		return algoParams.getParameterSpec(DHParameterSpec.class);
 
-    }
+	}
 
-    /**
-     * Generate key generation Diffie-Hellman-Merkel parameters using given "p" and "g" variables
-     *
-     * @param keyLength Length of the key in bits
-     * 
-     * @param p         Prime number
-     * @param g         Natural number
-     *
-     * @return Diffie-Hellman-Merkel parameters
-     * 
-     * @throws InvalidParameterSpecException
-     * @throws NoSuchProviderException
-     * @throws NoSuchAlgorithmException
-     */
-    public static DHParameterSpec generateVariables(DHKEMKeyLength keyLength, BigInteger p, BigInteger g) throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException {
+	/**
+	 * Generate key generation Diffie-Hellman-Merkel parameters using given "p" and
+	 * "g" variables
+	 * 
+	 * @param p Prime number
+	 * @param g Natural number
+	 *
+	 * @return Diffie-Hellman-Merkel parameters
+	 * 
+	 * @throws InvalidParameterSpecException
+	 * @throws NoSuchProviderException
+	 * @throws NoSuchAlgorithmException
+	 */
+	public static DHParameterSpec generateVariables(BigInteger p, BigInteger g) throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException {
 
-	return new DHParameterSpec(p, g, keyLength.getIntValue());
+		return new DHParameterSpec(p, g, 256);
 
-    }
+	}
 
-    /**
-     * Generates a key pair for the Diffie-Hellman-Merkle process
-     * 
-     * @param parameterSpec
-     *
-     * @return Key pair
-     *
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
-     * @throws InvalidParameterSpecException
-     * @throws InvalidAlgorithmParameterException
-     */
-    public static KeyPair generateKeyPair(DHParameterSpec parameterSpec) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidParameterSpecException, InvalidAlgorithmParameterException {
+	/**
+	 * Generates a key pair for the Diffie-Hellman-Merkle process
+	 * 
+	 * @param parameterSpec
+	 *
+	 * @return Key pair
+	 *
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchProviderException
+	 * @throws InvalidParameterSpecException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static KeyPair generateKeyPair(DHParameterSpec parameterSpec) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidParameterSpecException, InvalidAlgorithmParameterException {
 
-	KeyPairGenerator clientKeyPairGenerator = KeyPairGenerator.getInstance("DH", BouncyCastleProvider.PROVIDER_NAME);
-	clientKeyPairGenerator.initialize(parameterSpec);
+		KeyPairGenerator clientKeyPairGenerator = KeyPairGenerator.getInstance("DH", BouncyCastleProvider.PROVIDER_NAME);
+		clientKeyPairGenerator.initialize(parameterSpec);
 
-	return clientKeyPairGenerator.generateKeyPair();
+		return clientKeyPairGenerator.generateKeyPair();
 
-    }
+	}
 
-    /**
-     * Calculates the shared secret key
-     *
-     * @param ownSecretKey          The own secret key
-     * @param otherPublicKey        The public key of the other side
-     * @param keyLengthSharedSecret The desired bit length of the shared secret key
-     * 
-     * @return the shared secret key
-     *
-     * @throws NoSuchProviderException
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
-     */
-    public static byte[] getSharedSecretKey(PrivateKey ownSecretKey, PublicKey otherPublicKey, AESKeyLength keyLengthSharedSecret) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
+	/**
+	 * Calculates the shared secret key
+	 *
+	 * @param ownSecretKey          The own secret key
+	 * @param otherPublicKey        The public key of the other side
+	 * @param keyLengthSharedSecret The desired bit length of the shared secret key
+	 * 
+	 * @return the shared secret key
+	 *
+	 * @throws NoSuchProviderException
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
+	 */
+	public static byte[] getSharedSecretKey(PrivateKey ownSecretKey, PublicKey otherPublicKey, AESKeyLength keyLengthSharedSecret)
+			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
 
-	KeyAgreement serverKeyAgreement = KeyAgreement.getInstance("DH", BouncyCastleProvider.PROVIDER_NAME);
-	serverKeyAgreement.init(ownSecretKey);
-	serverKeyAgreement.doPhase(otherPublicKey, true);
+		KeyAgreement serverKeyAgreement = KeyAgreement.getInstance("DH", BouncyCastleProvider.PROVIDER_NAME);
+		serverKeyAgreement.init(ownSecretKey);
+		serverKeyAgreement.doPhase(otherPublicKey, true);
 
-	return new SecretKeySpec(serverKeyAgreement.generateSecret(), 0, keyLengthSharedSecret.getIntValue() / 8, "PBKDF2WithHmacSHA256").getEncoded();
-    }
+		return new SecretKeySpec(serverKeyAgreement.generateSecret(), 0, keyLengthSharedSecret.getIntValue() / 8, "PBKDF2WithHmacSHA256").getEncoded();
+	}
 
 }

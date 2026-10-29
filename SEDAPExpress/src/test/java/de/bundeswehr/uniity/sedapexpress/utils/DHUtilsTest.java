@@ -45,47 +45,47 @@ import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
 
 class DHUtilsTest {
 
-    @Test
-    void testDHKeyExchange() throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
+	@Test
+	void testDHKeyExchange() throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
 
-	for (DHKEMKeyLength keyLengthDHKEM : DHKEMKeyLength.values()) {
+		for (DHKEMKeyLength keyLengthDHKEM : DHKEMKeyLength.values()) {
 
-	    for (AESKeyLength keyLengthSharedSecret : AESKeyLength.values()) {
+			for (AESKeyLength keyLengthSharedSecret : AESKeyLength.values()) {
 
-		DHParameterSpec parameterSpecsServer = DHUtils.generateVariables(keyLengthDHKEM);
+				DHParameterSpec parameterSpecsServer = DHUtils.generateVariables(keyLengthDHKEM);
 
-		BigInteger p = parameterSpecsServer.getP();
-		BigInteger g = parameterSpecsServer.getG();
+				BigInteger p = parameterSpecsServer.getP();
+				BigInteger g = parameterSpecsServer.getG();
 
-		DHParameterSpec parameterSpecsClient = DHUtils.generateVariables(keyLengthDHKEM, p, g);
+				DHParameterSpec parameterSpecsClient = DHUtils.generateVariables(p, g);
 
-		// Client Key (private / public)
-		KeyPair clientKeyPair = DHUtils.generateKeyPair(parameterSpecsServer);
+				// Client Key (private / public)
+				KeyPair clientKeyPair = DHUtils.generateKeyPair(parameterSpecsServer);
 
-		// Server Key (private / public)
-		KeyPair serverKeyPair = DHUtils.generateKeyPair(parameterSpecsClient);
+				// Server Key (private / public)
+				KeyPair serverKeyPair = DHUtils.generateKeyPair(parameterSpecsClient);
 
-		// Client
-		byte[] secretClient = DHUtils.getSharedSecretKey(clientKeyPair.getPrivate(), serverKeyPair.getPublic(), keyLengthSharedSecret);
+				// Client
+				byte[] secretClient = DHUtils.getSharedSecretKey(clientKeyPair.getPrivate(), serverKeyPair.getPublic(), keyLengthSharedSecret);
 
-		// Server
-		byte[] secretServer = DHUtils.getSharedSecretKey(serverKeyPair.getPrivate(), clientKeyPair.getPublic(), keyLengthSharedSecret);
+				// Server
+				byte[] secretServer = DHUtils.getSharedSecretKey(serverKeyPair.getPrivate(), clientKeyPair.getPublic(), keyLengthSharedSecret);
 
-		Assertions.assertArrayEquals(secretClient, secretServer);
+				Assertions.assertArrayEquals(secretClient, secretServer);
 
-		System.out.println();
-		System.out.println();
-		System.out.println("Key length for DH:        " + keyLengthDHKEM.getIntValue());
-		System.out.println("p:                        " + p);
-		System.out.println("g:                        " + g);
-		System.out.println();
-		System.out.println("Public key client:        " + HexFormat.of().withUpperCase().formatHex(clientKeyPair.getPublic().getEncoded()));
-		System.out.println("Public key server:        " + HexFormat.of().withUpperCase().formatHex(serverKeyPair.getPublic().getEncoded()));
-		System.out.println();
-		System.out.println("Key length shared secret: " + keyLengthSharedSecret.getIntValue());
-		System.out.println("Shared secret client:     " + HexFormat.of().withUpperCase().formatHex(secretClient));
-		System.out.println("Shared secret sever:      " + HexFormat.of().withUpperCase().formatHex(secretServer));
-	    }
+				System.out.println();
+				System.out.println();
+				System.out.println("Key length for DH:        " + keyLengthDHKEM.getIntValue());
+				System.out.println("p:                        " + p);
+				System.out.println("g:                        " + g);
+				System.out.println();
+				System.out.println("Public key client:        " + HexFormat.of().withUpperCase().formatHex(clientKeyPair.getPublic().getEncoded()));
+				System.out.println("Public key server:        " + HexFormat.of().withUpperCase().formatHex(serverKeyPair.getPublic().getEncoded()));
+				System.out.println();
+				System.out.println("Key length shared secret: " + keyLengthSharedSecret.getIntValue());
+				System.out.println("Shared secret client:     " + HexFormat.of().withUpperCase().formatHex(secretClient));
+				System.out.println("Shared secret sever:      " + HexFormat.of().withUpperCase().formatHex(secretServer));
+			}
+		}
 	}
-    }
 }

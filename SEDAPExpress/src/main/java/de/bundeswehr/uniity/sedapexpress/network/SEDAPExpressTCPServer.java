@@ -43,156 +43,156 @@ import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
  */
 public class SEDAPExpressTCPServer extends SEDAPExpressCommunicator implements Runnable {
 
-    protected static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    static {
-	SEDAPExpressTCPServer.logger.setLevel(Level.ALL);
-    }
-
-    private Exception lastException = null;
-
-    private ServerSocketChannel serverSocket;
-    private final String intf;
-    private final int port;
-
-    private boolean status = true;
-
-    private ConcurrentLinkedDeque<SEDAPExpressTCPClient> clients = new ConcurrentLinkedDeque<>();
-
-    /**
-     * Instantiate a new SEDAP-Express TCP Server on the given interface
-     *
-     * @param intf Interface to bind to
-     * @param port Port to be used
-     */
-    public SEDAPExpressTCPServer(String intf, int port) {
-
-	super();
-
-	this.intf = intf;
-	this.port = port;
-
-    }
-
-    /**
-     * Instantiate a new SEDAP-Express TCP Client
-     *
-     * @param port Port to be used
-     */
-    public SEDAPExpressTCPServer(int port) {
-	this("0.0.0.0", port);
-    }
-
-    public boolean connect() {
-
-	try {
-
-	    this.serverSocket = ServerSocketChannel.open();
-	    this.serverSocket.configureBlocking(true);
-
-	    if (this.intf == null || "0.0.0.0".equals(this.intf)) {
-		this.serverSocket.bind(new InetSocketAddress(this.port)); // Bind to 0.0.0.0
-	    } else {
-		this.serverSocket.bind(new InetSocketAddress(this.intf, this.port));
-	    }
-
-	    SEDAPExpressTCPServer.logger.logp(Level.INFO, "SEDAPExpressTCPServer", "connect()", "TCP server listening on port: " + this.port);
-	    logInput("TCP server listening on port: " + this.port);
-
-	    this.lastException = null;
-
-	    new Thread(this).start();
-
-	    return true;
-
-	} catch (Exception e) {
-	    this.lastException = e;
-	    SEDAPExpressTCPServer.logger.logp(Level.INFO, "SEDAPExpressTCPServer", "connect()", "Could not listening on port " + this.port + " - port is already in use?");
-	    logInput("Error: " + e.getLocalizedMessage());
-	    return false;
+	protected static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	static {
+		SEDAPExpressTCPServer.logger.setLevel(Level.ALL);
 	}
-    }
 
-    @Override
-    public void run() {
+	private Exception lastException = null;
 
-	while (this.status) {
+	private ServerSocketChannel serverSocket;
+	private final String intf;
+	private final int port;
 
-	    try {
-		while (this.status) {
-		    SocketChannel clientSocket = this.serverSocket.accept();
-		    SEDAPExpressTCPClient newClient = new SEDAPExpressTCPClient(clientSocket, this.clients, this.subscriptions);
-		    this.clients.add(newClient);
-		    newClient.inputLogger = this.inputLogger;
-		    newClient.outputLogger = this.outputLogger;
+	private boolean status = true;
 
-		    newClient.connect();
+	private ConcurrentLinkedDeque<SEDAPExpressTCPClient> clients = new ConcurrentLinkedDeque<>();
 
-		    SEDAPExpressTCPServer.logger.logp(Level.INFO, "SEDAPExpressTCPServer", "run()", "Added new client " + newClient.getHost());
-		    logInput("Added new client " + newClient.getHost());
-		}
-	    } catch (Exception e) {
-		if (this.status) { // Only if not manually triggered
-		    this.lastException = e;
-		    SEDAPExpressTCPServer.logger.logp(Level.SEVERE, "SEDAPExpressTCPServer", "run()", "Could not listening on port: " + this.port);
-		    logInput("Could not listening on port: " + this.port);
-		}
-		this.status = false;
-	    } finally {
+	/**
+	 * Instantiate a new SEDAP-Express TCP Server on the given interface
+	 *
+	 * @param intf Interface to bind to
+	 * @param port Port to be used
+	 */
+	public SEDAPExpressTCPServer(String intf, int port) {
+
+		super();
+
+		this.intf = intf;
+		this.port = port;
+
+	}
+
+	/**
+	 * Instantiate a new SEDAP-Express TCP Client
+	 *
+	 * @param port Port to be used
+	 */
+	public SEDAPExpressTCPServer(int port) {
+		this("0.0.0.0", port);
+	}
+
+	public boolean connect() {
+
 		try {
-		    this.serverSocket.close();
+
+			this.serverSocket = ServerSocketChannel.open();
+			this.serverSocket.configureBlocking(true);
+
+			if (this.intf == null || "0.0.0.0".equals(this.intf)) {
+				this.serverSocket.bind(new InetSocketAddress(this.port)); // Bind to 0.0.0.0
+			} else {
+				this.serverSocket.bind(new InetSocketAddress(this.intf, this.port));
+			}
+
+			SEDAPExpressTCPServer.logger.logp(Level.INFO, "SEDAPExpressTCPServer", "connect()", "TCP server listening on port: " + this.port);
+			logInput("TCP server listening on port: " + this.port);
+
+			this.lastException = null;
+
+			new Thread(this).start();
+
+			return true;
+
+		} catch (Exception e) {
+			this.lastException = e;
+			SEDAPExpressTCPServer.logger.logp(Level.SEVERE, "SEDAPExpressTCPServer", "connect()", "Could not listening on port " + this.port + " - port is already in use?", e);
+			logInput("Error: " + e.getLocalizedMessage());
+			return false;
+		}
+	}
+
+	@Override
+	public void run() {
+
+		while (this.status) {
+
+			try {
+				while (this.status) {
+					SocketChannel clientSocket = this.serverSocket.accept();
+					SEDAPExpressTCPClient newClient = new SEDAPExpressTCPClient(clientSocket, this.clients, this.subscriptions);
+					this.clients.add(newClient);
+					newClient.inputLogger = this.inputLogger;
+					newClient.outputLogger = this.outputLogger;
+
+					newClient.connect();
+
+					SEDAPExpressTCPServer.logger.logp(Level.INFO, "SEDAPExpressTCPServer", "run()", "Added new client " + newClient.getHost());
+					logInput("Added new client " + newClient.getHost());
+				}
+			} catch (Exception e) {
+				if (this.status) { // Only if not manually triggered
+					this.lastException = e;
+					SEDAPExpressTCPServer.logger.logp(Level.SEVERE, "SEDAPExpressTCPServer", "run()", "Could not listening on port: " + this.port, e);
+					logInput("Could not listening on port: " + this.port);
+				}
+				this.status = false;
+			} finally {
+				try {
+					this.serverSocket.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+
+	}
+
+	@Override
+	public boolean sendSEDAPExpressMessage(SEDAPExpressMessage message) throws IOException {
+
+		ConcurrentLinkedDeque<SEDAPExpressTCPClient> removeClients = new ConcurrentLinkedDeque<>();
+
+		this.clients.forEach(client -> {
+
+			if (client.isStatus()) {
+				try {
+					client.sendSEDAPExpressMessage(message);
+				} catch (Exception e) {
+					removeClients.add(client);
+					if (this.status) { // Only if not manually triggered
+						SEDAPExpressTCPServer.logger.logp(Level.INFO, "SEDAPExpressTCPServer", "run()", "Removed client " + client.getHost());
+						logInput("Removed client " + client.getHost());
+					}
+				}
+			}
+
+			this.clients.removeAll(removeClients);
+
+		});
+
+		return false;
+	}
+
+	@Override
+	public void stopCommunicator() {
+
+		this.status = false;
+
+		try {
+			this.serverSocket.close();
 		} catch (IOException e) {
 		}
-	    }
+
+		this.clients.forEach(SEDAPExpressTCPClient::stopCommunicator);
+
+		SEDAPExpressTCPServer.logger.logp(Level.INFO, "SEDAPExpressTCPServer", "stopCommunicator()", "TCP server stopped");
+		logInput("TCP server stopped");
 	}
 
-    }
+	@Override
+	public Exception getLastException() {
 
-    @Override
-    public boolean sendSEDAPExpressMessage(SEDAPExpressMessage message) throws IOException {
-
-	ConcurrentLinkedDeque<SEDAPExpressTCPClient> removeClients = new ConcurrentLinkedDeque<>();
-
-	this.clients.forEach(client -> {
-
-	    if (client.isStatus()) {
-		try {
-		    client.sendSEDAPExpressMessage(message);
-		} catch (Exception e) {
-		    removeClients.add(client);
-		    if (this.status) { // Only if not manually triggered
-			SEDAPExpressTCPServer.logger.logp(Level.INFO, "SEDAPExpressTCPServer", "run()", "Removed client " + client.getHost());
-			logInput("Removed client " + client.getHost());
-		    }
-		}
-	    }
-
-	    this.clients.removeAll(removeClients);
-
-	});
-
-	return false;
-    }
-
-    @Override
-    public void stopCommunicator() {
-
-	this.status = false;
-
-	try {
-	    this.serverSocket.close();
-	} catch (IOException e) {
+		return this.lastException;
 	}
-
-	this.clients.forEach(SEDAPExpressTCPClient::stopCommunicator);
-
-	SEDAPExpressTCPServer.logger.logp(Level.INFO, "SEDAPExpressTCPServer", "stopCommunicator()", "TCP server stopped");
-	logInput("TCP server stopped");
-    }
-
-    @Override
-    public Exception getLastException() {
-
-	return this.lastException;
-    }
 
 }

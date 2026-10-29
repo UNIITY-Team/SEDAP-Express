@@ -74,7 +74,7 @@ public class FrodoUtils {
 	 */
 	public static KeyPair generateKeyPair(FrodoKEMParameterSpec frodoParameterSpec) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
-		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("Frodo", "BCPQC");
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("FrodoKEM", "BC");
 		keyPairGenerator.initialize(frodoParameterSpec, FrodoUtils.random);
 
 		return keyPairGenerator.generateKeyPair();
@@ -95,7 +95,7 @@ public class FrodoUtils {
 	public static SecretKeyWithEncapsulation generateSharedSecretKeyWithEncapsulation(PublicKey publicKey, DHKEMKeyLength keyLength)
 			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
-		KeyGenerator keyGenerator = KeyGenerator.getInstance("Frodo", "BCPQC");
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("FrodoKEM", "BC");
 		KEMGenerateSpec kemGenerateSpec = new KEMGenerateSpec(publicKey, "Secret", keyLength.getIntValue());
 		keyGenerator.init(kemGenerateSpec);
 
@@ -119,7 +119,7 @@ public class FrodoUtils {
 			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
 
 		KEMExtractSpec kemExtractSpec = new KEMExtractSpec(privateKey, encapsulation, "Secret", keyLength.getIntValue());
-		KeyGenerator keyGenerator = KeyGenerator.getInstance("Frodo", "BCPQC");
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("FrodoKEM", "BC");
 		keyGenerator.init(kemExtractSpec);
 
 		return ((SecretKeyWithEncapsulation) keyGenerator.generateKey()).getEncoded();

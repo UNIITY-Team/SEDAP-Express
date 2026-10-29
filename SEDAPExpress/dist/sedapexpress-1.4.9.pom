@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.uniity-team</groupId>
 	<artifactId>sedapexpress</artifactId>
-	<version>1.4.8</version>
+	<version>1.4.9</version>
 	<packaging>jar</packaging>
 	<name>SEDAP-Express</name>
 	<licenses>
@@ -48,20 +48,26 @@
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk18on</artifactId>
-			<version>1.85.2</version>
+			<version>1.86</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcpkix-jdk18on</artifactId>
-			<version>1.85</version>
+			<version>1.86</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcutil-jdk18on</artifactId>
-			<version>1.85</version>
+			<version>1.86</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+ 		   <artifactId>bctls-jdk18on</artifactId>
+  		  <version>1.86.2</version>
+  		  <scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -84,13 +90,13 @@
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
-			<version>4.36.0</version>
+			<version>4.36.2</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java-util</artifactId>
-			<version>4.36.0</version>
+			<version>4.36.2</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
