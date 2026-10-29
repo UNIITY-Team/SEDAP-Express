@@ -27,6 +27,7 @@ package de.bundeswehr.uniity.sedapexpress.sample.mqttclient;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 
 import de.bundeswehr.uniity.sedapexpress.messages.CONTACT;
 import de.bundeswehr.uniity.sedapexpress.messages.EMISSION;
@@ -53,109 +54,107 @@ import de.bundeswehr.uniity.sedapexpress.processing.SEDAPExpressSubscriber;
  */
 public class SampleMQTTClient implements SEDAPExpressSubscriber {
 
-    private final SEDAPExpressCommunicator communicator;
+	private final SEDAPExpressCommunicator communicator;
 
-    private final String senderId;
+	private final String senderId;
 
-    private byte numberSTATUS = 0;
+	private byte numberSTATUS = 0;
 
-    /**
-     * Instantiate a sample MQTT client
-     *
-     */
-    public SampleMQTTClient() {
+	/**
+	 * Instantiate a sample MQTT client
+	 *
+	 */
+	public SampleMQTTClient() {
 
-	InputStream caStream = SampleMQTTClient.class.getResourceAsStream("ca.crt");
-	InputStream clientStream = SampleMQTTClient.class.getResourceAsStream("client.crt");
-	InputStream clientKeyStream = SampleMQTTClient.class.getResourceAsStream("client.key");
+		String caStream = "ca.crt";
+		String clientStream = "client.crt";
+		String clientKeyStream = "client.key";
 
-	this.communicator = new SEDAPExpressMQTTClient("ssl://localhost:8883", "MESE", "MESE", "MESE",
-		caStream, clientStream, clientKeyStream);
+		this.communicator = new SEDAPExpressMQTTClient("ssl://localhost:8883", "MESE", "MESE", "MESE", caStream, clientStream, clientKeyStream, new LinkedList<>(), "SEDAP-X");
 
-	if (!this.communicator.connect()) {
+		if (!this.communicator.connect()) {
 
-	    System.exit(1);
-	}
-
-	this.communicator.subscribeMessages(this, MessageType.OWNUNIT, MessageType.CONTACT, MessageType.POINT, MessageType.EMISSION, MessageType.HEARTBEAT, MessageType.STATUS);
-	this.senderId = this.communicator.createSenderId();
-
-	// Sample thread as example for how producing messages
-	new Thread(() -> {
-
-	    while (true) {
-
-		final STATUS status = new STATUS(this.numberSTATUS++, System.currentTimeMillis(), this.senderId, Classification.Confidential, Acknowledgement.FALSE, null, TechnicalState.Operational, OperationalState.Operational, "MLG",
-			50.0,
-			"Tank", 75.3, "MainAkku", 10.8, 23, CommandState.Executed_successfully, "10.8.0.6", "rtsp://10.8.0.6/stream1", "This is a sample!");
-
-		try {
-		    this.communicator.sendSEDAPExpressMessage(status);
-		} catch (IOException e) {
-		    e.printStackTrace();
+			System.exit(1);
 		}
 
-		if (this.numberSTATUS == 0x7f) {
-		    this.numberSTATUS = 0;
+		this.communicator.subscribeMessages(this, MessageType.OWNUNIT, MessageType.CONTACT, MessageType.POINT, MessageType.EMISSION, MessageType.HEARTBEAT, MessageType.STATUS);
+		this.senderId = this.communicator.createSenderId();
+
+		// Sample thread as example for how producing messages
+		new Thread(() -> {
+
+			while (true) {
+
+				final STATUS status = new STATUS(this.numberSTATUS++, System.currentTimeMillis(), this.senderId, Classification.Confidential, Acknowledgement.FALSE, null, TechnicalState.Operational,
+						OperationalState.Operational, "MLG", 50.0, "Tank", 75.3, "MainAkku", 10.8, 23, CommandState.Executed_successfully, "10.8.0.6", "rtsp://10.8.0.6/stream1", "This is a sample!");
+
+				try {
+					this.communicator.sendSEDAPExpressMessage(status);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+				if (this.numberSTATUS == 0x7f) {
+					this.numberSTATUS = 0;
+				}
+
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+				}
+
+			}
+
+		}).start();
+
+	}
+
+	@Override
+	public void processSEDAPExpressMessage(SEDAPExpressMessage message) {
+
+		System.out.println("Received: " + message); // Use e.g. a Logger or output in a HMI
+
+		if (message instanceof OWNUNIT ownunitMessage) {
+			// Write here your own processing code
 		}
 
-		try {
-		    Thread.sleep(5000);
-		} catch (InterruptedException e) {
+		else if (message instanceof CONTACT contactMessage) {
+
+			// Write here your own processing code
 		}
 
-	    }
+		else if (message instanceof POINT pointMessage) {
 
-	}).start();
+			// Write here your own processing code
+		}
 
-    }
+		else if (message instanceof EMISSION emissionMessage) {
 
-    @Override
-    public void processSEDAPExpressMessage(SEDAPExpressMessage message) {
+			// Write here your own processing code
+		}
 
-	System.out.println("Received: " + message); // Use e.g. a Logger or output in a HMI
+		else if (message instanceof HEARTBEAT heartbeat) {
 
-	if (message instanceof OWNUNIT ownunitMessage) {
-	    // Write here your own processing code
+			// Write here your own processing code
+			try {
+				this.communicator.sendSEDAPExpressMessage(new HEARTBEAT());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("Answered: HEARTBEAT");
+		}
+
+		else if (message instanceof STATUS status) {
+			// Write here your own processing code
+		}
+
+		else
+			throw new IllegalArgumentException("Unexpected value: " + message);
+
 	}
 
-	else if (message instanceof CONTACT contactMessage) {
+	public static void main(String[] args) {
+		new SampleMQTTClient();
 
-	    // Write here your own processing code
 	}
-
-	else if (message instanceof POINT pointMessage) {
-
-	    // Write here your own processing code
-	}
-
-	else if (message instanceof EMISSION emissionMessage) {
-
-	    // Write here your own processing code
-	}
-
-	else if (message instanceof HEARTBEAT heartbeat) {
-
-	    // Write here your own processing code
-	    try {
-		this.communicator.sendSEDAPExpressMessage(new HEARTBEAT());
-	    } catch (IOException e) {
-		e.printStackTrace();
-	    }
-	    System.out.println("Answered: HEARTBEAT");
-	}
-
-	else if (message instanceof STATUS status) {
-	    // Write here your own processing code
-	}
-
-	else
-	    throw new IllegalArgumentException("Unexpected value: " + message);
-
-    }
-
-    public static void main(String[] args) {
-	new SampleMQTTClient();
-
-    }
 }
