@@ -1,0 +1,10 @@
+{
+  "messages": [
+    {
+      "message": "OWNUNIT;5E;0191C643A8AF;66A3;R;TRUE;;42.32;-123.11;10000;50.23;297;;;33.3;-0.15;sfapmf---------"
+    },
+    {
+      "message": "TEXT;AE;0191C643A8AF;374E;S;;3;This is a chat message!;E4F1"
+    }
+  ]
+}

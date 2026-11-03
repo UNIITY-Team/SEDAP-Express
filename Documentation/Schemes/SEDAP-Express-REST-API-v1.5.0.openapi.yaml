@@ -1,0 +1,162 @@
+openapi: 3.1.0
+info:
+  title: SEDAP-Express REST API
+  version: 1.5.0
+  description: |
+    REST interface for exchanging SEDAP-Express messages.
+
+    The REST API transports the original SEDAP-Express message representation
+    as a string in the `message` property. The message content follows the
+    SEDAP-Express CSV format; this OpenAPI document describes the HTTP
+    transport wrapper, not a separate JSON schema for every message type.
+
+    Authentication / MAC:
+    If a message carries a MAC, the MAC is calculated over the complete
+    serialized SEDAP-Express message, including its header, while the MAC
+    field is empty. The MAC field position and CSV field separators remain
+    part of the serialized message; the received or previously calculated
+    MAC value is not included in the calculation. The calculated MAC is then
+    placed in the MAC header field. A MAC may be truncated to the first
+    4 bytes (32 bits), where configured by the protocol.
+servers:
+  - url: 'http://{host}:{port}'
+    description: HTTP endpoint
+    variables:
+      host:
+        default: sample.host
+        description: Hostname or IP address of the SEDAP-Express REST service.
+      port:
+        default: '80'
+        description: Configured HTTP port.
+  - url: 'https://{host}:{port}'
+    description: HTTPS endpoint
+    variables:
+      host:
+        default: sample.host
+        description: Hostname or IP address of the SEDAP-Express REST service.
+      port:
+        default: '443'
+        description: Configured HTTPS port.
+paths:
+  /SEDAPEXPRESS:
+    get:
+      operationId: getSedapExpressMessages
+      summary: Retrieve SEDAP-Express messages
+      description: |
+        Retrieves messages from the service. Different message types may be
+        returned together in the `messages` array.
+      responses:
+        '200':
+          description: Messages retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageCollection'
+              example:
+                messages:
+                  - message: 'CONTACT;60;0191C643A8AF;66A3;S;TRUE;102;TRUE;53.32;8.11'
+                  - message: 'METEO;AC;0191C643A8AF;74BE;U;;15.4;15.5;;;10.2;72;20.3;;55;1005;25;;;2500;33'
+                  - message: 'TEXT;D6;0191C643A8AF;324E;S;;3;This is a chat message!;E4F1'
+                  - message: 'GRAPHIC;79;0191C643A8AF;910E;U;;8;1;FF8000;Area A;10000;53.43;9.45'
+        '4XX':
+          description: Client error.
+        '5XX':
+          description: Server error.
+    post:
+      operationId: postSedapExpressMessages
+      summary: Send SEDAP-Express messages
+      description: |
+        Sends one or more SEDAP-Express messages to the service. Different
+        message types may be mixed in one request. Updates to existing
+        messages (for example, contacts) may also be submitted using POST.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCollection'
+            example:
+              messages:
+                - message: 'OWNUNIT;5E;0191C643A8AF;66A3;R;TRUE;;42.32;-123.11;10000;50.23;297;;;33.3;-0.15;sfapmf---------'
+                - message: 'TEXT;AE;0191C643A8AF;374E;S;;3;This is a chat message!;E4F1'
+      responses:
+        '200':
+          description: Request processed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                success: 'true'
+        '400':
+          description: Invalid request body.
+        '4XX':
+          description: Other client error.
+        '5XX':
+          description: Server error.
+    put:
+      operationId: putSedapExpressMessages
+      summary: Update SEDAP-Express messages
+      description: |
+        Updates existing messages. The SEDAP-Express ICD permits updates
+        (for example, contacts) using POST or PUT.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCollection'
+      responses:
+        '200':
+          description: Request processed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+              example:
+                success: 'true'
+        '400':
+          description: Invalid request body.
+        '4XX':
+          description: Other client error.
+        '5XX':
+          description: Server error.
+components:
+  schemas:
+    MessageCollection:
+      type: object
+      required:
+        - messages
+      properties:
+        messages:
+          type: array
+          description: List of SEDAP-Express messages; different message types may be mixed.
+          items:
+            $ref: '#/components/schemas/SedapExpressMessage'
+    SedapExpressMessage:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: |
+            Complete SEDAP-Express message in its original semicolon-separated
+            representation. Message fields and header semantics are defined
+            by the SEDAP-Express ICD. If a MAC is present, calculate it over
+            the complete serialized message with the MAC field empty,
+            retaining the field position and delimiters; do not calculate
+            using the received MAC value or a placeholder such as `0000`.
+          examples:
+            - 'TEXT;AE;0191C643A8AF;374E;S;;3;This is a chat message!;E4F1'
+    SuccessResponse:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: string
+          description: Success indicator as returned by the ICD example.
+          enum:
+            - 'true'
+            - 'false'

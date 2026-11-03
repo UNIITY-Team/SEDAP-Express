@@ -1,6 +1,6 @@
-# SEDAP-Express ICD v1.4.8 (AI-optimized reference)
+# SEDAP-Express ICD v1.5.0 (AI-optimized reference)
 
-Source: "SEDAP-Express ICD v1.4.8.docx". Content reproduced completely; formatting condensed for machine consumption.
+Source: "SEDAP-Express ICD v1.5.0.docx". Content reproduced completely; formatting condensed for machine consumption.
 
 ## 1. Scope
 
@@ -45,13 +45,13 @@ Units/geodesy (apply to all messages):
 - If auth/encryption is required, prefer VPN instead.
 - Messages authenticated by filling the MAC header field using a shared password.
 - Password: pre-defined, or exchanged via Diffie-Hellman using KEYEXCHANGE (recommended: authenticate even KEYEXCHANGE with a pre-shared password).
-- MAC calculation: over the complete message incl. header, with MAC field temporarily set to `"0000"`.
+- MAC calculation: over the complete message incl. header, with an empty MAC field.
 - MAC may be truncated to first 4 bytes / 32 bits (saves data, reduces security).
 - Minimum: FIPS 140-2. Preferred:
   - 32/256-bit HMAC with SHA256 (FIPS 198-1 / RFC 2104)
   - 32/128-bit CMAC with AES128 (NIST SP 800-38B)
   - 32/128-bit GMAC with AES128 (NIST SP 800-38D)
-- Recommended: MAC DRBG (NIST SP 800-90A/B).
+- Recommended: Deterministic Random Bit Generator (NIST SP 800-90A/B) and appropriate Initialization Vectors (IV) 
 - Sample (32-bit CMAC, password `expressexpressex`):
   `OWNUNIT;5E;0195236D151A;66A3;R;;089A01E7;53.32;8.11;0;5.5;21;22;;;FGS Bayern`
 
@@ -59,7 +59,7 @@ Units/geodesy (apply to all messages):
 - Optional; prefer VPN. Minimum FIPS 140-2. Preferred:
   - AES128/256 CFB/NoPadding (NIST SP 800-38A)
   - AES128/256 CTR/NoPadding (NIST SP 800-38A)
-  - AES128/256 ECB/PKCS7Padding (NIST SP 800-38A)
+  - AES128/256 GCM/NoPadding (NIST SP 800-38A)
   - XOR (pseudo-encryption, ONLY testing/debugging/light obfuscation)
 - Recommended: MAC DRBG (NIST SP 800-90A/B).
 - Encrypted data must be BASE64-encoded; the **whole message incl. header** is encrypted.
@@ -83,7 +83,7 @@ Units/geodesy (apply to all messages):
 | TCP | Standard port 50000 (customizable). SEC/MockUp can be server or client. Use ONE persistent connection for all message kinds. Most simple/reliable; no free-text/data field size limits. |
 | UDP | Standard port 50000 (customizable). Uni-/Broad-/Multicast; multiple messages per UDP packet allowed. Multicast: 228.2.19.80 / ff02:8:2:19:80::1. Answer HEARTBEAT via UDP unicast if possible. Strongly recommended: use header `<Number>` + `<Acknowledgement>` (packet loss). |
 | Serial | Standard 115200-8-N-1. Full-duplex preferred; half-duplex and simplex without acknowledge requests. Modes: (a) message never contains `\n` → may be sent with appended `\n\n\n\n`; (b) message contains `\n` → must be BASE64-encoded and sent with appended `\n\n\n\n`. |
-| MQTT | Plain TCP/MQTT or SSL/certificates. Publish topic: `UNIITY-X/<senderid>/<messagetype>`. |
+| MQTT | Plain TCP/MQTT or SSL/certificates. Publish topic: `SEDAP-X/<senderid>/<messagetype>`. |
 | REST-API | Standard ports HTTP 80 / HTTPS 443 (customizable). Deflate or GZip compression should be supported. Prefer using provided JSON schema + generated code (SEDAP-Express SDK). See §7. |
 | Protocol Buffers | Same TCP/UDP parameters as above. Schema in §8. |
 
@@ -353,7 +353,7 @@ CmdType + parameters:
 | 33 | Take photo | `<CameraID>` |
 | 34 | Record video | `<CameraID>;<ON\|OFF>;<Duration>` |
 | 35 | Stream video | `<CameraID>;<ON\|OFF>` |
-| 36 | Set camera parameters | `<CameraID>;<Zoom>[0-100%];<Mode>[DayLight\|InfraRed\|LightIntensifier]` |
+| 36 | Set camera parameters | `<CameraID>;<Zoom>[0-100%];<Mode>[DL\|IR\|LI]` |
 | 37 | Set orientation of camera | `<CameraID>;<Azimuth>[°];<Elevation>[°]` |
 | 40 | Actuator check | `<ActuatorID>` |
 | 41 | Set orientation of actuator | `<ActuatorID>;<Azimuth>[°];<Elevation>[°]` |
@@ -390,13 +390,13 @@ COMMAND;2E;0195238E25AD;E4B3;C;TRUE;;ORKA;0331;00;;30;53.4397;8.2262;1000;200
 Status variables (e.g. remaining battery) and optionally execution status of the last or a specific COMMAND. When forwarding sub-system status (e.g. swarm), Sender = the individual sub-system (e.g. concrete drone). StorageLevel can mean recording memory or physical storage room (picking up/transferring objects).
 
 ```
-STATUS;<HDR>;<TecStatus>;<OpsStatus>;<AmmunitionLevels>*;
+STATUS;<HDR>;<TechnicalStatus>;<OpsStatus>;<AmmunitionLevels>*;
 <FuelLevels>*;<BatteryLevels>*;<StorageLevels>*;<CmdID>;<CmdState>;<IP/Host>;<Media>*;<Text>
 ```
 
 | Field | Values |
 |---|---|
-| TecStatus | 0=Off/Absent, 1=Initializing, 2=Degraded, 3=Operational, 4=Fault |
+| TechnicalStatus | 0=Off/Absent, 1=Initializing, 2=Degraded, 3=Operational, 4=Fault |
 | OpsStatus | 0=Not operational, 1=Degraded, 2=Operational, 3=Operational (semi-autonomous), 4=Operational (autonomous) |
 | AmmunitionLevels | `String#%` list: `<weaponName>#<level>#…` (relative remaining ammunition) |
 | FuelLevels | `String#%` list: `<tankName>#<level>#…` |
@@ -496,7 +496,7 @@ TIMESYNC;12;;FE2A;U;;;0191C643A8AF
 ```
 
 ### 6.15 KEYEXCHANGE
-Key exchange via Diffie-Hellman-Merkle or post-quantum Kyber/FrodoKEM when no other channel (mail, telco) is available. Prefer ECDH or standard DH with MAC DRBG. If possible use MAC authentication for these messages, otherwise plausibility checks. The current Phase defines which fields are mandatory. Either side can restart by sending Phase=0 again; the other side then restarts the whole process incl. generating new key pairs (ECDH/Kyber/FrodoKEM). ECDH has NO phase 1. The process always ends with a finalization confirmation. Key derivation from a larger secret: PBKDF2 with HMACSHA256, 1 iteration, no salt → 128/256-bit key.
+Key exchange via Diffie-Hellman-Merkle or post-quantum ML-KEM/FrodoKEM when no other channel (mail, telco) is available. Prefer ECDH or standard DH with MAC DRBG. If possible use MAC authentication for these messages, otherwise plausibility checks. The current Phase defines which fields are mandatory. Either side can restart by sending Phase=0 again; the other side then restarts the whole process incl. generating new key pairs (ECDH/ML-KEM/FrodoKEM). ECDH has NO phase 1. The process always ends with a finalization confirmation. Key derivation from a larger secret: PBKDF2 with HMACSHA256, 1 iteration, no salt → 128/256-bit key.
 
 ```
 KEYEXCHANGE;<HDR>;<Recipient>;<AlgorithmType>(M);<Phase>(M);
@@ -506,7 +506,7 @@ KEYEXCHANGE;<HDR>;<Recipient>;<AlgorithmType>(M);<Phase>(M);
 
 | Field | Values |
 |---|---|
-| AlgorithmType | 0=DH (1024/2048 bit, NIST SP 800-56A/B & 90A/B), 1=ECDH (Curve25519/X25519, 1024/2048/4096 bit), 2=Kyber-512, 3=Kyber-768, 4=Kyber-1024, 5=FrodoKEM-640 (AES), 6=FrodoKEM-976 (AES), 7=FrodoKEM-1344 (AES) |
+| AlgorithmType | 0=DH (1024/2048 bit, NIST SP 800-56A/B & 90A/B), 1=ECDH (BrainpoolP256r1, 1024/2048/4096 bit), 2=ML-KEM-512, 3=ML-KEM-768, 4=ML-KEM-1024, 5=FrodoKEM-640 (AES), 6=FrodoKEM-976 (AES), 7=FrodoKEM-1344 (AES) |
 | Phase | 0, 1, 2 — current step of the exchange. |
 | KeyLengthSharedSecret | 128 or 256 (bits, Phase 0). |
 | KeyLengthKEM | 1024, 2048 or 4096 (bits of DH/KEM key, Phase 0). |
@@ -520,7 +520,7 @@ Samples (fields shortened for readability):
 KEYEXCHANGE;00;0191C643A8AF;89AD;U;;;FE2A;0;128;1024;7FFFFFFF;822460DE
 KEYEXCHANGE;00;0191C643A8AF;FE2A;U;;;89AD;1;128;2048;;6E6026EFF9D9EBEB9D4A973CB5C287DBD77D75EDDD2
 ```
-(The ICD additionally shows DH-, ECDH- and Kyber/FrodoKEM sequence diagrams — graphics, not reproduced here.)
+(The ICD additionally shows DH-, ECDH- and ML-KEM/FrodoKEM sequence diagrams — graphics, not reproduced here.)
 
 ## 7. REST-API (JSON)
 
@@ -543,14 +543,14 @@ Sample GET answer:
 ```
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 399
+Content-Length: 368
 
 {
    "messages":[
-      {"message":"CONTACT;60;0191C643A8AF;66A3;S;TRUE;;102;TRUE;53.32;8.11"},
-      {"message":"METEO;2C;0191C643A8AF;74BE;U;;;15.4;15.5;;;;;10.2;72;1005;25;111;50;2500;33;RefPoint1"},
-      {"message":"TEXT;56;0191C643A8AF;324E;S;;;E4F1;4;NONE;This is a chat message!"},
-      {"message":"GRAPHIC;79;0191C643A8AF;910E;U;;;AreaA;;08;1;FF8000FF;;;;Area A;53.43;9.45;0;10000"}
+      {"message":"CONTACT;60;0191C643A8AF;66A3;S;TRUE;102;TRUE;53.32;8.11"},
+      {"message":"METEO;AC;0191C643A8AF;74BE;U;;15.4;15.5;;;10.2;72;20.3;;55;1005;25;;;2500;33"},
+      {"message":"TEXT;D6;0191C643A8AF;324E;S;;3;This is a chat message!;E4F1"},
+      {"message":"GRAPHIC;79;0191C643A8AF;910E;U;;8;1;FF8000;Area A;10000;53.43;9.45"}
    ]
 }
 ```
@@ -558,15 +558,13 @@ Sample POST request:
 ```
 POST /SEDAPEXPRESS HTTP/1.1
 Host: sample.host
-Content-Type: application/json
+Accept: application/json
 
 {
-"messages":[
-{
-"message":" OWNUNIT;5E;0191C643A8AF;66A3;R;TRUE;;42.32;-123.11;10000;50.23;297;;;33.3;-0.15;sfapmf---------"
-"message":"TEXT;2E;0191C643A8AF;374E;S;;3;This is a chat message!;E4F1"
-}
-]
+   "messages":[
+      {"message":" OWNUNIT;5E;0191C643A8AF;66A3;R;TRUE;;42.32;-123.11;10000;50.23;297;;;33.3;-0.15;sfapmf---------"},
+      {"message":"TEXT;AE;0191C643A8AF;374E;S;;3;This is a chat message!;E4F1"}
+   ]
 }
 ```
 Sample POST answer:

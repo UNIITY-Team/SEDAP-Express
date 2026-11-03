@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/sedap-express-rest-api-v1.5.0.schema.json",
+  "title": "SEDAP-Express REST API v1.5.0",
+  "description": "JSON Schema for the SEDAP-Express REST API request and response envelopes. The SEDAP-Express message itself is transported as its original semicolon-separated string.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/MessageCollection"
+    },
+    {
+      "$ref": "#/$defs/SuccessResponse"
+    }
+  ],
+  "$defs": {
+    "MessageCollection": {
+      "type": "object",
+      "title": "MessageCollection",
+      "description": "Container for one or more SEDAP-Express messages.",
+      "required": [
+        "messages"
+      ],
+      "properties": {
+        "messages": {
+          "type": "array",
+          "description": "List of SEDAP-Express messages; different message types may be mixed.",
+          "items": {
+            "$ref": "#/$defs/SedapExpressMessage"
+          }
+        }
+      }
+    },
+    "SedapExpressMessage": {
+      "type": "object",
+      "title": "SedapExpressMessage",
+      "description": "A complete SEDAP-Express message in its original semicolon-separated representation.",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "Complete SEDAP-Express CSV message. If a MAC is present, calculate it over the complete serialized message with the MAC field empty, retaining the field position and delimiters. Do not include the received MAC value or a placeholder in the calculation.",
+          "examples": [
+            "TEXT;AE;0191C643A8AF;374E;S;;3;This is a chat message!;E4F1"
+          ]
+        }
+      }
+    },
+    "SuccessResponse": {
+      "type": "object",
+      "title": "SuccessResponse",
+      "description": "Response indicating whether the request was processed successfully.",
+      "required": [
+        "success"
+      ],
+      "properties": {
+        "success": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Success indicator represented as a string."
+        }
+      }
+    }
+  }
+}
