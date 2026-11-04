@@ -99,8 +99,8 @@ class WireEncodingTest {
 		Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 		cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
 		String expected = Base64.getEncoder().encodeToString(cipher.doFinal(CONTENT.getBytes(StandardCharsets.ISO_8859_1)));
-		assertEquals(expected, EncryptionUtils.encrypt_AES_CTR(CONTENT, key, iv));
-		assertEquals(CONTENT, EncryptionUtils.decrypt_AES_CTR(expected, key, iv));
+		assertEquals(expected, EncryptionUtils.encodeBase64(EncryptionUtils.encrypt_AES_CTR(CONTENT.getBytes(StandardCharsets.ISO_8859_1), key, iv)));
+		assertEquals(CONTENT, new String(EncryptionUtils.decrypt_AES_CTR(EncryptionUtils.decodeBase64(expected), key, iv), StandardCharsets.ISO_8859_1));
 	}
 
 	@Test

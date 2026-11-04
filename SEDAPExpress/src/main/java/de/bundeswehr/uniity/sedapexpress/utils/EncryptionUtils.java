@@ -25,12 +25,14 @@
  */
 package de.bundeswehr.uniity.sedapexpress.utils;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.Security;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -91,7 +93,11 @@ public class EncryptionUtils {
 
 	static {
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+		sessionId = random.nextInt();
 	}
+
+	private static final int sessionId;
+	private static final AtomicLong counter = new AtomicLong(0);
 
 	/**
 	 * This method generates a (pseudo)random key for using the authentication or
@@ -162,7 +168,7 @@ public class EncryptionUtils {
 	}
 
 	/**
-	 * Generates an appropriate Initialization Vector (IV)
+	 * Generates an appropriate Initialization Vector (IV) for CFB and CTR
 	 * 
 	 * @return Initialization Vector (IV)
 	 */
@@ -197,11 +203,43 @@ public class EncryptionUtils {
 	}
 
 	/**
+	 * Generates a unique 96-bit nonce for use with GCM Uses a default random
+	 * sessionid
+	 * 
+	 * @return 12-byte AES-GCM nonce
+	 */
+	public static byte[] generateNonce() {
+		long currentCounter = counter.getAndIncrement();
+
+		if (currentCounter < 0) {
+			throw new IllegalStateException("Nonce counter exhausted");
+		}
+
+		return ByteBuffer.allocate(12).putInt(sessionId).putLong(currentCounter).array();
+	}
+
+	/**
+	 * Generates a unique 96-bit nonce for use with GCM
+	 * 
+	 * @return 12-byte AES-GCM nonce
+	 */
+	public static byte[] generateNonce(int sessionId) {
+		long currentCounter = counter.getAndIncrement();
+
+		if (currentCounter < 0) {
+			throw new IllegalStateException("Nonce counter exhausted");
+		}
+
+		return ByteBuffer.allocate(12).putInt(sessionId).putLong(currentCounter).array();
+	}
+
+	/**
 	 * Encrypts a message with AES128/256 CFB/NoPadding (NIST SP 800-38A)
 	 *
 	 * @param originalData plain data which should be encrypted
 	 * @param key          the 128 or 256 bit wide encryption key
-	 * @param iv           appropriate Initialization Vector
+	 * @param iv           appropriate Initialization Vector (IV, 16 bytes
+	 *                     recommended)
 	 *
 	 * @return encrypted data
 	 *
@@ -212,15 +250,15 @@ public class EncryptionUtils {
 	 * @throws InvalidKeyException
 	 * @throws InvalidAlgorithmParameterException
 	 */
-	public static String encrypt_AES_CFB(String originalData, byte[] key, byte[] iv)
+	public static byte[] encrypt_AES_CFB(byte[] originalData, byte[] key, byte[] iv)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
 
 		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 		Cipher cipher = Cipher.getInstance("AES/CFB/NoPadding");
 		cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv), EncryptionUtils.random);
-		byte[] encryptedBytes = cipher.doFinal(originalData.getBytes(StandardCharsets.ISO_8859_1));
+		byte[] encryptedBytes = cipher.doFinal(originalData);
 
-		return new String(Base64.encode(encryptedBytes), StandardCharsets.US_ASCII);
+		return encryptedBytes;
 	}
 
 	/**
@@ -228,7 +266,8 @@ public class EncryptionUtils {
 	 *
 	 * @param encryptedData encrypted data which should be decrypted
 	 * @param key           the 128 or 256 bit wide decryption key
-	 * @param iv            appropriate Initialization Vector (IV)
+	 * @param iv            appropriate Initialization Vector (IV, 16 bytes
+	 *                      recommended)
 	 *
 	 * @return decrypted data
 	 *
@@ -239,16 +278,15 @@ public class EncryptionUtils {
 	 * @throws InvalidKeyException
 	 * @throws InvalidAlgorithmParameterException
 	 */
-	public static String decrypt_AES_CFB(String encryptedData, byte[] key, byte[] iv)
+	public static byte[] decrypt_AES_CFB(byte[] encryptedData, byte[] key, byte[] iv)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 
 		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 		Cipher cipher = Cipher.getInstance("AES/CFB/NoPadding");
 		cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv), EncryptionUtils.random);
-		byte[] decodedBytes = Base64.decode(encryptedData);
-		byte[] decryptedBytes = cipher.doFinal(decodedBytes);
+		byte[] decryptedBytes = cipher.doFinal(encryptedData);
 
-		return new String(decryptedBytes, StandardCharsets.ISO_8859_1);
+		return decryptedBytes;
 	}
 
 	/**
@@ -256,7 +294,8 @@ public class EncryptionUtils {
 	 *
 	 * @param originalData plain data which should be encrypted
 	 * @param key          the 128 or 256 bit wide encryption key
-	 * @param iv           appropriate Initialization Vector
+	 * @param iv           appropriate Initialization Vector (IV, 16 bytes
+	 *                     recommended)
 	 *
 	 * @return encrypted data
 	 *
@@ -267,15 +306,15 @@ public class EncryptionUtils {
 	 * @throws InvalidKeyException
 	 * @throws InvalidAlgorithmParameterException
 	 */
-	public static String encrypt_AES_CTR(String originalData, byte[] key, byte[] iv)
+	public static byte[] encrypt_AES_CTR(byte[] originalData, byte[] key, byte[] iv)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
 
 		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 		Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 		cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv), EncryptionUtils.random);
-		byte[] encryptedBytes = cipher.doFinal(originalData.getBytes(StandardCharsets.ISO_8859_1));
+		byte[] encryptedBytes = cipher.doFinal(originalData);
 
-		return new String(Base64.encode(encryptedBytes), StandardCharsets.US_ASCII);
+		return encryptedBytes;
 	}
 
 	/**
@@ -283,7 +322,8 @@ public class EncryptionUtils {
 	 *
 	 * @param encryptedData encrypted data which should be decrypted
 	 * @param key           the 128 or 256 bit wide decryption key
-	 * @param iv            appropriate Initialization Vector (12 bytes recommended)
+	 * @param iv            appropriate Initialization Vector (IV, 16 bytes
+	 *                      recommended)
 	 *
 	 * @return decrypted data
 	 *
@@ -294,16 +334,15 @@ public class EncryptionUtils {
 	 * @throws InvalidKeyException
 	 * @throws InvalidAlgorithmParameterException
 	 */
-	public static String decrypt_AES_CTR(String encryptedData, byte[] key, byte[] iv)
+	public static byte[] decrypt_AES_CTR(byte[] encryptedData, byte[] key, byte[] iv)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 
 		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 		Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 		cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv), EncryptionUtils.random);
-		byte[] decodedBytes = Base64.decode(encryptedData);
-		byte[] decryptedBytes = cipher.doFinal(decodedBytes);
+		byte[] decryptedBytes = cipher.doFinal(encryptedData);
 
-		return new String(decryptedBytes, StandardCharsets.ISO_8859_1);
+		return decryptedBytes;
 	}
 
 	/**
@@ -311,7 +350,7 @@ public class EncryptionUtils {
 	 *
 	 * @param originalData plain data which should be encrypted
 	 * @param key          the 128 or 256 bit wide encryption key
-	 * @param iv           appropriate Initialization Vector (12 bytes recommended)
+	 * @param nonce        appropriate nonce (12 bytes recommended)
 	 *
 	 * @return encrypted data
 	 *
@@ -322,25 +361,24 @@ public class EncryptionUtils {
 	 * @throws InvalidKeyException
 	 * @throws InvalidAlgorithmParameterException
 	 */
-	public static String encrypt_AES_GCM(String originalData, byte[] key, byte[] iv)
+	public static byte[] encrypt_AES_GCM(byte[] originalData, byte[] key, byte[] nonce)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
 
 		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 		Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-		GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
+		GCMParameterSpec gcmSpec = new GCMParameterSpec(128, nonce);
 		cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec);
-		byte[] encryptedBytes = cipher.doFinal(originalData.getBytes(StandardCharsets.ISO_8859_1));
+		byte[] encryptedBytes = cipher.doFinal(originalData);
 
-		return new String(Base64.encode(encryptedBytes), StandardCharsets.US_ASCII);
+		return encryptedBytes;
 	}
 
 	/**
 	 * Decrypts a message with AES128/256 GCM/NoPadding.
 	 *
-	 * @param encryptedData encrypted data which should be decrypted (Base64
-	 *                      encoded)
+	 * @param encryptedData encrypted data which should be decrypted
 	 * @param key           the 128, 192 or 256 bit wide decryption key
-	 * @param iv            appropriate Initialization Vector (12 bytes recommended)
+	 * @param nonce         appropriate nonce (12 bytes recommended)
 	 *
 	 * @return decrypted data
 	 *
@@ -351,16 +389,24 @@ public class EncryptionUtils {
 	 * @throws InvalidKeyException
 	 * @throws InvalidAlgorithmParameterException
 	 */
-	public static String decrypt_AES_GCM(String encryptedData, byte[] key, byte[] iv)
+	public static byte[] decrypt_AES_GCM(byte[] encryptedData, byte[] key, byte[] nonce)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 
 		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 		Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-		GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
+		GCMParameterSpec gcmSpec = new GCMParameterSpec(128, nonce);
 		cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmSpec);
-		byte[] decodedBytes = Base64.decode(encryptedData);
-		byte[] decryptedBytes = cipher.doFinal(decodedBytes);
+		byte[] decryptedBytes = cipher.doFinal(encryptedData);
 
-		return new String(decryptedBytes, StandardCharsets.ISO_8859_1);
+		return decryptedBytes;
 	}
+
+	public static String encodeBase64(byte[] data) {
+		return new String(Base64.encode(data), StandardCharsets.ISO_8859_1);
+	}
+
+	public static byte[] decodeBase64(String base64Data) {
+		return Base64.decode(base64Data);
+	}
+
 }

@@ -4,10 +4,10 @@ Built-By: Volker Voss (volker.v@gmx.net)
 Build-Jdk: 27+35
 Sealed: true
 Specification-Title: SEDAP-Express Framework
-Specification-Version: 1.5.1
+Specification-Version: 1.5.2
 Specification-Vendor: Federal Armed Forces of Germany
 Implementation-Title: SEDAP-Express Framework
-Implementation-Version: 1.5.1
+Implementation-Version: 1.5.2
 Implementation-Vendor: Federal Armed Forces of Germany
 Main-Class: de.bundeswehr.uniity.sedapexpress.ReleaseInfo
 Class-Path: . 

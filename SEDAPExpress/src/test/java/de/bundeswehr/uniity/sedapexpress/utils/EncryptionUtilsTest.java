@@ -25,9 +25,12 @@
  */
 package de.bundeswehr.uniity.sedapexpress.utils;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -68,6 +71,46 @@ class EncryptionUtilsTest {
 	}
 
 	@Test
+	void testGenerateNonce() {
+
+		byte[] nonce1 = EncryptionUtils.generateNonce();
+		byte[] nonce2 = EncryptionUtils.generateNonce();
+
+		Assertions.assertNotNull(nonce1);
+		Assertions.assertNotNull(nonce2);
+		Assertions.assertEquals(12, nonce1.length, "A GCM nonce must be 96 bits (12 bytes).");
+		Assertions.assertEquals(12, nonce2.length, "A GCM nonce must be 96 bits (12 bytes).");
+		Assertions.assertFalse(Arrays.equals(nonce1, nonce2), "Consecutive nonces from the same generator must be different.");
+		Assertions.assertArrayEquals(Arrays.copyOfRange(nonce1, 0, 4), Arrays.copyOfRange(nonce2, 0, 4), "The session identifier must remain constant for one generator.");
+	}
+
+	@Test
+	void testGenerateNonceWithSessionId() {
+		int sessionId = 0x12345678;
+
+		byte[] nonce1 = EncryptionUtils.generateNonce(sessionId);
+		byte[] nonce2 = EncryptionUtils.generateNonce(sessionId);
+
+		Assertions.assertNotNull(nonce1);
+		Assertions.assertNotNull(nonce2);
+		Assertions.assertEquals(12, nonce1.length);
+		Assertions.assertEquals(12, nonce2.length);
+
+		ByteBuffer buffer1 = ByteBuffer.wrap(nonce1);
+		ByteBuffer buffer2 = ByteBuffer.wrap(nonce2);
+
+		// First 4 bytes: session ID
+		Assertions.assertEquals(sessionId, buffer1.getInt());
+		Assertions.assertEquals(sessionId, buffer2.getInt());
+
+		// Last 8 bytes: incrementing counter
+		long counter1 = buffer1.getLong();
+		long counter2 = buffer2.getLong();
+
+		Assertions.assertEquals(counter1 + 1, counter2);
+	}
+
+	@Test
 	void testGetIVStringFromByteArray() {
 
 		byte[] refArray = new byte[] { (byte) 0xB4, 0x6A, 0x45, (byte) 0x83, (byte) 0x9E, (byte) 0xF3, 0x79, (byte) 0xC0 };
@@ -96,8 +139,8 @@ class EncryptionUtilsTest {
 
 		for (AESKeyLength keyLength : AESKeyLength.values()) {
 			byte[] key = Base64.decode(EncryptionUtils.generatesKey(keyLength));
-			String encryptedMessage = EncryptionUtils.encrypt_AES_CFB(message, key, iv);
-			String decryptedMessage = EncryptionUtils.decrypt_AES_CFB(encryptedMessage, key, iv);
+			String encryptedMessage = EncryptionUtils.encodeBase64(EncryptionUtils.encrypt_AES_CFB(message.getBytes(StandardCharsets.ISO_8859_1), key, iv));
+			String decryptedMessage = new String(EncryptionUtils.decrypt_AES_CFB(EncryptionUtils.decodeBase64(encryptedMessage), key, iv), StandardCharsets.ISO_8859_1);
 
 			Assertions.assertNotEquals(message, encryptedMessage);
 			Assertions.assertEquals(message, decryptedMessage);
@@ -114,8 +157,8 @@ class EncryptionUtilsTest {
 
 		for (AESKeyLength keyLength : AESKeyLength.values()) {
 			byte[] key = Base64.decode(EncryptionUtils.generatesKey(keyLength));
-			String encryptedMessage = EncryptionUtils.encrypt_AES_CTR(message, key, iv);
-			String decryptedMessage = EncryptionUtils.decrypt_AES_CTR(encryptedMessage, key, iv);
+			String encryptedMessage = EncryptionUtils.encodeBase64(EncryptionUtils.encrypt_AES_CTR(message.getBytes(StandardCharsets.ISO_8859_1), key, iv));
+			String decryptedMessage = new String(EncryptionUtils.decrypt_AES_CTR(EncryptionUtils.decodeBase64(encryptedMessage), key, iv), StandardCharsets.ISO_8859_1);
 
 			Assertions.assertNotEquals(message, encryptedMessage);
 			Assertions.assertEquals(message, decryptedMessage);
@@ -128,17 +171,49 @@ class EncryptionUtilsTest {
 
 		String message = "CONTACT;66;1B351C87;59CE;U;TRUE;FFAA327B;1000;;43.21;-111.22;10011.0;1.0;2.0;3.0;200.0;275.0;10.0;20.0;30.0;33.0;22.0;11.0;Track Alpha;R;SFAPMF---------;221333201;FA550C;iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAC4jAAAuIwF4pT92AAABcElEQVRYw+1WsYrCUBCcyLUiNinEL1AUxNpKgoLYiqWg+AvmE/wAS0sLsbERC4UgFikEowhqqY0WQRQEsUr2ii0OTzkuuUvCHVkI+3b3EYaZHXgCERE8jAA8Dh+AD+APA+h0AEEAtlsPAJgm0O3yeTb7GQVkJ3Y7IoBIlokkicgwyG7YY0DTAFEE8nlgPAb2e5cl6PeBWg2Ix7mez12U4Hhk+gcDrksl/kzTJQmWS86JBOdiEej1gMPBJQmGQ0CSgGiU62TyEZijEpxOTH+7/dG73YiCQaJ63ZYE1gAoCgNYLB77ssx9XbcM4M0SXYrCOZV6PV+tgGzW0i+Fb7+IrlcgFAIqFaBQeJ5Vq0CjATSbDu2AqjLNo9HzzDCIMhmeXy4O2XA65RyLvfBSACiX+bxeO2DD+x1otYBcDohEXt9JpzlPJg5IoGnP9vsc5zPfEUW25q9KoKpfbz8AhMO8iLoObDYOuMB/kvkAfAD/FcA7SSgc2Vo2QpYAAAAASUVORK5CYII=;VGVzdFRyYWNr";
 
-		byte[] iv = EncryptionUtils.generateIV();
-
 		for (AESKeyLength keyLength : AESKeyLength.values()) {
 			byte[] key = Base64.decode(EncryptionUtils.generatesKey(keyLength));
-			String encryptedMessage = EncryptionUtils.encrypt_AES_GCM(message, key, iv);
-			String decryptedMessage = EncryptionUtils.decrypt_AES_GCM(encryptedMessage, key, iv);
+			byte[] nonce = EncryptionUtils.generateNonce();
+
+			String encryptedMessage = EncryptionUtils.encodeBase64(EncryptionUtils.encrypt_AES_GCM(message.getBytes(StandardCharsets.ISO_8859_1), key, nonce));
+			String decryptedMessage = new String(EncryptionUtils.decrypt_AES_GCM(EncryptionUtils.decodeBase64(encryptedMessage), key, nonce), StandardCharsets.ISO_8859_1);
 
 			Assertions.assertNotEquals(message, encryptedMessage);
 			Assertions.assertEquals(message, decryptedMessage);
 		}
+	}
 
+	@Test
+	void testEnDecryptionGCMWithDifferentNonce()
+			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+
+		String message = "GCM nonce test";
+		byte[] key = Base64.decode(EncryptionUtils.generatesKey(AESKeyLength.KEY_LENGTH_128_BITS));
+
+		byte[] encryptionNonce = EncryptionUtils.generateNonce();
+		byte[] decryptionNonce = EncryptionUtils.generateNonce();
+		String encryptedMessage = EncryptionUtils.encodeBase64(EncryptionUtils.encrypt_AES_GCM(message.getBytes(StandardCharsets.ISO_8859_1), key, encryptionNonce));
+
+		Assertions.assertFalse(Arrays.equals(encryptionNonce, decryptionNonce));
+		Assertions.assertThrows(BadPaddingException.class, () -> EncryptionUtils.decrypt_AES_GCM(EncryptionUtils.decodeBase64(encryptedMessage), key, decryptionNonce),
+				"Decryption with a different GCM nonce must fail authentication.");
+	}
+
+	@Test
+	void testEnDecryptionGCMWithModifiedCiphertext()
+			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+
+		String message = "GCM integrity test";
+		byte[] key = Base64.decode(EncryptionUtils.generatesKey(AESKeyLength.KEY_LENGTH_128_BITS));
+		byte[] nonce = EncryptionUtils.generateNonce();
+		String encryptedMessage = EncryptionUtils.encodeBase64(EncryptionUtils.encrypt_AES_GCM(message.getBytes(StandardCharsets.ISO_8859_1), key, nonce));
+
+		byte[] ciphertextAndTag = Base64.decode(encryptedMessage);
+		ciphertextAndTag[0] ^= 0x01;
+		String modifiedEncryptedMessage = new String(Base64.encode(ciphertextAndTag), java.nio.charset.StandardCharsets.US_ASCII);
+
+		Assertions.assertThrows(BadPaddingException.class, () -> EncryptionUtils.decrypt_AES_GCM(EncryptionUtils.decodeBase64(modifiedEncryptedMessage), key, nonce),
+				"Decryption must fail if the encrypted data or authentication tag was modified.");
 	}
 
 }
