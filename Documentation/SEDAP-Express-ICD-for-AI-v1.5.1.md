@@ -1,6 +1,6 @@
-# SEDAP-Express ICD v1.5.0 (AI-optimized reference)
+# SEDAP-Express ICD v1.5.1 (AI-optimized reference)
 
-Source: "SEDAP-Express ICD v1.5.0.docx". Content reproduced completely; formatting condensed for machine consumption.
+Source: "SEDAP-Express ICD v1.5.1.docx". Content reproduced completely; formatting condensed for machine consumption.
 
 ## 1. Scope
 
@@ -53,7 +53,7 @@ Units/geodesy (apply to all messages):
   - 32/128-bit GMAC with AES128 (NIST SP 800-38D)
 - Recommended: Deterministic Random Bit Generator (NIST SP 800-90A/B) and appropriate Initialization Vectors (IV) 
 - Sample (32-bit CMAC, password `expressexpressex`):
-  `OWNUNIT;5E;0195236D151A;66A3;R;;089A01E7;53.32;8.11;0;5.5;21;22;;;FGS Bayern`
+  `OWNUNIT;5E;0195236D151A;66A3;R;;DDA6B526;53.32;8.11;0;5.5;21;22;;;FGS Bayern`
 
 ### 3.2 Encryption
 - Optional; prefer VPN. Minimum FIPS 140-2. Preferred:
