@@ -82,9 +82,9 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Gson/gson-2.14.0.jar">
+	<classpathentry kind="lib" path="libs/Gson/gson-2.15.0.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Gson/gson-2.14.0-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Gson/gson-2.15.0-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>

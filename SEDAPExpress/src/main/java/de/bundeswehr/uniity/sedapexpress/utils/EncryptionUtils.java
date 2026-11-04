@@ -31,12 +31,12 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.Security;
-import java.util.HexFormat;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -46,6 +46,8 @@ import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.macs.HMac;
 import org.bouncycastle.crypto.prng.SP800SecureRandomBuilder;
 import org.bouncycastle.util.encoders.Base64;
+
+import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
 
 /**
  * Some encryption utils
@@ -85,8 +87,7 @@ public class EncryptionUtils {
 		}
 	}
 
-	private static SecureRandom random = new SP800SecureRandomBuilder().buildHMAC(new HMac(new SHA256Digest()), null, true);
-	private static HexFormat hexformater = HexFormat.of().withUpperCase();
+	private static SecureRandom random = new SP800SecureRandomBuilder().setSecurityStrength(128).setEntropyBitsRequired(128).buildHMAC(new HMac(new SHA256Digest()), null, true);
 
 	static {
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -180,7 +181,7 @@ public class EncryptionUtils {
 
 	public static String getIVStringFromByteArray(byte[] ivArray) {
 
-		return EncryptionUtils.hexformater.withUpperCase().formatHex(ivArray);
+		return SEDAPExpressMessage.HexFormater.withUpperCase().formatHex(ivArray);
 	}
 
 	/**
@@ -191,7 +192,7 @@ public class EncryptionUtils {
 	 */
 	public static byte[] getIVByteArrayFromString(String ivString) {
 
-		return EncryptionUtils.hexformater.parseHex(ivString);
+		return SEDAPExpressMessage.HexFormater.parseHex(ivString);
 
 	}
 
@@ -282,7 +283,7 @@ public class EncryptionUtils {
 	 *
 	 * @param encryptedData encrypted data which should be decrypted
 	 * @param key           the 128 or 256 bit wide decryption key
-	 * @param iv            appropriate Initialization Vector
+	 * @param iv            appropriate Initialization Vector (12 bytes recommended)
 	 *
 	 * @return decrypted data
 	 *
@@ -305,4 +306,61 @@ public class EncryptionUtils {
 		return new String(decryptedBytes, StandardCharsets.ISO_8859_1);
 	}
 
+	/**
+	 * Encrypts a message with AES128/256 GCM (NIST SP 800-38A)
+	 *
+	 * @param originalData plain data which should be encrypted
+	 * @param key          the 128 or 256 bit wide encryption key
+	 * @param iv           appropriate Initialization Vector (12 bytes recommended)
+	 *
+	 * @return encrypted data
+	 *
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws BadPaddingException
+	 * @throws IllegalBlockSizeException
+	 * @throws InvalidKeyException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static String encrypt_AES_GCM(String originalData, byte[] key, byte[] iv)
+			throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+
+		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+		Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+		GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
+		cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec);
+		byte[] encryptedBytes = cipher.doFinal(originalData.getBytes(StandardCharsets.ISO_8859_1));
+
+		return new String(Base64.encode(encryptedBytes), StandardCharsets.US_ASCII);
+	}
+
+	/**
+	 * Decrypts a message with AES128/256 GCM/NoPadding.
+	 *
+	 * @param encryptedData encrypted data which should be decrypted (Base64
+	 *                      encoded)
+	 * @param key           the 128, 192 or 256 bit wide decryption key
+	 * @param iv            appropriate Initialization Vector (12 bytes recommended)
+	 *
+	 * @return decrypted data
+	 *
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws BadPaddingException
+	 * @throws IllegalBlockSizeException
+	 * @throws InvalidKeyException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static String decrypt_AES_GCM(String encryptedData, byte[] key, byte[] iv)
+			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+
+		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+		Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+		GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
+		cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmSpec);
+		byte[] decodedBytes = Base64.decode(encryptedData);
+		byte[] decryptedBytes = cipher.doFinal(decodedBytes);
+
+		return new String(decryptedBytes, StandardCharsets.ISO_8859_1);
+	}
 }

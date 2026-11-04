@@ -83,8 +83,7 @@ class WireEncodingTest {
 		TEXT message = text();
 		String compressed = CompressUtils.compressMessage(message);
 		Inflater inflater = new Inflater(true);
-		try (InflaterInputStream input = new InflaterInputStream(
-				new ByteArrayInputStream(Base64.getDecoder().decode(compressed)), inflater)) {
+		try (InflaterInputStream input = new InflaterInputStream(new ByteArrayInputStream(Base64.getDecoder().decode(compressed)), inflater)) {
 			assertArrayEquals(message.toString().getBytes(StandardCharsets.ISO_8859_1), input.readAllBytes());
 		} finally {
 			inflater.close();
@@ -99,8 +98,7 @@ class WireEncodingTest {
 		byte[] iv = new byte[16];
 		Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
 		cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
-		String expected = Base64.getEncoder()
-				.encodeToString(cipher.doFinal(CONTENT.getBytes(StandardCharsets.ISO_8859_1)));
+		String expected = Base64.getEncoder().encodeToString(cipher.doFinal(CONTENT.getBytes(StandardCharsets.ISO_8859_1)));
 		assertEquals(expected, EncryptionUtils.encrypt_AES_CTR(CONTENT, key, iv));
 		assertEquals(CONTENT, EncryptionUtils.decrypt_AES_CTR(expected, key, iv));
 	}
@@ -109,11 +107,11 @@ class WireEncodingTest {
 	void hmacUsesLatin1SerializedMessage() throws Exception {
 		TEXT message = text();
 		byte[] key = new byte[16];
-		message.setMAC("0000");
+		message.setMAC("");
 		Mac mac = Mac.getInstance("HmacSHA256");
 		mac.init(new SecretKeySpec(key, "HmacSHA256"));
-		String expected = HexFormat.of().withUpperCase()
-				.formatHex(mac.doFinal(message.toString().getBytes(StandardCharsets.ISO_8859_1)));
-		assertEquals(expected, MACUtils.calcHMAC(key, message));
+		String expected = HexFormat.of().withUpperCase().formatHex(mac.doFinal(message.toString().getBytes(StandardCharsets.ISO_8859_1)));
+		String calculatedMac = MACUtils.setMACFieldWithHMAC(key, message).getMAC();
+		assertEquals(expected, calculatedMac);
 	}
 }

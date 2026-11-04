@@ -149,6 +149,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	}
 
 	public static final HexFormat HexFormater = HexFormat.of().withUpperCase();
+
 	public static final NumberFormat NumberFormatter = new DecimalFormat("##.############", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 
 	public static final Pattern NAME_MATCHER = Pattern.compile("^[a-zA-Z]+$"); // Name
@@ -695,7 +696,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 					\n
 				************************************************************
 				************************************************************
-				**     SEDAP-Express v1.4.9 (October 29th, 2026)    **
+				**     SEDAP-Express v1.5.0 (November 3rd, 2026)   **
 				**       Licensed under the BSD-2-clause License       **
 				** (C)2024-2026, Federal Armed Forces of Germany **
 				************************************************************

@@ -35,10 +35,13 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.spec.ECGenParameterSpec;
+import java.util.Arrays;
 
 import javax.crypto.KeyAgreement;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
+import org.bouncycastle.crypto.params.Argon2Parameters;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.AESKeyLength;
@@ -93,6 +96,45 @@ public class ECDHUtils {
 		serverKeyAgreement.doPhase(otherPublicKey, true);
 
 		return new SecretKeySpec(serverKeyAgreement.generateSecret(), 0, keyLengthSharedSecret.getIntValue() / 8, "PBKDF2WithHmacSHA256").getEncoded();
+	}
+
+	/**
+	 * Calculates the shared secret key using ECDH and derives a key of the
+	 * requested length using Argon2id.
+	 *
+	 * @param ownSecretKey          The own private key
+	 * @param otherPublicKey        The public key of the other side
+	 * @param keyLengthSharedSecret The desired bit length of the shared secret key
+	 * @param salt                  A cryptographically secure random salt
+	 *
+	 * @return The derived shared secret key
+	 *
+	 * @throws NoSuchProviderException
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
+	 */
+	public static byte[] getSharedSecretKey(PrivateKey ownSecretKey, PublicKey otherPublicKey, AESKeyLength keyLengthSharedSecret, byte[] salt)
+			throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
+
+		KeyAgreement keyAgreement = KeyAgreement.getInstance("ECDH", BouncyCastleProvider.PROVIDER_NAME);
+
+		keyAgreement.init(ownSecretKey);
+		keyAgreement.doPhase(otherPublicKey, true);
+
+		byte[] sharedSecret = keyAgreement.generateSecret();
+
+		Argon2Parameters parameters = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id).withSalt(salt).withIterations(3).withMemoryAsKB(65536).withParallelism(1).build();
+
+		Argon2BytesGenerator generator = new Argon2BytesGenerator();
+		generator.init(parameters);
+
+		byte[] derivedKey = new byte[keyLengthSharedSecret.getIntValue() / 8];
+
+		generator.generateBytes(sharedSecret, derivedKey);
+
+		Arrays.fill(sharedSecret, (byte) 0);
+
+		return derivedKey;
 	}
 
 }

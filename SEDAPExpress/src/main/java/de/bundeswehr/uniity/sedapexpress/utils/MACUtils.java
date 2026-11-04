@@ -27,7 +27,6 @@ package de.bundeswehr.uniity.sedapexpress.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Security;
-import java.util.HexFormat;
 import java.util.zip.Adler32;
 
 import org.bouncycastle.crypto.CipherParameters;
@@ -50,188 +49,250 @@ import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
  */
 public class MACUtils {
 
-    static {
-	Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-    }
-
-    public static HexFormat hexFormatter = HexFormat.of().withUpperCase();
-
-    /**
-     *
-     * @param key     Key for creating the MAC
-     * @param message SEDAPExpress message
-     *
-     * @return SEDAPExpress message with set HMAC field
-     */
-    public static SEDAPExpressMessage setMACFieldWith32BitHMAC(final byte[] key, final SEDAPExpressMessage message) {
-
-	message.setMAC(MACUtils.calc32BitHMAC(key, message));
-	return message;
-
-    }
-
-    /**
-     *
-     * @param key     Key for creating the MAC
-     * @param message SEDAPExpress message
-     *
-     * @return SEDAPExpress message with set HMAC field
-     */
-    public static SEDAPExpressMessage setMACFieldWith32BitCMAC(final byte[] key, final SEDAPExpressMessage message) {
-
-	message.setMAC(MACUtils.calc32BitCMAC(key, message));
-	return message;
-
-    }
-
-    /**
-     *
-     * @param key        Key for creating the MAC
-     * @param initVector IV for creating the MAC
-     * @param message    SEDAPExpress message
-     *
-     * @return SEDAPExpress message with set HMAC field
-     */
-    public static SEDAPExpressMessage setMACFieldWith32BitGMAC(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
-
-	message.setMAC(MACUtils.calc32BitGMAC(key, initVector, message));
-	return message;
-    }
-
-    public static String calcAdler32Checksum(String str) {
-	Adler32 adler = new Adler32();
-	adler.update(str.getBytes(StandardCharsets.ISO_8859_1));
-	return MACUtils.hexFormatter.toHexDigits(adler.getValue(), 8);
-    }
-
-    public static String calc32BitHMAC(final byte[] key, final SEDAPExpressMessage message) {
-
-	return MACUtils.calcAdler32Checksum(MACUtils.calcHMAC(key, message));
-    }
-
-    /**
-     *
-     * @param key
-     * @param message
-     *
-     * @return the HMAC of the message
-     */
-    public static String calcHMAC(final byte[] key, final SEDAPExpressMessage message) {
-
-	message.setMAC("0000");
-
-	final byte[] content = message.toString().getBytes(StandardCharsets.ISO_8859_1);
-
-	HMac hmac = new HMac(new SHA256Digest());
-	hmac.init(new KeyParameter(key));
-	hmac.update(content, 0, content.length);
-	final byte[] generatedHMac = new byte[hmac.getMacSize()];
-	hmac.doFinal(generatedHMac, 0);
-	return MACUtils.hexFormatter.formatHex(generatedHMac);
-
-    }
-
-    public static String calc32BitCMAC(final byte[] key, final SEDAPExpressMessage message) {
-
-	return MACUtils.calcAdler32Checksum(MACUtils.calcCMAC(key, message));
-    }
-
-    /**
-     *
-     * @param key
-     * @param message
-     *
-     * @return the CMAC of the messaga
-     */
-    public static String calcCMAC(final byte[] key, final SEDAPExpressMessage message) {
-
-	message.setMAC("0000");
-
-	final byte[] content = message.toString().getBytes(StandardCharsets.ISO_8859_1);
-
-	final CipherParameters cipherParameters = new KeyParameter(key);
-	final CMac cmac = new CMac(new AESLightEngine(), 32);
-	cmac.init(cipherParameters);
-	cmac.update(content, 0, content.length);
-	final byte[] generatedCMac = new byte[cmac.getMacSize()];
-	cmac.doFinal(generatedCMac, 0);
-
-	return MACUtils.hexFormatter.formatHex(generatedCMac);
-    }
-
-    public static String calc32BitGMAC(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
-
-	return MACUtils.calcAdler32Checksum(MACUtils.calcGMAC(key, initVector, message));
-    }
-
-    /**
-     *
-     * @param key
-     * @param initVector
-     * @param message
-     *
-     * @return the GMAC of the message
-     */
-    public static String calcGMAC(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
-
-	message.setMAC("0000");
-
-	final byte[] content = message.toString().getBytes(StandardCharsets.ISO_8859_1);
-
-	final CipherParameters cipherParameters = new KeyParameter(key);
-	final ParametersWithIV cipherParametersWithInitVector = new ParametersWithIV(cipherParameters, initVector);
-
-	final GMac gmac = new GMac(GCMBlockCipher.newInstance(new AESLightEngine()), 32);
-	gmac.init(cipherParametersWithInitVector);
-	gmac.update(content, 0, content.length);
-	final byte[] generatedGMac = new byte[gmac.getMacSize()];
-	gmac.doFinal(generatedGMac, 0);
-
-	return MACUtils.hexFormatter.formatHex(generatedGMac);
-    }
-
-    /**
-     * Checks if a message is authentic.
-     *
-     * @param key     Shared secret key
-     * @param message Original message
-     *
-     * @return Status if the message is authentic. True means yes, false means not.
-     */
-    public static boolean isMessageAuthentic(final byte[] key, final SEDAPExpressMessage message) {
-
-	return MACUtils.calcHMAC(key, message).equals(message.getMAC()) ||
-		MACUtils.calcCMAC(key, message).equals(message.getMAC()) ||
-
-		MACUtils.calc32BitHMAC(key, message).equals(message.getMAC()) ||
-		MACUtils.calc32BitCMAC(key, message).equals(message.getMAC());
-
-    }
-
-    /**
-     * Checks if a message is authentic.
-     * 
-     * @param key        En-/Decryption key
-     * @param initVector Initialisation vector (sometimes called IV), could be null
-     * @param message    Message to prove
-     *
-     * @return Status if the message is authentic. True means yes, false means not.
-     */
-    public static boolean isMessageAuthentic(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
-
-	if (initVector == null) {
-
-	    return MACUtils.calcHMAC(key, message).equals(message.getMAC()) ||
-		    MACUtils.calcCMAC(key, message).equals(message.getMAC()) ||
-
-		    MACUtils.calc32BitHMAC(key, message).equals(message.getMAC()) ||
-		    MACUtils.calc32BitCMAC(key, message).equals(message.getMAC());
-	} else {
-
-	    return MACUtils.calcGMAC(key, initVector, message).equals(message.getMAC()) ||
-		    MACUtils.calc32BitGMAC(key, initVector, message).equals(message.getMAC());
+	static {
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 	}
 
-    }
+	/**
+	 *
+	 * @param key     Key for creating the MAC
+	 * @param message SEDAPExpress message
+	 *
+	 * @return SEDAPExpress message with set HMAC field
+	 */
+	public static SEDAPExpressMessage setMACFieldWithHMAC(final byte[] key, final SEDAPExpressMessage message) {
+
+		message.setMAC(MACUtils.calcHMAC(key, message));
+		return message;
+
+	}
+
+	/**
+	 *
+	 * @param key     Key for creating the MAC
+	 * @param message SEDAPExpress message
+	 *
+	 * @return SEDAPExpress message with set CMAC field
+	 */
+	public static SEDAPExpressMessage setMACFieldWithCMAC(final byte[] key, final SEDAPExpressMessage message) {
+
+		message.setMAC(MACUtils.calcCMAC(key, message));
+		return message;
+
+	}
+
+	/**
+	 *
+	 * @param key        Key for creating the MAC
+	 * @param initVector IV for creating the MAC
+	 * @param message    SEDAPExpress message
+	 *
+	 * @return SEDAPExpress message with set GMAC field
+	 */
+	public static SEDAPExpressMessage setMACFieldWithGMAC(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
+
+		message.setMAC(MACUtils.calcGMAC(key, initVector, message));
+		return message;
+	}
+
+	/**
+	 *
+	 * @param key
+	 * @param message
+	 *
+	 * @return the HMAC of the message
+	 */
+	/**
+	 * Serializes a message for MAC calculation while excluding its MAC field.
+	 * The original MAC is restored before this method returns.
+	 *
+	 * @param message SEDAP-Express message
+	 * @return serialized message content without the MAC value
+	 */
+	private static byte[] getMessageContentWithoutMAC(final SEDAPExpressMessage message) {
+
+		final String originalMAC = message.getMAC();
+		try {
+			message.setMAC(null);
+			return message.toString().getBytes(StandardCharsets.ISO_8859_1);
+		} finally {
+			message.setMAC(originalMAC);
+		}
+	}
+
+	private static String calcHMAC(final byte[] key, final SEDAPExpressMessage message) {
+
+		final byte[] content = MACUtils.getMessageContentWithoutMAC(message);
+
+		HMac hmac = new HMac(new SHA256Digest());
+		hmac.init(new KeyParameter(key));
+		hmac.update(content, 0, content.length);
+		final byte[] generatedHMac = new byte[hmac.getMacSize()];
+		hmac.doFinal(generatedHMac, 0);
+		return SEDAPExpressMessage.HexFormater.formatHex(generatedHMac);
+
+	}
+
+	/**
+	 *
+	 * @param key
+	 * @param message
+	 *
+	 * @return the CMAC of the messaga
+	 */
+	private static String calcCMAC(final byte[] key, final SEDAPExpressMessage message) {
+
+		final byte[] content = MACUtils.getMessageContentWithoutMAC(message);
+
+		final CipherParameters cipherParameters = new KeyParameter(key);
+		final CMac cmac = new CMac(new AESLightEngine(), 32);
+		cmac.init(cipherParameters);
+		cmac.update(content, 0, content.length);
+		final byte[] generatedCMac = new byte[cmac.getMacSize()];
+		cmac.doFinal(generatedCMac, 0);
+
+		return SEDAPExpressMessage.HexFormater.formatHex(generatedCMac);
+	}
+
+	/**
+	 *
+	 * @param key
+	 * @param initVector
+	 * @param message
+	 *
+	 * @return the GMAC of the message
+	 */
+	private static String calcGMAC(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
+
+		final byte[] content = MACUtils.getMessageContentWithoutMAC(message);
+
+		final CipherParameters cipherParameters = new KeyParameter(key);
+		final ParametersWithIV cipherParametersWithInitVector = new ParametersWithIV(cipherParameters, initVector);
+
+		final GMac gmac = new GMac(GCMBlockCipher.newInstance(new AESLightEngine()), 32);
+		gmac.init(cipherParametersWithInitVector);
+		gmac.update(content, 0, content.length);
+		final byte[] generatedGMac = new byte[gmac.getMacSize()];
+		gmac.doFinal(generatedGMac, 0);
+
+		return SEDAPExpressMessage.HexFormater.formatHex(generatedGMac);
+	}
+
+	/**
+	 *
+	 * @param key     Key for creating the MAC
+	 * @param message SEDAPExpress message
+	 *
+	 * @return SEDAPExpress message with set 32bit HMAC field
+	 */
+	public static SEDAPExpressMessage setMACFieldWith32BitHMAC(final byte[] key, final SEDAPExpressMessage message) {
+
+		message.setMAC(MACUtils.calc32BitHMAC(key, message));
+		return message;
+
+	}
+
+	/**
+	 *
+	 * @param key     Key for creating the MAC
+	 * @param message SEDAPExpress message
+	 *
+	 * @return SEDAPExpress message with set 32bit CMAC field
+	 */
+	public static SEDAPExpressMessage setMACFieldWith32BitCMAC(final byte[] key, final SEDAPExpressMessage message) {
+
+		message.setMAC(MACUtils.calc32BitCMAC(key, message));
+		return message;
+
+	}
+
+	/**
+	 *
+	 * @param key        Key for creating the MAC
+	 * @param initVector IV for creating the MAC
+	 * @param message    SEDAPExpress message
+	 *
+	 * @return SEDAPExpress message with set 32bit GMAC field
+	 */
+	public static SEDAPExpressMessage setMACFieldWith32BitGMAC(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
+
+		message.setMAC(MACUtils.calc32BitGMAC(key, initVector, message));
+		return message;
+	}
+
+	/**
+	 * Only used to truncate the HMAC to 32 bits. This reduces security and
+	 * increases the likelihood of collisions, but requires less bandwidth.
+	 * 
+	 * @param mac Original HMAC/CMAC/GMAC
+	 * 
+	 * @return Reduced MAC, shortened to 32Bit
+	 */
+	private static String calcAdler32Checksum(String mac) {
+		Adler32 adler = new Adler32();
+		adler.update(mac.getBytes(StandardCharsets.ISO_8859_1));
+		return SEDAPExpressMessage.HexFormater.toHexDigits(adler.getValue(), 8);
+	}
+
+	private static String calc32BitHMAC(final byte[] key, final SEDAPExpressMessage message) {
+
+		return MACUtils.calcAdler32Checksum(MACUtils.calcHMAC(key, message));
+	}
+
+	private static String calc32BitCMAC(final byte[] key, final SEDAPExpressMessage message) {
+
+		return MACUtils.calcAdler32Checksum(MACUtils.calcCMAC(key, message));
+	}
+
+	private static String calc32BitGMAC(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
+
+		return MACUtils.calcAdler32Checksum(MACUtils.calcGMAC(key, initVector, message));
+	}
+
+	/**
+	 * Checks if a message is authentic.
+	 *
+	 * @param key     Shared secret key
+	 * @param message Original message
+	 *
+	 * @return Status if the message is authentic. True means yes, false means not.
+	 */
+	public static boolean isMessageAuthentic(final byte[] key, final SEDAPExpressMessage message) {
+
+		final String receivedMAC = message.getMAC();
+		if (receivedMAC == null) {
+			return false;
+		}
+
+		return MACUtils.calcHMAC(key, message).equals(receivedMAC) || MACUtils.calcCMAC(key, message).equals(receivedMAC) ||
+				MACUtils.calc32BitHMAC(key, message).equals(receivedMAC) || MACUtils.calc32BitCMAC(key, message).equals(receivedMAC);
+
+	}
+
+	/**
+	 * Checks if a message is authentic.
+	 * 
+	 * @param key        En-/Decryption key
+	 * @param initVector Initialisation vector (sometimes called IV), could be null
+	 * @param message    Message to prove
+	 *
+	 * @return Status if the message is authentic. True means yes, false means not.
+	 */
+	public static boolean isMessageAuthentic(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
+
+		final String receivedMAC = message.getMAC();
+		if (receivedMAC == null) {
+			return false;
+		}
+
+		if (initVector == null) {
+			return MACUtils.calcHMAC(key, message).equals(receivedMAC) || MACUtils.calcCMAC(key, message).equals(receivedMAC) ||
+					MACUtils.calc32BitHMAC(key, message).equals(receivedMAC) || MACUtils.calc32BitCMAC(key, message).equals(receivedMAC);
+		} else {
+			return MACUtils.calcGMAC(key, initVector, message).equals(receivedMAC) ||
+					MACUtils.calc32BitGMAC(key, initVector, message).equals(receivedMAC);
+		}
+
+	}
 
 }
