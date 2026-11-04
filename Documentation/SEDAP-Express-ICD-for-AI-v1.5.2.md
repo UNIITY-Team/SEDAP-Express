@@ -1,6 +1,6 @@
-# SEDAP-Express ICD v1.5.1 (AI-optimized reference)
+# SEDAP-Express ICD v1.5.2 (AI-optimized reference)
 
-Source: "SEDAP-Express ICD v1.5.1.docx". Content reproduced completely; formatting condensed for machine consumption.
+Source: "SEDAP-Express ICD v1.5.2.docx". Content reproduced completely; formatting condensed for machine consumption.
 
 ## 1. Scope
 
