@@ -33,23 +33,23 @@ import de.bundeswehr.uniity.sedapexpress.messages.TEXT;
 
 public class CompressUtilsTest {
 
-    @Test
-    void testMessageCompression() {
+	@Test
+	void testMessageCompression() {
 
-	TEXT text = (TEXT) SEDAPExpressMessage.deserialize("TEXT;63;0195238E15AD;324E;S;TRUE;;;1;NONE;\"This is an alert!\";1000");
+		TEXT text = (TEXT) SEDAPExpressMessage.deserialize("TEXT;63;0195238E15AD;324E;S;TRUE;;;1;NONE;\"This is an alert!\";1000");
 
-	String compressedMessage = CompressUtils.compressMessage(text);
+		String compressedMessage = CompressUtils.compressMessage(text);
 
-	Assertions.assertEquals("C3GNCLE2M7Y2MLQ0NTK2cDU0dXSxNjYycbUOtg4JCnW1trY2tPbz93O1VgrJyCxWAKLEPIXEnNSiEkUla0MDAwMA", compressedMessage);
+		Assertions.assertEquals("C3GNCLE2M7Y2MLQ0NTK2cDU0dXSxNjYycbUOtg4JCnW1trY2tPbz93O1VgrJyCxWAKLEPIXEnNSiEkUla0MDAwMA", compressedMessage);
 
-    }
+	}
 
-    @Test
-    void testMessageDecompression() {
+	@Test
+	void testMessageDecompression() {
 
-	TEXT text = (TEXT) CompressUtils.decompressMessage("C3GNCLE2M7Y2MLQ0NTK2cDU0dXSxNjYycbUOtg4JCnW1trY2tPbz93O1VgrJyCxWAKLEPIXEnNSiEkUla0MDAwMA");
+		TEXT text = (TEXT) CompressUtils.decompressMessage("C3GNCLE2M7Y2MLQ0NTK2cDU0dXSxNjYycbUOtg4JCnW1trY2tPbz93O1VgrJyCxWAKLEPIXEnNSiEkUla0MDAwMA");
 
-	Assertions.assertEquals("TEXT;63;0195238E15AD;324E;S;TRUE;;;1;NONE;\"This is an alert!\";1000", text.toString());
-    }
+		Assertions.assertEquals("TEXT;63;0195238E15AD;324E;S;TRUE;;;1;NONE;\"This is an alert!\";1000", text.toString());
+	}
 
 }

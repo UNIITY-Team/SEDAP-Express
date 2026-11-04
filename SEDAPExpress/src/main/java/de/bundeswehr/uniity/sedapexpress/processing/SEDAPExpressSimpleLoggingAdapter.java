@@ -33,18 +33,18 @@ package de.bundeswehr.uniity.sedapexpress.processing;
  */
 public class SEDAPExpressSimpleLoggingAdapter implements SEDAPExpressInputLoggingSubscriber, SEDAPExpressOutputLoggingSubscriber {
 
-    public SEDAPExpressSimpleLoggingAdapter() {
-	// Nothing to do
-    }
+	public SEDAPExpressSimpleLoggingAdapter() {
+		// Nothing to do
+	}
 
-    @Override
-    public void processSEDAPExpressOutputLoggingMessage(String message) {
-	System.out.println(message);
-    }
+	@Override
+	public void processSEDAPExpressOutputLoggingMessage(String message) {
+		System.out.println(message);
+	}
 
-    @Override
-    public void processSEDAPExpressInputLoggingMessage(String message) {
-	System.out.println(message);
-    }
+	@Override
+	public void processSEDAPExpressInputLoggingMessage(String message) {
+		System.out.println(message);
+	}
 
 }

@@ -35,115 +35,115 @@ import java.util.logging.Level;
  */
 public class TIMESYNC extends SEDAPExpressMessage {
 
-    private static final long serialVersionUID = -5109007783190777675L;
+	private static final long serialVersionUID = -5109007783190777675L;
 
-    private Long timestamp;
+	private Long timestamp;
 
-    public Long getTimestamp() {
-	return this.timestamp;
-    }
-
-    public void setTimestamp(Long timestamp) {
-	this.timestamp = timestamp;
-    }
-
-    /**
-     * Instantiate a new default TIMESYNC message
-     */
-    public TIMESYNC() {
-
-	super(null, null, null, null, null, null);
-
-	this.timestamp = null;
-    }
-
-    /**
-     * Instantiate the initial TIMESYNC message
-     *
-     * @param number
-     * @param time
-     * @param sender
-     * @param classification
-     * @param acknowledgement
-     * @param mac
-     */
-    public TIMESYNC(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
-	super(number, time, sender, classification, acknowledgement, mac);
-	this.timestamp = null;
-    }
-
-    /**
-     * Instantiate the answer TIMESYNC message (used only by the SEC/SECMockUp
-     * 
-     * @param number
-     * @param time
-     * @param sender
-     * @param classification
-     * @param acknowledgement
-     * @param mac
-     * @param timestamp
-     */
-    public TIMESYNC(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, Long timestamp) {
-	super(number, time, sender, classification, acknowledgement, mac);
-	this.timestamp = timestamp;
-    }
-
-    /**
-     * Instantiate a new TIMESYNC message
-     *
-     * @param message
-     */
-    public TIMESYNC(String message) {
-
-	this(SEDAPExpressMessage.splitMessage(message.substring(message.indexOf(';') + 1)).iterator());
-    }
-
-    /**
-     *
-     * @param message
-     */
-    public TIMESYNC(Iterator<String> message) {
-
-	super(message);
-
-	String value;
-
-	// Timestamp
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "TIMESYNC", "TIMESYNC(Iterator<String> message)", "Mandatory field \"timestamp\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.TIME_MATCHER, value)) {
-		this.timestamp = Long.parseLong(value, 16);
-	    } else if (!value.isBlank()) {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "TIMESYNC", "TIMESYNC(Iterator<String> message)", "Mandatory field \"timestamp\" contains invalid value!", value);
-	    }
+	public Long getTimestamp() {
+		return this.timestamp;
 	}
-    }
 
-    @Override
-    public boolean equals(Object obj) {
-
-	if (obj == null) {
-	    return false;
-	} else if (!(obj instanceof TIMESYNC)) {
-	    return false;
-	} else {
-	    return super.equals(obj) &&
-
-		    (((this.timestamp == null) && (((TIMESYNC) obj).timestamp == null)) || ((this.timestamp != null) && this.timestamp.equals(((TIMESYNC) obj).timestamp)));
+	public void setTimestamp(Long timestamp) {
+		this.timestamp = timestamp;
 	}
-    }
 
-    @Override
-    public int hashCode() {
-	return super.hashCode();
-    }
+	/**
+	 * Instantiate a new default TIMESYNC message
+	 */
+	public TIMESYNC() {
 
-    @Override
-    public String toString() {
+		super(null, null, null, null, null, null);
 
-	return SEDAPExpressMessage.removeSemicolons(serializeHeader().append((this.timestamp != null) ? SEDAPExpressMessage.HexFormater.toHexDigits(this.timestamp, 12) : "").toString());
-    }
+		this.timestamp = null;
+	}
+
+	/**
+	 * Instantiate the initial TIMESYNC message
+	 *
+	 * @param number
+	 * @param time
+	 * @param sender
+	 * @param classification
+	 * @param acknowledgement
+	 * @param mac
+	 */
+	public TIMESYNC(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
+		super(number, time, sender, classification, acknowledgement, mac);
+		this.timestamp = null;
+	}
+
+	/**
+	 * Instantiate the answer TIMESYNC message (used only by the SEC/SECMockUp
+	 * 
+	 * @param number
+	 * @param time
+	 * @param sender
+	 * @param classification
+	 * @param acknowledgement
+	 * @param mac
+	 * @param timestamp
+	 */
+	public TIMESYNC(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, Long timestamp) {
+		super(number, time, sender, classification, acknowledgement, mac);
+		this.timestamp = timestamp;
+	}
+
+	/**
+	 * Instantiate a new TIMESYNC message
+	 *
+	 * @param message
+	 */
+	public TIMESYNC(String message) {
+
+		this(SEDAPExpressMessage.splitMessage(message.substring(message.indexOf(';') + 1)).iterator());
+	}
+
+	/**
+	 *
+	 * @param message
+	 */
+	public TIMESYNC(Iterator<String> message) {
+
+		super(message);
+
+		String value;
+
+		// Timestamp
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "TIMESYNC", "TIMESYNC(Iterator<String> message)", "Mandatory field \"timestamp\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.TIME_MATCHER, value)) {
+				this.timestamp = Long.parseLong(value, 16);
+			} else if (!value.isBlank()) {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "TIMESYNC", "TIMESYNC(Iterator<String> message)", "Mandatory field \"timestamp\" contains invalid value!", value);
+			}
+		}
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (obj == null) {
+			return false;
+		} else if (!(obj instanceof TIMESYNC)) {
+			return false;
+		} else {
+			return super.equals(obj) &&
+
+					(((this.timestamp == null) && (((TIMESYNC) obj).timestamp == null)) || ((this.timestamp != null) && this.timestamp.equals(((TIMESYNC) obj).timestamp)));
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public String toString() {
+
+		return SEDAPExpressMessage.removeSemicolons(serializeHeader().append((this.timestamp != null) ? SEDAPExpressMessage.HexFormater.toHexDigits(this.timestamp, 12) : "").toString());
+	}
 
 }

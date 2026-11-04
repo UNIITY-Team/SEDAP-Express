@@ -34,5 +34,5 @@ import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
  */
 public interface SEDAPExpressSubscriber {
 
-    public void processSEDAPExpressMessage(SEDAPExpressMessage message);
+	public void processSEDAPExpressMessage(SEDAPExpressMessage message);
 }

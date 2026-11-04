@@ -35,8 +35,8 @@ import de.bundeswehr.uniity.sedapexpress.messages.HEARTBEAT;
  */
 public class ReleaseInfo {
 
-    public static void main(String[] args) {
-	new HEARTBEAT();
-    }
+	public static void main(String[] args) {
+		new HEARTBEAT();
+	}
 
 }

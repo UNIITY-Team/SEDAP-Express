@@ -35,149 +35,149 @@ import java.util.logging.Level;
  */
 public class HEARTBEAT extends SEDAPExpressMessage {
 
-    private static final long serialVersionUID = 3957328245063360161L;
+	private static final long serialVersionUID = 3957328245063360161L;
 
-    private String recipient;
+	private String recipient;
 
-    public String getRecipient() {
-	return this.recipient;
-    }
-
-    public void setRecipient(String recipient) {
-	this.recipient = recipient;
-    }
-
-    /**
-     * Instantiate a new HEARTBEAT message
-     *
-     * @param number
-     * @param time
-     * @param sender
-     * @param classification
-     * @param acknowledgement
-     * @param mac
-     */
-    public HEARTBEAT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
-
-	this(number, time, sender, classification, acknowledgement, mac, null);
-
-    }
-
-    /**
-     * Instantiate a new HEARTBEAT message
-     *
-     * @param number
-     * @param time
-     * @param sender
-     * @param classification
-     * @param acknowledgement
-     * @param mac
-     * @param recipient
-     */
-    public HEARTBEAT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient) {
-
-	super(number, time, sender, classification, acknowledgement, mac);
-
-	this.recipient = recipient;
-    }
-
-    /**
-     * Instantiate a new default HEARTBEAT message
-     */
-    public HEARTBEAT() {
-
-	super(null, null, null, null, null, null);
-
-	this.recipient = null;
-    }
-
-    /**
-     *
-     * @param message
-     */
-    public HEARTBEAT(String message) {
-
-	this(SEDAPExpressMessage.splitMessage(message.substring(message.indexOf(';') + 1)).iterator());
-    }
-
-    /**
-     *
-     * @param message
-     */
-    public HEARTBEAT(Iterator<String> message) {
-
-	super(message);
-
-	String value;
-
-	// Recipient
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isBlank()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "HEARTBEAT", "HEARTBEAT(Iterator<String> message)", "Optional field \"recipient\" is empty!");
-	    } else {
-		this.recipient = value;
-	    }
-	} else {
-	    SEDAPExpressMessage.logger.logp(Level.INFO, "HEARTBEAT", "HEARTBEAT(Iterator<String> message)", "Optional field \"recipient\" is empty!");
-	}
-    }
-
-    /**
-     * Generates a new Answer-HEARTBEAT message from a HEARTBEART-Request.
-     * 
-     * @param originalHEARTBEAT Original HEARTBEAT request message
-     * @return answer HEARTBEAT message
-     */
-    public static HEARTBEAT generateAnswerHEARTBEAT(HEARTBEAT originalHEARTBEAT) {
-
-	HEARTBEAT heartBeat = new HEARTBEAT();
-
-	if (originalHEARTBEAT.getSender() != null) {
-	    heartBeat.setRecipient(originalHEARTBEAT.getSender());
+	public String getRecipient() {
+		return this.recipient;
 	}
 
-	if (originalHEARTBEAT.getRecipient() != null) {
-	    heartBeat.setSender(originalHEARTBEAT.getSender());
+	public void setRecipient(String recipient) {
+		this.recipient = recipient;
 	}
 
-	if (originalHEARTBEAT.getClassification() != null) {
-	    heartBeat.setClassification(originalHEARTBEAT.getClassification());
-	}
+	/**
+	 * Instantiate a new HEARTBEAT message
+	 *
+	 * @param number
+	 * @param time
+	 * @param sender
+	 * @param classification
+	 * @param acknowledgement
+	 * @param mac
+	 */
+	public HEARTBEAT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
 
-	if (originalHEARTBEAT.getTime() != null) {
-	    heartBeat.setTime(System.currentTimeMillis());
-	}
-
-	return heartBeat;
-
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-
-	if (obj == null) {
-	    return false;
-	} else if (!(obj instanceof HEARTBEAT)) {
-	    return false;
-	} else {
-	    return super.equals(obj) &&
-
-		    (((this.recipient == null) && (((HEARTBEAT) obj).recipient == null)) || ((this.recipient != null) && this.recipient.equals(((HEARTBEAT) obj).recipient)));
+		this(number, time, sender, classification, acknowledgement, mac, null);
 
 	}
-    }
 
-    @Override
-    public int hashCode() {
-	return super.hashCode();
-    }
+	/**
+	 * Instantiate a new HEARTBEAT message
+	 *
+	 * @param number
+	 * @param time
+	 * @param sender
+	 * @param classification
+	 * @param acknowledgement
+	 * @param mac
+	 * @param recipient
+	 */
+	public HEARTBEAT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient) {
 
-    @Override
-    public String toString() {
+		super(number, time, sender, classification, acknowledgement, mac);
 
-	return SEDAPExpressMessage.removeSemicolons(serializeHeader().append(this.recipient != null ? this.recipient : "").toString());
+		this.recipient = recipient;
+	}
 
-    }
+	/**
+	 * Instantiate a new default HEARTBEAT message
+	 */
+	public HEARTBEAT() {
+
+		super(null, null, null, null, null, null);
+
+		this.recipient = null;
+	}
+
+	/**
+	 *
+	 * @param message
+	 */
+	public HEARTBEAT(String message) {
+
+		this(SEDAPExpressMessage.splitMessage(message.substring(message.indexOf(';') + 1)).iterator());
+	}
+
+	/**
+	 *
+	 * @param message
+	 */
+	public HEARTBEAT(Iterator<String> message) {
+
+		super(message);
+
+		String value;
+
+		// Recipient
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isBlank()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "HEARTBEAT", "HEARTBEAT(Iterator<String> message)", "Optional field \"recipient\" is empty!");
+			} else {
+				this.recipient = value;
+			}
+		} else {
+			SEDAPExpressMessage.logger.logp(Level.INFO, "HEARTBEAT", "HEARTBEAT(Iterator<String> message)", "Optional field \"recipient\" is empty!");
+		}
+	}
+
+	/**
+	 * Generates a new Answer-HEARTBEAT message from a HEARTBEART-Request.
+	 * 
+	 * @param originalHEARTBEAT Original HEARTBEAT request message
+	 * @return answer HEARTBEAT message
+	 */
+	public static HEARTBEAT generateAnswerHEARTBEAT(HEARTBEAT originalHEARTBEAT) {
+
+		HEARTBEAT heartBeat = new HEARTBEAT();
+
+		if (originalHEARTBEAT.getSender() != null) {
+			heartBeat.setRecipient(originalHEARTBEAT.getSender());
+		}
+
+		if (originalHEARTBEAT.getRecipient() != null) {
+			heartBeat.setSender(originalHEARTBEAT.getSender());
+		}
+
+		if (originalHEARTBEAT.getClassification() != null) {
+			heartBeat.setClassification(originalHEARTBEAT.getClassification());
+		}
+
+		if (originalHEARTBEAT.getTime() != null) {
+			heartBeat.setTime(System.currentTimeMillis());
+		}
+
+		return heartBeat;
+
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (obj == null) {
+			return false;
+		} else if (!(obj instanceof HEARTBEAT)) {
+			return false;
+		} else {
+			return super.equals(obj) &&
+
+					(((this.recipient == null) && (((HEARTBEAT) obj).recipient == null)) || ((this.recipient != null) && this.recipient.equals(((HEARTBEAT) obj).recipient)));
+
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public String toString() {
+
+		return SEDAPExpressMessage.removeSemicolons(serializeHeader().append(this.recipient != null ? this.recipient : "").toString());
+
+	}
 
 }

@@ -32,5 +32,5 @@ package de.bundeswehr.uniity.sedapexpress.processing;
  */
 public interface SEDAPExpressInputLoggingSubscriber {
 
-    public void processSEDAPExpressInputLoggingMessage(String message);
+	public void processSEDAPExpressInputLoggingMessage(String message);
 }

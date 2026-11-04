@@ -35,458 +35,464 @@ import java.util.logging.Level;
  */
 public class METEO extends SEDAPExpressMessage {
 
-    private static final long serialVersionUID = -792741988148542864L;
+	private static final long serialVersionUID = -792741988148542864L;
 
-    private Double speedThroughWater;
-    private Double waterSpeed;
-    private Double waterDirection;
-    private Double waterTemperature;
-    private Double waterDepth;
-    private Double airTemperature;
-    private Double dewPoint;
-    private Double humidityRel;
-    private Double pressure;
-    private Double windSpeed;
-    private Double windDirection;
-    private Double visibility;
-    private Double cloudHeight;
-    private Double cloudCover;
+	private Double speedThroughWater;
+	private Double waterSpeed;
+	private Double waterDirection;
+	private Double waterTemperature;
+	private Double waterDepth;
+	private Double airTemperature;
+	private Double dewPoint;
+	private Double humidityRel;
+	private Double pressure;
+	private Double windSpeed;
+	private Double windDirection;
+	private Double visibility;
+	private Double cloudHeight;
+	private Double cloudCover;
 
-    private String reference;
+	private String reference;
 
-    public Double getSpeedThroughWater() {
-	return this.speedThroughWater;
-    }
-
-    public void setSpeedThroughWater(Double speedThroughWater) {
-	this.speedThroughWater = speedThroughWater;
-    }
-
-    public Double getWaterSpeed() {
-	return this.waterSpeed;
-    }
-
-    public void setWaterSpeed(Double waterSpeed) {
-	this.waterSpeed = waterSpeed;
-    }
-
-    public Double getWaterDirection() {
-	return this.waterDirection;
-    }
-
-    public void setWaterDirection(Double waterDirection) {
-	this.waterDirection = waterDirection;
-    }
-
-    public Double getWaterTemperature() {
-	return this.waterTemperature;
-    }
-
-    public void setWaterTemperature(Double waterTemperature) {
-	this.waterTemperature = waterTemperature;
-    }
-
-    public Double getWaterDepth() {
-	return this.waterDepth;
-    }
-
-    public void setWaterDepth(Double waterDepth) {
-	this.waterDepth = waterDepth;
-    }
-
-    public Double getAirTemperature() {
-	return this.airTemperature;
-    }
-
-    public void setAirTemperature(Double airTemperature) {
-	this.airTemperature = airTemperature;
-    }
-
-    public Double getDewPoint() {
-	return this.dewPoint;
-    }
-
-    public void setDewPoint(Double dewPoint) {
-	this.dewPoint = dewPoint;
-    }
-
-    public Double getHumidityRel() {
-	return this.humidityRel;
-    }
-
-    public void setHumidityRel(Double humidityRel) {
-	this.humidityRel = humidityRel;
-    }
-
-    public Double getPressure() {
-	return this.pressure;
-    }
-
-    public void setPressure(Double pressure) {
-	this.pressure = pressure;
-    }
-
-    public Double getWindSpeed() {
-	return this.windSpeed;
-    }
-
-    public void setWindSpeed(Double windSpeed) {
-	this.windSpeed = windSpeed;
-    }
-
-    public Double getWindDirection() {
-	return this.windDirection;
-    }
-
-    public void setWindDirection(Double windDirection) {
-	this.windDirection = windDirection;
-    }
-
-    public Double getVisibility() {
-	return this.visibility;
-    }
-
-    public void setVisibility(Double visibility) {
-	this.visibility = visibility;
-    }
-
-    public Double getCloudHeight() {
-	return this.cloudHeight;
-    }
-
-    public void setCloudHeight(Double cloudHeight) {
-	this.cloudHeight = cloudHeight;
-    }
-
-    public Double getCloudCover() {
-	return this.cloudCover;
-    }
-
-    public void setCloudCover(Double cloudCover) {
-	this.cloudCover = cloudCover;
-    }
-
-    public String getReference() {
-	return this.reference;
-    }
-
-    public void setReference(String reference) {
-	this.reference = reference;
-    }
-
-    /**
-     * Instantiate a new default METEO message
-     */
-    public METEO() {
-
-	super(null, null, null, null, null, null);
-
-	this.speedThroughWater = null;
-	this.waterSpeed = null;
-	this.waterDirection = null;
-	this.waterTemperature = null;
-	this.waterDepth = null;
-	this.airTemperature = null;
-	this.dewPoint = null;
-	this.humidityRel = null;
-	this.pressure = null;
-	this.windSpeed = null;
-	this.windDirection = null;
-	this.visibility = null;
-	this.cloudHeight = null;
-	this.cloudCover = null;
-	this.reference = null;
-    }
-
-    /**
-     * Instantiate a new METEO message
-     *
-     * @param number
-     * @param time
-     * @param sender
-     * @param classification
-     * @param acknowledgement
-     * @param mac
-     * @param speedThroughWater
-     * @param waterSpeed
-     * @param waterDirection
-     * @param waterTemperature
-     * @param waterDepth
-     * @param airTemperature
-     * @param dewPoint
-     * @param humidityRel
-     * @param pressure
-     * @param windSpeed
-     * @param windDirection
-     * @param visibility
-     * @param cloudHeight
-     * @param cloudCover
-     * @param reference
-     */
-    public METEO(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, Double speedThroughWater, Double waterSpeed, Double waterDirection, Double waterTemperature,
-	    Double waterDepth, Double airTemperature, Double dewPoint, Double humidityRel, Double pressure, Double windSpeed, Double windDirection, Double visibility, Double cloudHeight, Double cloudCover, String reference) {
-
-	super(number, time, sender, classification, acknowledgement, mac);
-
-	this.speedThroughWater = speedThroughWater;
-	this.waterSpeed = waterSpeed;
-	this.waterDirection = waterDirection;
-	this.waterTemperature = waterTemperature;
-	this.waterDepth = waterDepth;
-	this.airTemperature = airTemperature;
-	this.dewPoint = dewPoint;
-	this.humidityRel = humidityRel;
-	this.pressure = pressure;
-	this.windSpeed = windSpeed;
-	this.windDirection = windDirection;
-	this.visibility = visibility;
-	this.cloudHeight = cloudHeight;
-	this.cloudCover = cloudCover;
-	this.reference = reference;
-    }
-
-    /**
-     *
-     * @param message
-     */
-    public METEO(String message) {
-
-	this(SEDAPExpressMessage.splitMessage(message.substring(message.indexOf(';') + 1)).iterator());
-    }
-
-    public METEO(Iterator<String> message) {
-
-	super(message);
-
-	String value;
-
-	// SpeedThroughWater
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"speedThroughWater\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.speedThroughWater = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"speedThroughWater\" contains invalid value!", value);
-	    }
+	public Double getSpeedThroughWater() {
+		return this.speedThroughWater;
 	}
 
-	// WaterSpeed
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterSpeed\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.waterSpeed = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterSpeed\" contains invalid value!", value);
-	    }
+	public void setSpeedThroughWater(Double speedThroughWater) {
+		this.speedThroughWater = speedThroughWater;
 	}
 
-	// WaterDirection
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterDirection\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.waterDirection = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterDirection\" contains invalid value!", value);
-	    }
+	public Double getWaterSpeed() {
+		return this.waterSpeed;
 	}
 
-	// WaterTemperature
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterTemperature\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.waterTemperature = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterTemperature\" contains invalid value!", value);
-	    }
+	public void setWaterSpeed(Double waterSpeed) {
+		this.waterSpeed = waterSpeed;
 	}
 
-	// WaterDepth
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterDepth\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.waterDepth = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterDepth\" contains invalid value!", value);
-	    }
+	public Double getWaterDirection() {
+		return this.waterDirection;
 	}
 
-	// AirTemperature
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"airTemperature\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.airTemperature = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"airTemperature\" contains invalid value!", value);
-	    }
+	public void setWaterDirection(Double waterDirection) {
+		this.waterDirection = waterDirection;
 	}
 
-	// DewPoint
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"dewPoint\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.dewPoint = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"dewPoint\" contains invalid value!", value);
-	    }
+	public Double getWaterTemperature() {
+		return this.waterTemperature;
 	}
 
-	// HumidityRel
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"humidityRel\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.humidityRel = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"humidityRel\" contains invalid value!", value);
-	    }
+	public void setWaterTemperature(Double waterTemperature) {
+		this.waterTemperature = waterTemperature;
 	}
 
-	// Pressure
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"pressure\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.pressure = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"pressure\" contains invalid value!", value);
-	    }
+	public Double getWaterDepth() {
+		return this.waterDepth;
 	}
 
-	// WindSpeed
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"windSpeed\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.windSpeed = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"windSpeed\" contains invalid value!", value);
-	    }
+	public void setWaterDepth(Double waterDepth) {
+		this.waterDepth = waterDepth;
 	}
 
-	// WindDirection
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"windDirection\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.windDirection = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"windDirection\" contains invalid value!", value);
-	    }
+	public Double getAirTemperature() {
+		return this.airTemperature;
 	}
 
-	// Visibility
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"visibility\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.visibility = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"visibility\" contains invalid value!", value);
-	    }
+	public void setAirTemperature(Double airTemperature) {
+		this.airTemperature = airTemperature;
 	}
 
-	// CloudHeight
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"cloudHeight\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.cloudHeight = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"cloudHeight\" contains invalid value!", value);
-	    }
+	public Double getDewPoint() {
+		return this.dewPoint;
 	}
 
-	// CloudCover
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isEmpty()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"cloudCover\" is empty!");
-	    } else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
-		this.cloudCover = Double.valueOf(value);
-	    } else {
-		SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"cloudCover\" contains invalid value!", value);
-	    }
+	public void setDewPoint(Double dewPoint) {
+		this.dewPoint = dewPoint;
 	}
 
-	// Reference
-	if (message.hasNext()) {
-	    value = message.next();
-	    if (value.isBlank()) {
-		SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"reference\" is empty!");
-	    } else {
-		this.reference = value;
-	    }
-	} else
-	    SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"reference\" is empty!");
-
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-	if (obj == null) {
-	    return false;
-	} else if (!(obj instanceof METEO)) {
-	    return false;
-	} else {
-	    return super.equals(obj) && (this.speedThroughWater == ((METEO) obj).speedThroughWater) && (this.waterSpeed == ((METEO) obj).waterSpeed) && (this.waterDirection == ((METEO) obj).waterDirection)
-
-		    && (this.waterTemperature == ((METEO) obj).waterTemperature) && (this.waterDepth == ((METEO) obj).waterDepth) && (this.airTemperature == ((METEO) obj).airTemperature) && (this.dewPoint == ((METEO) obj).dewPoint)
-
-		    && (this.humidityRel == ((METEO) obj).humidityRel) && (this.pressure == ((METEO) obj).pressure) && (this.windSpeed == ((METEO) obj).windSpeed) && (this.windDirection == ((METEO) obj).windDirection)
-
-		    && (this.visibility == ((METEO) obj).visibility) && (this.cloudHeight == ((METEO) obj).cloudHeight) && (this.cloudCover == ((METEO) obj).cloudCover)
-
-		    && (((this.reference == null) && (((METEO) obj).reference == null)) || ((this.reference != null) && this.reference.equals(((METEO) obj).reference)));
+	public Double getHumidityRel() {
+		return this.humidityRel;
 	}
-    }
 
-    @Override
-    public int hashCode() {
-	return super.hashCode();
-    }
+	public void setHumidityRel(Double humidityRel) {
+		this.humidityRel = humidityRel;
+	}
 
-    @Override
-    public String toString() {
+	public Double getPressure() {
+		return this.pressure;
+	}
 
-	return SEDAPExpressMessage.removeSemicolons(serializeHeader()
+	public void setPressure(Double pressure) {
+		this.pressure = pressure;
+	}
 
-		.append((this.speedThroughWater != null) ? SEDAPExpressMessage.NumberFormatter.format(this.speedThroughWater) : "").append(";")
-		.append(this.waterSpeed != null ? SEDAPExpressMessage.NumberFormatter.format(this.waterSpeed) : "").append(";").append(this.waterDirection != null ? SEDAPExpressMessage.NumberFormatter.format(this.waterDirection) : "")
-		.append(";").append(this.waterTemperature != null ? SEDAPExpressMessage.NumberFormatter.format(this.waterTemperature) : "").append(";")
-		.append(this.waterDepth != null ? SEDAPExpressMessage.NumberFormatter.format(this.waterDepth) : "").append(";")
+	public Double getWindSpeed() {
+		return this.windSpeed;
+	}
 
-		.append(this.airTemperature != null ? SEDAPExpressMessage.NumberFormatter.format(this.airTemperature) : "").append(";").append(this.dewPoint != null ? SEDAPExpressMessage.NumberFormatter.format(this.dewPoint) : "")
-		.append(";").append(this.humidityRel != null ? SEDAPExpressMessage.NumberFormatter.format(this.humidityRel) : "").append(";").append(this.pressure != null ? SEDAPExpressMessage.NumberFormatter.format(this.pressure) : "")
-		.append(";")
+	public void setWindSpeed(Double windSpeed) {
+		this.windSpeed = windSpeed;
+	}
 
-		.append(this.windSpeed != null ? SEDAPExpressMessage.NumberFormatter.format(this.windSpeed) : "").append(";").append(this.windDirection != null ? SEDAPExpressMessage.NumberFormatter.format(this.windDirection) : "")
-		.append(";")
+	public Double getWindDirection() {
+		return this.windDirection;
+	}
 
-		.append(this.visibility != null ? SEDAPExpressMessage.NumberFormatter.format(this.visibility) : "").append(";")
-		.append(this.cloudHeight != null ? SEDAPExpressMessage.NumberFormatter.format(this.cloudHeight) : "").append(";")
-		.append(this.cloudCover != null ? SEDAPExpressMessage.NumberFormatter.format(this.cloudCover) : "")
+	public void setWindDirection(Double windDirection) {
+		this.windDirection = windDirection;
+	}
 
-		.append((this.reference != null) ? ";" + this.reference : "").toString());
-    }
+	public Double getVisibility() {
+		return this.visibility;
+	}
+
+	public void setVisibility(Double visibility) {
+		this.visibility = visibility;
+	}
+
+	public Double getCloudHeight() {
+		return this.cloudHeight;
+	}
+
+	public void setCloudHeight(Double cloudHeight) {
+		this.cloudHeight = cloudHeight;
+	}
+
+	public Double getCloudCover() {
+		return this.cloudCover;
+	}
+
+	public void setCloudCover(Double cloudCover) {
+		this.cloudCover = cloudCover;
+	}
+
+	public String getReference() {
+		return this.reference;
+	}
+
+	public void setReference(String reference) {
+		this.reference = reference;
+	}
+
+	/**
+	 * Instantiate a new default METEO message
+	 */
+	public METEO() {
+
+		super(null, null, null, null, null, null);
+
+		this.speedThroughWater = null;
+		this.waterSpeed = null;
+		this.waterDirection = null;
+		this.waterTemperature = null;
+		this.waterDepth = null;
+		this.airTemperature = null;
+		this.dewPoint = null;
+		this.humidityRel = null;
+		this.pressure = null;
+		this.windSpeed = null;
+		this.windDirection = null;
+		this.visibility = null;
+		this.cloudHeight = null;
+		this.cloudCover = null;
+		this.reference = null;
+	}
+
+	/**
+	 * Instantiate a new METEO message
+	 *
+	 * @param number
+	 * @param time
+	 * @param sender
+	 * @param classification
+	 * @param acknowledgement
+	 * @param mac
+	 * @param speedThroughWater
+	 * @param waterSpeed
+	 * @param waterDirection
+	 * @param waterTemperature
+	 * @param waterDepth
+	 * @param airTemperature
+	 * @param dewPoint
+	 * @param humidityRel
+	 * @param pressure
+	 * @param windSpeed
+	 * @param windDirection
+	 * @param visibility
+	 * @param cloudHeight
+	 * @param cloudCover
+	 * @param reference
+	 */
+	public METEO(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, Double speedThroughWater, Double waterSpeed, Double waterDirection,
+			Double waterTemperature, Double waterDepth, Double airTemperature, Double dewPoint, Double humidityRel, Double pressure, Double windSpeed, Double windDirection, Double visibility,
+			Double cloudHeight, Double cloudCover, String reference) {
+
+		super(number, time, sender, classification, acknowledgement, mac);
+
+		this.speedThroughWater = speedThroughWater;
+		this.waterSpeed = waterSpeed;
+		this.waterDirection = waterDirection;
+		this.waterTemperature = waterTemperature;
+		this.waterDepth = waterDepth;
+		this.airTemperature = airTemperature;
+		this.dewPoint = dewPoint;
+		this.humidityRel = humidityRel;
+		this.pressure = pressure;
+		this.windSpeed = windSpeed;
+		this.windDirection = windDirection;
+		this.visibility = visibility;
+		this.cloudHeight = cloudHeight;
+		this.cloudCover = cloudCover;
+		this.reference = reference;
+	}
+
+	/**
+	 *
+	 * @param message
+	 */
+	public METEO(String message) {
+
+		this(SEDAPExpressMessage.splitMessage(message.substring(message.indexOf(';') + 1)).iterator());
+	}
+
+	public METEO(Iterator<String> message) {
+
+		super(message);
+
+		String value;
+
+		// SpeedThroughWater
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"speedThroughWater\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.speedThroughWater = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"speedThroughWater\" contains invalid value!", value);
+			}
+		}
+
+		// WaterSpeed
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterSpeed\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.waterSpeed = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterSpeed\" contains invalid value!", value);
+			}
+		}
+
+		// WaterDirection
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterDirection\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.waterDirection = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterDirection\" contains invalid value!", value);
+			}
+		}
+
+		// WaterTemperature
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterTemperature\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.waterTemperature = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterTemperature\" contains invalid value!", value);
+			}
+		}
+
+		// WaterDepth
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterDepth\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.waterDepth = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"waterDepth\" contains invalid value!", value);
+			}
+		}
+
+		// AirTemperature
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"airTemperature\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.airTemperature = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"airTemperature\" contains invalid value!", value);
+			}
+		}
+
+		// DewPoint
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"dewPoint\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.dewPoint = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"dewPoint\" contains invalid value!", value);
+			}
+		}
+
+		// HumidityRel
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"humidityRel\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.humidityRel = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"humidityRel\" contains invalid value!", value);
+			}
+		}
+
+		// Pressure
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"pressure\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.pressure = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"pressure\" contains invalid value!", value);
+			}
+		}
+
+		// WindSpeed
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"windSpeed\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.windSpeed = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"windSpeed\" contains invalid value!", value);
+			}
+		}
+
+		// WindDirection
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"windDirection\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.windDirection = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"windDirection\" contains invalid value!", value);
+			}
+		}
+
+		// Visibility
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"visibility\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.visibility = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"visibility\" contains invalid value!", value);
+			}
+		}
+
+		// CloudHeight
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"cloudHeight\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.cloudHeight = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"cloudHeight\" contains invalid value!", value);
+			}
+		}
+
+		// CloudCover
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isEmpty()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"cloudCover\" is empty!");
+			} else if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.DOUBLE_MATCHER, value)) {
+				this.cloudCover = Double.valueOf(value);
+			} else {
+				SEDAPExpressMessage.logger.logp(Level.SEVERE, "METEO", "METEO(Iterator<String> message)", "Optional field \"cloudCover\" contains invalid value!", value);
+			}
+		}
+
+		// Reference
+		if (message.hasNext()) {
+			value = message.next();
+			if (value.isBlank()) {
+				SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"reference\" is empty!");
+			} else {
+				this.reference = value;
+			}
+		} else
+			SEDAPExpressMessage.logger.logp(Level.INFO, "METEO", "METEO(Iterator<String> message)", "Optional field \"reference\" is empty!");
+
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		} else if (!(obj instanceof METEO)) {
+			return false;
+		} else {
+			return super.equals(obj) && (this.speedThroughWater == ((METEO) obj).speedThroughWater) && (this.waterSpeed == ((METEO) obj).waterSpeed)
+					&& (this.waterDirection == ((METEO) obj).waterDirection)
+
+					&& (this.waterTemperature == ((METEO) obj).waterTemperature) && (this.waterDepth == ((METEO) obj).waterDepth) && (this.airTemperature == ((METEO) obj).airTemperature)
+					&& (this.dewPoint == ((METEO) obj).dewPoint)
+
+					&& (this.humidityRel == ((METEO) obj).humidityRel) && (this.pressure == ((METEO) obj).pressure) && (this.windSpeed == ((METEO) obj).windSpeed)
+					&& (this.windDirection == ((METEO) obj).windDirection)
+
+					&& (this.visibility == ((METEO) obj).visibility) && (this.cloudHeight == ((METEO) obj).cloudHeight) && (this.cloudCover == ((METEO) obj).cloudCover)
+
+					&& (((this.reference == null) && (((METEO) obj).reference == null)) || ((this.reference != null) && this.reference.equals(((METEO) obj).reference)));
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public String toString() {
+
+		return SEDAPExpressMessage.removeSemicolons(serializeHeader()
+
+				.append((this.speedThroughWater != null) ? SEDAPExpressMessage.NumberFormatter.format(this.speedThroughWater) : "").append(";")
+				.append(this.waterSpeed != null ? SEDAPExpressMessage.NumberFormatter.format(this.waterSpeed) : "").append(";")
+				.append(this.waterDirection != null ? SEDAPExpressMessage.NumberFormatter.format(this.waterDirection) : "").append(";")
+				.append(this.waterTemperature != null ? SEDAPExpressMessage.NumberFormatter.format(this.waterTemperature) : "").append(";")
+				.append(this.waterDepth != null ? SEDAPExpressMessage.NumberFormatter.format(this.waterDepth) : "").append(";")
+
+				.append(this.airTemperature != null ? SEDAPExpressMessage.NumberFormatter.format(this.airTemperature) : "").append(";")
+				.append(this.dewPoint != null ? SEDAPExpressMessage.NumberFormatter.format(this.dewPoint) : "").append(";")
+				.append(this.humidityRel != null ? SEDAPExpressMessage.NumberFormatter.format(this.humidityRel) : "").append(";")
+				.append(this.pressure != null ? SEDAPExpressMessage.NumberFormatter.format(this.pressure) : "").append(";")
+
+				.append(this.windSpeed != null ? SEDAPExpressMessage.NumberFormatter.format(this.windSpeed) : "").append(";")
+				.append(this.windDirection != null ? SEDAPExpressMessage.NumberFormatter.format(this.windDirection) : "").append(";")
+
+				.append(this.visibility != null ? SEDAPExpressMessage.NumberFormatter.format(this.visibility) : "").append(";")
+				.append(this.cloudHeight != null ? SEDAPExpressMessage.NumberFormatter.format(this.cloudHeight) : "").append(";")
+				.append(this.cloudCover != null ? SEDAPExpressMessage.NumberFormatter.format(this.cloudCover) : "")
+
+				.append((this.reference != null) ? ";" + this.reference : "").toString());
+	}
 
 }

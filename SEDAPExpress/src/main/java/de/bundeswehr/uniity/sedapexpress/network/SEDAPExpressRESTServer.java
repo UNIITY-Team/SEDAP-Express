@@ -51,156 +51,156 @@ import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
  */
 public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements HttpHandler {
 
-    protected static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    static {
-	SEDAPExpressTCPClient.logger.setLevel(Level.ALL);
-    }
-
-    private Exception lastException = null;
-
-    private HttpServer server;
-
-    private final int port;
-
-    private boolean status = true;
-
-    private final Gson gson = new Gson();
-
-    private ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
-
-    private static final LinkedBlockingQueue<SEDAPExpressMessage> messageBuffer = new LinkedBlockingQueue<>();
-
-    /**
-     * Instantiate a new SEDAP-Express REST server
-     *
-     * @param port Port to be used
-     */
-    public SEDAPExpressRESTServer(final int port) {
-
-	super();
-
-	this.port = port;
-    }
-
-    public boolean connect() {
-
-	SEDAPExpressRESTServer.logger.logp(Level.INFO, "SEDAPExpressRESTServer", "run()", "Starting REST server");
-	logInput("Starting REST server");
-
-	try {
-
-	    this.server = HttpServer.create(new InetSocketAddress(this.port), 64);
-	    this.server.setExecutor(this.threadPoolExecutor);
-	    this.server.createContext("/", this);
-	    this.server.start();
-
-	    SEDAPExpressRESTServer.logger.logp(Level.INFO, "SEDAPExpressRESTServer", "run()", "REST server listening on port: " + this.port);
-	    logInput("REST server listening on port: " + this.port);
-
-	    return true;
-
-	} catch (final IOException e) {
-	    SEDAPExpressRESTServer.logger.logp(Level.SEVERE, "SEDAPExpressRESTServer", "run()", "REST server cannot listening on port: " + this.port);
-	    logInput("REST server cannot listening on port: " + this.port);
-
-		lastException =e;
-	    return false;
+	protected static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	static {
+		SEDAPExpressTCPClient.logger.setLevel(Level.ALL);
 	}
 
-    }
+	private Exception lastException = null;
 
-    @Override
-    public void handle(HttpExchange exchange) throws IOException {
+	private HttpServer server;
 
-	if ("GET".equals(exchange.getRequestMethod())) {
+	private final int port;
 
-	    try {
+	private boolean status = true;
 
-		SEDAPExpressJSONMessage jsonMessage = new SEDAPExpressJSONMessage();
+	private final Gson gson = new Gson();
 
-		while (!SEDAPExpressRESTServer.messageBuffer.isEmpty()) {
-		    jsonMessage.getMessages().add(new Message(SEDAPExpressRESTServer.messageBuffer.take().toString()));
+	private ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
 
+	private static final LinkedBlockingQueue<SEDAPExpressMessage> messageBuffer = new LinkedBlockingQueue<>();
+
+	/**
+	 * Instantiate a new SEDAP-Express REST server
+	 *
+	 * @param port Port to be used
+	 */
+	public SEDAPExpressRESTServer(final int port) {
+
+		super();
+
+		this.port = port;
+	}
+
+	public boolean connect() {
+
+		SEDAPExpressRESTServer.logger.logp(Level.INFO, "SEDAPExpressRESTServer", "run()", "Starting REST server");
+		logInput("Starting REST server");
+
+		try {
+
+			this.server = HttpServer.create(new InetSocketAddress(this.port), 64);
+			this.server.setExecutor(this.threadPoolExecutor);
+			this.server.createContext("/", this);
+			this.server.start();
+
+			SEDAPExpressRESTServer.logger.logp(Level.INFO, "SEDAPExpressRESTServer", "run()", "REST server listening on port: " + this.port);
+			logInput("REST server listening on port: " + this.port);
+
+			return true;
+
+		} catch (final IOException e) {
+			SEDAPExpressRESTServer.logger.logp(Level.SEVERE, "SEDAPExpressRESTServer", "run()", "REST server cannot listening on port: " + this.port);
+			logInput("REST server cannot listening on port: " + this.port);
+
+			lastException = e;
+			return false;
 		}
 
-		handleResponse(exchange, "", this.gson.toJson(jsonMessage), 200);
-
-		logInput("REST server sent " + jsonMessage.getMessages().size() + " messages successfully to the client!");
-
-	    } catch (final Exception e) {
-
-		lastException =e;
-	    }
-
-	} else if ("POST".equals(exchange.getRequestMethod())) {
-
-	    try {
-		String postBodyStr = new String(exchange.getRequestBody().readAllBytes());
-
-		SEDAPExpressJSONMessage jsonMessage = this.gson.fromJson(postBodyStr, SEDAPExpressJSONMessage.class);
-
-		logInput("REST server received " + jsonMessage.getMessages().size() + " messages from the client!");
-
-		jsonMessage.getMessages().forEach(message -> distributeReceivedSEDAPExpressMessage(SEDAPExpressMessage.deserialize(message.getMessage())));
-
-		exchange.getResponseHeaders().set("Content-Type", "application/json;charset=UTF-8");
-		handleResponse(exchange, postBodyStr, "{\"success\":\"true\"}", 200);
-	    } catch (Exception e) {
-
-		lastException =e;
-		handleResponse(exchange, "", "{\"success\":\"false\"}", 400);
-	    }
 	}
 
-    }
+	@Override
+	public void handle(HttpExchange exchange) throws IOException {
 
-    private void handleResponse(HttpExchange httpExchange, String requestParamValue, String responseString, int responseCode) throws IOException {
+		if ("GET".equals(exchange.getRequestMethod())) {
 
-	OutputStream outputStream = httpExchange.getResponseBody();
+			try {
 
-	// this line is a must
-	httpExchange.sendResponseHeaders(responseCode, responseString.length());
+				SEDAPExpressJSONMessage jsonMessage = new SEDAPExpressJSONMessage();
 
-	outputStream.write(responseString.getBytes());
+				while (!SEDAPExpressRESTServer.messageBuffer.isEmpty()) {
+					jsonMessage.getMessages().add(new Message(SEDAPExpressRESTServer.messageBuffer.take().toString()));
 
-	outputStream.flush();
+				}
 
-	outputStream.close();
+				handleResponse(exchange, "", this.gson.toJson(jsonMessage), 200);
 
-    }
+				logInput("REST server sent " + jsonMessage.getMessages().size() + " messages successfully to the client!");
 
-    @Override
-    public boolean sendSEDAPExpressMessage(SEDAPExpressMessage message) {
+			} catch (final Exception e) {
 
-	if (!this.status) {
+				lastException = e;
+			}
 
-	    SEDAPExpressRESTServer.logger.logp(Level.INFO, "SEDAPExpressRESTServer", "sendSEDAPExpressMessage()", "Could not send message, the HTTP server has been stopped!");
-	    logInput("Could not send message, the HTTP server has been stopped!");
+		} else if ("POST".equals(exchange.getRequestMethod())) {
 
-	    this.lastException = new IOException("Could not send message, the HTTP server has been stopped!");
-	    return false;
+			try {
+				String postBodyStr = new String(exchange.getRequestBody().readAllBytes());
+
+				SEDAPExpressJSONMessage jsonMessage = this.gson.fromJson(postBodyStr, SEDAPExpressJSONMessage.class);
+
+				logInput("REST server received " + jsonMessage.getMessages().size() + " messages from the client!");
+
+				jsonMessage.getMessages().forEach(message -> distributeReceivedSEDAPExpressMessage(SEDAPExpressMessage.deserialize(message.getMessage())));
+
+				exchange.getResponseHeaders().set("Content-Type", "application/json;charset=UTF-8");
+				handleResponse(exchange, postBodyStr, "{\"success\":\"true\"}", 200);
+			} catch (Exception e) {
+
+				lastException = e;
+				handleResponse(exchange, "", "{\"success\":\"false\"}", 400);
+			}
+		}
+
 	}
 
-	SEDAPExpressRESTServer.messageBuffer.add(message);
+	private void handleResponse(HttpExchange httpExchange, String requestParamValue, String responseString, int responseCode) throws IOException {
 
-	return true;
-    }
+		OutputStream outputStream = httpExchange.getResponseBody();
 
-    @Override
-    public void stopCommunicator() {
+		// this line is a must
+		httpExchange.sendResponseHeaders(responseCode, responseString.length());
 
-	this.status = false;
+		outputStream.write(responseString.getBytes());
 
-	this.server.stop(5000);
+		outputStream.flush();
 
-	SEDAPExpressRESTServer.logger.logp(Level.INFO, "SEDAPExpressRESTServer", "stopCommunicator()", "REST server stopped");
-	logInput("REST server stopped");
-    }
+		outputStream.close();
 
-    @Override
-    public Exception getLastException() {
+	}
 
-	return this.lastException;
-    }
+	@Override
+	public boolean sendSEDAPExpressMessage(SEDAPExpressMessage message) {
+
+		if (!this.status) {
+
+			SEDAPExpressRESTServer.logger.logp(Level.INFO, "SEDAPExpressRESTServer", "sendSEDAPExpressMessage()", "Could not send message, the HTTP server has been stopped!");
+			logInput("Could not send message, the HTTP server has been stopped!");
+
+			this.lastException = new IOException("Could not send message, the HTTP server has been stopped!");
+			return false;
+		}
+
+		SEDAPExpressRESTServer.messageBuffer.add(message);
+
+		return true;
+	}
+
+	@Override
+	public void stopCommunicator() {
+
+		this.status = false;
+
+		this.server.stop(5000);
+
+		SEDAPExpressRESTServer.logger.logp(Level.INFO, "SEDAPExpressRESTServer", "stopCommunicator()", "REST server stopped");
+		logInput("REST server stopped");
+	}
+
+	@Override
+	public Exception getLastException() {
+
+		return this.lastException;
+	}
 
 }

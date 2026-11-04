@@ -103,8 +103,8 @@ public class MACUtils {
 	 * @return the HMAC of the message
 	 */
 	/**
-	 * Serializes a message for MAC calculation while excluding its MAC field.
-	 * The original MAC is restored before this method returns.
+	 * Serializes a message for MAC calculation while excluding its MAC field. The
+	 * original MAC is restored before this method returns.
 	 *
 	 * @param message SEDAP-Express message
 	 * @return serialized message content without the MAC value
@@ -264,8 +264,8 @@ public class MACUtils {
 			return false;
 		}
 
-		return MACUtils.calcHMAC(key, message).equals(receivedMAC) || MACUtils.calcCMAC(key, message).equals(receivedMAC) ||
-				MACUtils.calc32BitHMAC(key, message).equals(receivedMAC) || MACUtils.calc32BitCMAC(key, message).equals(receivedMAC);
+		return MACUtils.calcHMAC(key, message).equals(receivedMAC) || MACUtils.calcCMAC(key, message).equals(receivedMAC) || MACUtils.calc32BitHMAC(key, message).equals(receivedMAC)
+				|| MACUtils.calc32BitCMAC(key, message).equals(receivedMAC);
 
 	}
 
@@ -286,11 +286,10 @@ public class MACUtils {
 		}
 
 		if (initVector == null) {
-			return MACUtils.calcHMAC(key, message).equals(receivedMAC) || MACUtils.calcCMAC(key, message).equals(receivedMAC) ||
-					MACUtils.calc32BitHMAC(key, message).equals(receivedMAC) || MACUtils.calc32BitCMAC(key, message).equals(receivedMAC);
+			return MACUtils.calcHMAC(key, message).equals(receivedMAC) || MACUtils.calcCMAC(key, message).equals(receivedMAC) || MACUtils.calc32BitHMAC(key, message).equals(receivedMAC)
+					|| MACUtils.calc32BitCMAC(key, message).equals(receivedMAC);
 		} else {
-			return MACUtils.calcGMAC(key, initVector, message).equals(receivedMAC) ||
-					MACUtils.calc32BitGMAC(key, initVector, message).equals(receivedMAC);
+			return MACUtils.calcGMAC(key, initVector, message).equals(receivedMAC) || MACUtils.calc32BitGMAC(key, initVector, message).equals(receivedMAC);
 		}
 
 	}

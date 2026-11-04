@@ -44,43 +44,44 @@ import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
  */
 public class CompressUtils {
 
-    public static final Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION, true);
-    public static final Inflater inflater = new Inflater(true);
+	public static final Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION, true);
+	public static final Inflater inflater = new Inflater(true);
 
-    /**
-     * Compresses a SEDAPExpressMessage to a byte array.
-     * 
-     * @param message SEDAPExpressMessage to compress
-     * @return Compressed message as byte array
-     */
-    public static String compressMessage(SEDAPExpressMessage message) {
+	/**
+	 * Compresses a SEDAPExpressMessage to a byte array.
+	 * 
+	 * @param message SEDAPExpressMessage to compress
+	 * @return Compressed message as byte array
+	 */
+	public static String compressMessage(SEDAPExpressMessage message) {
 
-	synchronized (CompressUtils.deflater) {
-	    CompressUtils.deflater.reset();
-	    try {
-		return Base64.toBase64String(new DeflaterInputStream(new ByteArrayInputStream(message.toString().getBytes(StandardCharsets.ISO_8859_1)), CompressUtils.deflater).readAllBytes());
-	    } catch (final IOException e) {
-		return null;
-	    }
+		synchronized (CompressUtils.deflater) {
+			CompressUtils.deflater.reset();
+			try {
+				return Base64.toBase64String(new DeflaterInputStream(new ByteArrayInputStream(message.toString().getBytes(StandardCharsets.ISO_8859_1)), CompressUtils.deflater).readAllBytes());
+			} catch (final IOException e) {
+				return null;
+			}
+		}
 	}
-    }
 
-    /**
-     * Decompresses a byte array to a SEDAPExpressMessage
-     *
-     * @param compressedMessage Compressed message
-     * @return Decompressed message
-     */
-    public static SEDAPExpressMessage decompressMessage(final String compressedMessage) {
+	/**
+	 * Decompresses a byte array to a SEDAPExpressMessage
+	 *
+	 * @param compressedMessage Compressed message
+	 * @return Decompressed message
+	 */
+	public static SEDAPExpressMessage decompressMessage(final String compressedMessage) {
 
-	synchronized (CompressUtils.inflater) {
-	    CompressUtils.inflater.reset();
-	    try {
-		return SEDAPExpressMessage.deserialize(new String(new InflaterInputStream(new ByteArrayInputStream(Base64.decode(compressedMessage)), CompressUtils.inflater).readAllBytes(), StandardCharsets.ISO_8859_1));
-	    } catch (final IOException e) {
-		return null;
-	    }
+		synchronized (CompressUtils.inflater) {
+			CompressUtils.inflater.reset();
+			try {
+				return SEDAPExpressMessage.deserialize(
+						new String(new InflaterInputStream(new ByteArrayInputStream(Base64.decode(compressedMessage)), CompressUtils.inflater).readAllBytes(), StandardCharsets.ISO_8859_1));
+			} catch (final IOException e) {
+				return null;
+			}
+		}
 	}
-    }
 
 }

@@ -9,6 +9,6 @@ Specification-Vendor: Federal Armed Forces of Germany
 Implementation-Title: SEDAP-Express Framework
 Implementation-Version: 1.5.0
 Implementation-Vendor: Federal Armed Forces of Germany
-Main-Class: de.bundeswehr.mese.sedapexpress.ReleaseInfo
+Main-Class: de.bundeswehr.uniity.sedapexpress.ReleaseInfo
 Class-Path: . 
 
