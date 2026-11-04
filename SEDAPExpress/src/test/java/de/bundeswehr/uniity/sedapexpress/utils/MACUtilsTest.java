@@ -11,9 +11,15 @@ import org.junit.jupiter.api.Test;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
 
 /**
- * Tests MAC generation and verification. The MAC field itself is excluded from
- * the authenticated message data. Verification must preserve the received MAC
- * while comparing it with the newly calculated MAC.
+ * Tests MAC generation and verification.
+ *
+ * MAC calculation must use the complete serialized message with the MAC field
+ * left empty, preserving the field position and CSV delimiters. Verification
+ * must preserve the received MAC while comparing it with the newly calculated
+ * MAC.
+ *
+ * The 32-bit variants must be the first four bytes of the corresponding full
+ * cryptographic MAC tag. They must not use a secondary checksum such as Adler32.
  */
 class MACUtilsTest {
 
@@ -61,6 +67,27 @@ class MACUtilsTest {
 	@Test
 	void truncatedGmacGenerationIgnoresExistingMac() {
 		assertSameMac(m -> MACUtils.setMACFieldWith32BitGMAC(key, iv, m), 8);
+	}
+
+	@Test
+	void truncatedHmacIsFirstFourBytesOfFullHmac() {
+		assertTruncatedMacMatchesFullMac(
+				m -> MACUtils.setMACFieldWithHMAC(key, m),
+				m -> MACUtils.setMACFieldWith32BitHMAC(key, m));
+	}
+
+	@Test
+	void truncatedCmacIsFirstFourBytesOfFullCmac() {
+		assertTruncatedMacMatchesFullMac(
+				m -> MACUtils.setMACFieldWithCMAC(key, m),
+				m -> MACUtils.setMACFieldWith32BitCMAC(key, m));
+	}
+
+	@Test
+	void truncatedGmacIsFirstFourBytesOfFullGmac() {
+		assertTruncatedMacMatchesFullMac(
+				m -> MACUtils.setMACFieldWithGMAC(key, iv, m),
+				m -> MACUtils.setMACFieldWith32BitGMAC(key, iv, m));
 	}
 
 	@Test
@@ -150,6 +177,24 @@ class MACUtilsTest {
 		assertEquals(noMac.getMAC(), existingMac.getMAC(), "The MAC result must not depend on the current MAC field.");
 	}
 
+	private void assertTruncatedMacMatchesFullMac(MacSetter fullMacSetter, MacSetter truncatedMacSetter) {
+		TestMessage fullMacMessage = new TestMessage(PAYLOAD, null);
+		TestMessage truncatedMacMessage = new TestMessage(PAYLOAD, null);
+
+		fullMacSetter.set(fullMacMessage);
+		truncatedMacSetter.set(truncatedMacMessage);
+
+		String fullMac = fullMacMessage.getMAC();
+		String truncatedMac = truncatedMacMessage.getMAC();
+
+		assertNotNull(fullMac);
+		assertNotNull(truncatedMac);
+		assertEquals(8, truncatedMac.length(), "A 32-bit MAC must contain exactly four bytes.");
+		assertTrue(fullMac.length() >= 8, "The full MAC must contain at least four bytes.");
+		assertEquals(fullMac.substring(0, 8), truncatedMac,
+				"The 32-bit MAC must be the first four bytes of the full cryptographic MAC.");
+	}
+
 	private void assertVerificationPreservesMac(TestMessage message, BooleanSupplierWithException verification) {
 		String receivedMac = message.getMAC();
 
@@ -168,6 +213,7 @@ class MACUtilsTest {
 	}
 
 	private static class TestMessage extends SEDAPExpressMessage {
+		private static final long serialVersionUID = -447639167554559062L;
 		private String payload;
 
 		TestMessage(String payload, String mac) {
