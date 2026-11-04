@@ -27,7 +27,6 @@ package de.bundeswehr.uniity.sedapexpress.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Security;
-import java.util.zip.Adler32;
 
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.digests.SHA256Digest;
@@ -39,6 +38,7 @@ import org.bouncycastle.crypto.modes.GCMBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 
+import de.bundeswehr.uniity.sedapexpress.messages.OWNUNIT;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
 
 /**
@@ -187,7 +187,7 @@ public class MACUtils {
 	 */
 	public static SEDAPExpressMessage setMACFieldWith32BitHMAC(final byte[] key, final SEDAPExpressMessage message) {
 
-		message.setMAC(MACUtils.calc32BitHMAC(key, message));
+		message.setMAC(MACUtils.calcHMAC(key, message).substring(0, 8));
 		return message;
 
 	}
@@ -201,7 +201,7 @@ public class MACUtils {
 	 */
 	public static SEDAPExpressMessage setMACFieldWith32BitCMAC(final byte[] key, final SEDAPExpressMessage message) {
 
-		message.setMAC(MACUtils.calc32BitCMAC(key, message));
+		message.setMAC(MACUtils.calcCMAC(key, message).substring(0, 8));
 		return message;
 
 	}
@@ -216,37 +216,8 @@ public class MACUtils {
 	 */
 	public static SEDAPExpressMessage setMACFieldWith32BitGMAC(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
 
-		message.setMAC(MACUtils.calc32BitGMAC(key, initVector, message));
+		message.setMAC(MACUtils.calcGMAC(key, initVector, message).substring(0, 8));
 		return message;
-	}
-
-	/**
-	 * Only used to truncate the HMAC to 32 bits. This reduces security and
-	 * increases the likelihood of collisions, but requires less bandwidth.
-	 * 
-	 * @param mac Original HMAC/CMAC/GMAC
-	 * 
-	 * @return Reduced MAC, shortened to 32Bit
-	 */
-	private static String calcAdler32Checksum(String mac) {
-		Adler32 adler = new Adler32();
-		adler.update(mac.getBytes(StandardCharsets.ISO_8859_1));
-		return SEDAPExpressMessage.HexFormater.toHexDigits(adler.getValue(), 8);
-	}
-
-	private static String calc32BitHMAC(final byte[] key, final SEDAPExpressMessage message) {
-
-		return MACUtils.calcAdler32Checksum(MACUtils.calcHMAC(key, message));
-	}
-
-	private static String calc32BitCMAC(final byte[] key, final SEDAPExpressMessage message) {
-
-		return MACUtils.calcAdler32Checksum(MACUtils.calcCMAC(key, message));
-	}
-
-	private static String calc32BitGMAC(final byte[] key, final byte[] initVector, final SEDAPExpressMessage message) {
-
-		return MACUtils.calcAdler32Checksum(MACUtils.calcGMAC(key, initVector, message));
 	}
 
 	/**
@@ -259,13 +230,7 @@ public class MACUtils {
 	 */
 	public static boolean isMessageAuthentic(final byte[] key, final SEDAPExpressMessage message) {
 
-		final String receivedMAC = message.getMAC();
-		if (receivedMAC == null) {
-			return false;
-		}
-
-		return MACUtils.calcHMAC(key, message).equals(receivedMAC) || MACUtils.calcCMAC(key, message).equals(receivedMAC) || MACUtils.calc32BitHMAC(key, message).equals(receivedMAC)
-				|| MACUtils.calc32BitCMAC(key, message).equals(receivedMAC);
+		return isMessageAuthentic(key, null, message);
 
 	}
 
@@ -285,13 +250,34 @@ public class MACUtils {
 			return false;
 		}
 
-		if (initVector == null) {
-			return MACUtils.calcHMAC(key, message).equals(receivedMAC) || MACUtils.calcCMAC(key, message).equals(receivedMAC) || MACUtils.calc32BitHMAC(key, message).equals(receivedMAC)
-					|| MACUtils.calc32BitCMAC(key, message).equals(receivedMAC);
-		} else {
-			return MACUtils.calcGMAC(key, initVector, message).equals(receivedMAC) || MACUtils.calc32BitGMAC(key, initVector, message).equals(receivedMAC);
+		// 32Bit MAC
+		if (receivedMAC.length() == 8) {
+			if (initVector == null) {
+				return MACUtils.calcHMAC(key, message).subSequence(0, 8).equals(receivedMAC) || MACUtils.calcCMAC(key, message).subSequence(0, 8).equals(receivedMAC);
+			} else {
+				return MACUtils.calcGMAC(key, initVector, message).subSequence(0, 8).equals(receivedMAC);
+			}
+
+		} else { // 128Bit or 256Bit MAC
+			if (initVector == null) {
+				return MACUtils.calcHMAC(key, message).equals(receivedMAC) || MACUtils.calcCMAC(key, message).equals(receivedMAC);
+			} else {
+				return MACUtils.calcGMAC(key, initVector, message).equals(receivedMAC);
+			}
 		}
 
+	}
+
+	public static void main(String[] args) {
+		OWNUNIT msg1 = new OWNUNIT("OWNUNIT;5E;0195236D151A;66A3;R;;;53.32;8.11;0;5.5;21;22;;;FGS Bayern");
+		OWNUNIT msg2 = new OWNUNIT("OWNUNIT;5E;0195236D151A;66A3;R;;DDA6B526;53.32;8.11;0;5.5;21;22;;;FGS Bayern");
+		OWNUNIT msg3 = new OWNUNIT("OWNUNIT;5E;0195236D151A;66A3;R;;DAA6B526;53.32;8.11;0;5.5;21;22;;;FGS Bayern");
+
+		setMACFieldWith32BitCMAC("expressexpressex".getBytes(), msg1);
+		System.out.println(msg1);
+
+		System.out.println(isMessageAuthentic("expressexpressex".getBytes(), msg2));
+		System.out.println(isMessageAuthentic("expressexpressex".getBytes(), msg3));
 	}
 
 }
