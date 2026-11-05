@@ -49,8 +49,6 @@ import org.bouncycastle.crypto.macs.HMac;
 import org.bouncycastle.crypto.prng.SP800SecureRandomBuilder;
 import org.bouncycastle.util.encoders.Base64;
 
-import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
-
 /**
  * Some encryption utils
  * 
@@ -89,7 +87,7 @@ public class EncryptionUtils {
 		}
 	}
 
-	private static SecureRandom random = new SP800SecureRandomBuilder().setSecurityStrength(128).setEntropyBitsRequired(128).buildHMAC(new HMac(new SHA256Digest()), null, true);
+	private static final SecureRandom random = new SP800SecureRandomBuilder().setSecurityStrength(128).setEntropyBitsRequired(128).buildHMAC(new HMac(new SHA256Digest()), null, true);
 
 	static {
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
@@ -97,7 +95,91 @@ public class EncryptionUtils {
 	}
 
 	private static final int sessionId;
-	private static final AtomicLong counter = new AtomicLong(0);
+	private static final AtomicLong ivCounter = new AtomicLong(0);
+	private static final AtomicLong nonceCounter = new AtomicLong(0);
+
+	/**
+	 * Creates a cryptographically secure random session ID.
+	 *
+	 * @return Random session ID
+	 */
+	public static int createRandomSessionID() {
+		return random.nextInt();
+	}
+
+	/**
+	 * Generates an appropriate Initialization Vector (IV) for AES-CTR
+	 * 
+	 * The IV consists of:
+	 * - 4 bytes: Session ID
+	 * - 8 bytes: Incrementing counter
+	 * - 4 bytes: Reserved (zero)
+	 * 
+	 * @return Initialization Vector (IV)
+	 */
+	public static byte[] generateCounterBasedIV() {
+
+		return generateCounterBasedIV(sessionId);
+	}
+
+	/**
+	 * Generates an appropriate Initialization Vector (IV) for AES-CTR
+	 * 
+	 * The IV consists of:
+	 * - 4 bytes: Session ID
+	 * - 8 bytes: Incrementing counter
+	 * - 4 bytes: Reserved (zero)
+	 * 
+	 * @return Initialization Vector (IV)
+	 */
+	public static byte[] generateCounterBasedIV(int sessionId) {
+
+		long currentCounter = ivCounter.getAndIncrement();
+
+		if (currentCounter < 0) {
+			throw new IllegalStateException("IV counter exhausted");
+		}
+
+		return ByteBuffer.allocate(16).putInt(sessionId).putLong(currentCounter).putInt(0).array();
+	}
+
+	/**
+	 * Generates an unpredictable 16-byte IV for AES-CFB.
+	 *
+	 * @return 16-byte random IV
+	 */
+	public static byte[] generateRandomIV() {
+		byte[] iv = new byte[16];
+		random.nextBytes(iv);
+		return iv;
+	}
+
+	/**
+	 * Generates a unique 96-bit nonce for use with AES-GCM
+	 * Uses a default random sessionid
+	 * 
+	 * @return 12-byte AES-GCM nonce
+	 */
+	public static byte[] generateNonce() {
+
+		return generateNonce(sessionId);
+	}
+
+	/**
+	 * Generates a unique 96-bit nonce for use with AES-GCM
+	 * 
+	 * @return 12-byte AES-GCM nonce
+	 */
+	public static byte[] generateNonce(int sessionId) {
+
+		long currentCounter = nonceCounter.getAndIncrement();
+
+		if (currentCounter < 0) {
+			throw new IllegalStateException("Nonce counter exhausted");
+		}
+
+		return ByteBuffer.allocate(12).putInt(sessionId).putLong(currentCounter).array();
+	}
 
 	/**
 	 * This method generates a (pseudo)random key for using the authentication or
@@ -168,237 +250,199 @@ public class EncryptionUtils {
 	}
 
 	/**
-	 * Generates an appropriate Initialization Vector (IV) for CFB and CTR
-	 * 
-	 * @return Initialization Vector (IV)
+	 * Concatenates the initialization vector/nonce and the encrypted data.
+	 *
+	 * @param iv             initialization vector or nonce
+	 * @param encryptedBytes encrypted data
+	 * @return IV/nonce followed by encrypted data
 	 */
-	public static byte[] generateIV() {
+	private static byte[] prependIV(byte[] iv, byte[] encryptedBytes) {
+		byte[] result = new byte[iv.length + encryptedBytes.length];
+		System.arraycopy(iv, 0, result, 0, iv.length);
+		System.arraycopy(encryptedBytes, 0, result, iv.length, encryptedBytes.length);
+		return result;
+	}
 
-		try {
-			byte[] iv = new byte[Cipher.getInstance("AES").getBlockSize()];
-			EncryptionUtils.random.nextBytes(iv);
-			return iv;
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-			e.printStackTrace();
+	/**
+	 * Extracts the initialization vector/nonce from the beginning of the input.
+	 *
+	 * @param data     combined IV/nonce and encrypted data
+	 * @param ivLength expected IV/nonce length
+	 * @return extracted IV/nonce
+	 * @throws IllegalArgumentException if the input is too short
+	 */
+	private static byte[] extractIV(byte[] data, int ivLength) {
+		if (data == null || data.length < ivLength) {
+			throw new IllegalArgumentException("Encrypted data is too short to contain the IV/nonce.");
 		}
 
-		return null;
-	}
-
-	public static String getIVStringFromByteArray(byte[] ivArray) {
-
-		return SEDAPExpressMessage.HexFormater.withUpperCase().formatHex(ivArray);
+		byte[] iv = new byte[ivLength];
+		System.arraycopy(data, 0, iv, 0, ivLength);
+		return iv;
 	}
 
 	/**
-	 * Converts a hexdecimal presentation of a IV to a byte array.
-	 * 
-	 * @param ivString hexdecimal presentation of a IV
-	 * @return IV as byte array
+	 * Removes the IV/nonce prefix from the combined input.
+	 *
+	 * @param data     combined IV/nonce and encrypted data
+	 * @param ivLength length of the IV/nonce prefix
+	 * @return encrypted data without the IV/nonce prefix
 	 */
-	public static byte[] getIVByteArrayFromString(String ivString) {
-
-		return SEDAPExpressMessage.HexFormater.parseHex(ivString);
-
-	}
-
-	/**
-	 * Generates a unique 96-bit nonce for use with GCM Uses a default random
-	 * sessionid
-	 * 
-	 * @return 12-byte AES-GCM nonce
-	 */
-	public static byte[] generateNonce() {
-		long currentCounter = counter.getAndIncrement();
-
-		if (currentCounter < 0) {
-			throw new IllegalStateException("Nonce counter exhausted");
+	private static byte[] removeIV(byte[] data, int ivLength) {
+		if (data == null || data.length < ivLength) {
+			throw new IllegalArgumentException("Encrypted data is too short to contain the IV/nonce.");
 		}
 
-		return ByteBuffer.allocate(12).putInt(sessionId).putLong(currentCounter).array();
-	}
-
-	/**
-	 * Generates a unique 96-bit nonce for use with GCM
-	 * 
-	 * @return 12-byte AES-GCM nonce
-	 */
-	public static byte[] generateNonce(int sessionId) {
-		long currentCounter = counter.getAndIncrement();
-
-		if (currentCounter < 0) {
-			throw new IllegalStateException("Nonce counter exhausted");
-		}
-
-		return ByteBuffer.allocate(12).putInt(sessionId).putLong(currentCounter).array();
-	}
-
-	/**
-	 * Encrypts a message with AES128/256 CFB/NoPadding (NIST SP 800-38A)
-	 *
-	 * @param originalData plain data which should be encrypted
-	 * @param key          the 128 or 256 bit wide encryption key
-	 * @param iv           appropriate Initialization Vector (IV, 16 bytes
-	 *                     recommended)
-	 *
-	 * @return encrypted data
-	 *
-	 * @throws NoSuchPaddingException
-	 * @throws NoSuchAlgorithmException
-	 * @throws BadPaddingException
-	 * @throws IllegalBlockSizeException
-	 * @throws InvalidKeyException
-	 * @throws InvalidAlgorithmParameterException
-	 */
-	public static byte[] encrypt_AES_CFB(byte[] originalData, byte[] key, byte[] iv)
-			throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
-
-		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
-		Cipher cipher = Cipher.getInstance("AES/CFB/NoPadding");
-		cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv), EncryptionUtils.random);
-		byte[] encryptedBytes = cipher.doFinal(originalData);
-
+		byte[] encryptedBytes = new byte[data.length - ivLength];
+		System.arraycopy(data, ivLength, encryptedBytes, 0, encryptedBytes.length);
 		return encryptedBytes;
 	}
 
 	/**
-	 * Decrypts a message with AES128/256 CFB/NoPadding (NIST SP 800-38A)
+	 * Encrypts data with AES-CFB and returns the 16-byte random IV followed by
+	 * the ciphertext.
 	 *
-	 * @param encryptedData encrypted data which should be decrypted
-	 * @param key           the 128 or 256 bit wide decryption key
-	 * @param iv            appropriate Initialization Vector (IV, 16 bytes
-	 *                      recommended)
-	 *
-	 * @return decrypted data
-	 *
+	 * @param originalData plaintext
+	 * @param key          128- or 256-bit AES key
+	 * @return IV (16 bytes) || ciphertext
 	 * @throws NoSuchPaddingException
 	 * @throws NoSuchAlgorithmException
-	 * @throws BadPaddingException
 	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
 	 * @throws InvalidKeyException
 	 * @throws InvalidAlgorithmParameterException
 	 */
-	public static byte[] decrypt_AES_CFB(byte[] encryptedData, byte[] key, byte[] iv)
-			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+	public static byte[] encrypt_AES_CFB(byte[] originalData, byte[] key)
+			throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
 
+		byte[] iv = generateRandomIV();
 		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 		Cipher cipher = Cipher.getInstance("AES/CFB/NoPadding");
-		cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv), EncryptionUtils.random);
-		byte[] decryptedBytes = cipher.doFinal(encryptedData);
-
-		return decryptedBytes;
+		cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
+		return prependIV(iv, cipher.doFinal(originalData));
 	}
 
 	/**
-	 * Encrypts a message with AES128/256 CTR/NoPadding (NIST SP 800-38A)
+	 * Decrypts AES-CFB data. The first 16 bytes are interpreted as the IV.
 	 *
-	 * @param originalData plain data which should be encrypted
-	 * @param key          the 128 or 256 bit wide encryption key
-	 * @param iv           appropriate Initialization Vector (IV, 16 bytes
-	 *                     recommended)
-	 *
-	 * @return encrypted data
-	 *
+	 * @param data combined IV (16 bytes) || ciphertext
+	 * @param key  128- or 256-bit AES key
+	 * @return plaintext
 	 * @throws NoSuchPaddingException
 	 * @throws NoSuchAlgorithmException
-	 * @throws BadPaddingException
 	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
 	 * @throws InvalidKeyException
 	 * @throws InvalidAlgorithmParameterException
 	 */
-	public static byte[] encrypt_AES_CTR(byte[] originalData, byte[] key, byte[] iv)
-			throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
-
-		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
-		Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
-		cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv), EncryptionUtils.random);
-		byte[] encryptedBytes = cipher.doFinal(originalData);
-
-		return encryptedBytes;
-	}
-
-	/**
-	 * Decrypts a message with AES128/256 CTR/NoPadding (NIST SP 800-38A)
-	 *
-	 * @param encryptedData encrypted data which should be decrypted
-	 * @param key           the 128 or 256 bit wide decryption key
-	 * @param iv            appropriate Initialization Vector (IV, 16 bytes
-	 *                      recommended)
-	 *
-	 * @return decrypted data
-	 *
-	 * @throws NoSuchPaddingException
-	 * @throws NoSuchAlgorithmException
-	 * @throws BadPaddingException
-	 * @throws IllegalBlockSizeException
-	 * @throws InvalidKeyException
-	 * @throws InvalidAlgorithmParameterException
-	 */
-	public static byte[] decrypt_AES_CTR(byte[] encryptedData, byte[] key, byte[] iv)
+	public static byte[] decrypt_AES_CFB(byte[] data, byte[] key)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 
+		byte[] iv = extractIV(data, 16);
+		byte[] encryptedData = removeIV(data, 16);
 		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
-		Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
-		cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv), EncryptionUtils.random);
-		byte[] decryptedBytes = cipher.doFinal(encryptedData);
-
-		return decryptedBytes;
+		Cipher cipher = Cipher.getInstance("AES/CFB/NoPadding");
+		cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
+		return cipher.doFinal(encryptedData);
 	}
 
 	/**
-	 * Encrypts a message with AES128/256 GCM (NIST SP 800-38A)
+	 * Encrypts data with AES-CTR and returns the 16-byte counter-based IV
+	 * followed by the ciphertext.
 	 *
-	 * @param originalData plain data which should be encrypted
-	 * @param key          the 128 or 256 bit wide encryption key
-	 * @param nonce        appropriate nonce (12 bytes recommended)
-	 *
-	 * @return encrypted data
-	 *
+	 * @param originalData plaintext
+	 * @param key          128- or 256-bit AES key
+	 * @return IV (16 bytes) || ciphertext
 	 * @throws NoSuchPaddingException
 	 * @throws NoSuchAlgorithmException
-	 * @throws BadPaddingException
 	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
 	 * @throws InvalidKeyException
 	 * @throws InvalidAlgorithmParameterException
 	 */
-	public static byte[] encrypt_AES_GCM(byte[] originalData, byte[] key, byte[] nonce)
+	public static byte[] encrypt_AES_CTR(byte[] originalData, byte[] key)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
 
+		byte[] iv = generateCounterBasedIV();
+		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+		Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
+		cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
+		return prependIV(iv, cipher.doFinal(originalData));
+	}
+
+	/**
+	 * Decrypts AES-CTR data. The first 16 bytes are interpreted as the IV.
+	 *
+	 * @param data combined IV (16 bytes) || ciphertext
+	 * @param key  128- or 256-bit AES key
+	 * @return plaintext
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
+	 * @throws InvalidKeyException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static byte[] decrypt_AES_CTR(byte[] data, byte[] key)
+			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+
+		byte[] iv = extractIV(data, 16);
+		byte[] encryptedData = removeIV(data, 16);
+		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+		Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
+		cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
+		return cipher.doFinal(encryptedData);
+	}
+
+	/**
+	 * Encrypts data with AES-GCM and returns the 12-byte nonce followed by
+	 * the ciphertext and authentication tag.
+	 *
+	 * @param originalData plaintext
+	 * @param key          128- or 256-bit AES key
+	 * @return nonce (12 bytes) || ciphertext || authentication tag
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
+	 * @throws InvalidKeyException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public static byte[] encrypt_AES_GCM(byte[] originalData, byte[] key)
+			throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+
+		byte[] nonce = generateNonce();
 		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 		Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
 		GCMParameterSpec gcmSpec = new GCMParameterSpec(128, nonce);
 		cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec);
-		byte[] encryptedBytes = cipher.doFinal(originalData);
-
-		return encryptedBytes;
+		return prependIV(nonce, cipher.doFinal(originalData));
 	}
 
 	/**
-	 * Decrypts a message with AES128/256 GCM/NoPadding.
+	 * Decrypts AES-GCM data. The first 12 bytes are interpreted as the nonce.
+	 * The ciphertext includes the authentication tag appended by the provider.
 	 *
-	 * @param encryptedData encrypted data which should be decrypted
-	 * @param key           the 128, 192 or 256 bit wide decryption key
-	 * @param nonce         appropriate nonce (12 bytes recommended)
-	 *
-	 * @return decrypted data
-	 *
+	 * @param data nonce (12 bytes) || ciphertext || authentication tag
+	 * @param key  128- or 256-bit AES key
+	 * @return plaintext, only if authentication succeeds
 	 * @throws NoSuchPaddingException
 	 * @throws NoSuchAlgorithmException
-	 * @throws BadPaddingException
 	 * @throws IllegalBlockSizeException
+	 * @throws BadPaddingException
 	 * @throws InvalidKeyException
 	 * @throws InvalidAlgorithmParameterException
 	 */
-	public static byte[] decrypt_AES_GCM(byte[] encryptedData, byte[] key, byte[] nonce)
+	public static byte[] decrypt_AES_GCM(byte[] data, byte[] key)
 			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 
+		byte[] nonce = extractIV(data, 12);
+		byte[] encryptedData = removeIV(data, 12);
 		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 		Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
 		GCMParameterSpec gcmSpec = new GCMParameterSpec(128, nonce);
 		cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmSpec);
-		byte[] decryptedBytes = cipher.doFinal(encryptedData);
-
-		return decryptedBytes;
+		return cipher.doFinal(encryptedData);
 	}
 
 	public static String encodeBase64(byte[] data) {
