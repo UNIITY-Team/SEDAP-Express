@@ -1,6 +1,6 @@
-# SEDAP-Express ICD v1.5.2 (AI-optimized reference)
+# SEDAP-Express ICD v1.5.3 (AI-optimized reference)
 
-Source: "SEDAP-Express ICD v1.5.2.docx". Content reproduced completely; formatting condensed for machine consumption.
+Source: "SEDAP-Express ICD v1.5.3.docx". Content reproduced completely; formatting condensed for machine consumption.
 
 ## 1. Scope
 
@@ -63,10 +63,13 @@ Units/geodesy (apply to all messages):
   - XOR (pseudo-encryption, ONLY testing/debugging/light obfuscation)
 - Recommended: MAC DRBG (NIST SP 800-90A/B).
 - Encrypted data must be BASE64-encoded; the **whole message incl. header** is encrypted.
+- AES-CTR / AES-CFB: The IV must be prepended to the ciphertext.
+- AES-GCM: The nonce must be prepended to the ciphertext, followed by the authentication tag.
 - If a password is set, EVERY message must be encrypted — no mixing plain/encrypted.
-- Sample plain: `OWNUNIT;5E;01952384BD8D;66A3;R;;;53.32;8.11;0;5.5;21;22;;;FGS Bayern;sfspclff-------`
-- Sample encrypted (AES128 CFB, password `expressexpressex`):
-  `UdlsDIB4oeKiuU4PXtV9qCPrrk10yPFg38Bakm7oGVOOC3siuczsyg37+Q9eiDE1Z0qyaXQl4puRGdB0mpb1Vf6cfhj7n7270Gv/VjW5Ol8IAFJh`
+- Sample plain message: OWNUNIT;5E;01952384BD8D;66A3;R;;;53.32;8.11;0;5.5;21;22;;;FGS Bayern;sfspclff-------
+- Sample encrypted message (AES128, CFB, Password:expressexpressex, IV (Base64): DK7jhkjTxpnKhwAq+4/E7Q==
+  DK7jhkjTxpnKhwAq+4/E7anUbGwxToyk2a9GmUiPermSWUJHVVO64vwy/UJ+z8kCVAlB/KFb7UnsVHKVoZH/acq4N9f7SJd1d7eOHJLKePZlRT/nvRmh4nvTFbfApJPFi9QaCQ==
+
 
 ### 3.3 Compression
 - Optional. Apply BEFORE encryption (entropy!). Algorithm: deflate.
