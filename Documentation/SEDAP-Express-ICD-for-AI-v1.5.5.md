@@ -1,10 +1,10 @@
-# SEDAP-Express ICD v1.5.3 (AI-optimized reference)
+# SEDAP-Express ICD v1.5.5 (AI-optimized reference)
 
-Source: "SEDAP-Express ICD v1.5.3.docx". Content reproduced completely; formatting condensed for machine consumption.
+Source: "SEDAP-Express ICD v1.5.5.docx". Formatting is condensed for machine consumption. The KEYEXCHANGE section uses the current unified `PublicData` field. The algorithm- and phase-dependent payload semantics are defined explicitly below.
 
 ## 1. Scope
 
-SEDAP-Express is a fast, intentionally simple path to integrate applications, sensors, effectors etc. into the UNIITY ecosystem (also used standalone for tactical/telemetry data exchange). If demands grow, the "bigger" SEDAP API / UNIITY interface can be used. License: Simplified BSD (BSD-2-Clause). Resources/SDK: https://SEDAP.Express (also in common repositories).
+SEDAP-Express is a fast, intentionally simple path to integrate applications, sensors, effectors etc. into the UNIITY ecosystem but not only (also used standalone for tactical/telemetry data exchange). If demands grow, the "bigger" SEDAP API / UNIITY interface can be used. License: Simplified BSD (BSD-2-Clause). Resources/SDK: https://SEDAP.Express (also in common repositories).
 
 Glossary:
 - UNIITY = Unified, Networked Integration of Innovative TechnologY
@@ -46,22 +46,21 @@ Units/geodesy (apply to all messages):
 - Messages authenticated by filling the MAC header field using a shared password.
 - Password: pre-defined, or exchanged via Diffie-Hellman using KEYEXCHANGE (recommended: authenticate even KEYEXCHANGE with a pre-shared password).
 - MAC calculation: over the complete message incl. header, with an empty MAC field.
-- MAC may be truncated to first 4 bytes / 32 bits (saves data, reduces security).
-- Minimum: FIPS 140-2. Preferred:
-  - 32/256-bit HMAC with SHA256 (FIPS 198-1 / RFC 2104)
-  - 32/128-bit CMAC with AES128 (NIST SP 800-38B)
-  - 32/128-bit GMAC with AES128 (NIST SP 800-38D)
-- Recommended: Deterministic Random Bit Generator (NIST SP 800-90A/B) and appropriate Initialization Vectors (IV) 
-- Sample (32-bit CMAC, password `expressexpressex`):
+- A MAC may technically be truncated to 32 bits for legacy compatibility, but this is not recommended for security-sensitive use; prefer at least a 128-bit tag.
+- Use cryptographic modules validated under the applicable current requirements (FIPS 140-3 superseded FIPS 140-2). Preferred mechanisms:
+  - HMAC-SHA-256 (256-bit full tag; FIPS 198-1 / RFC 2104)
+  - AES-CMAC (128-bit tag; NIST SP 800-38B)
+  - AES-GMAC (128-bit tag; NIST SP 800-38D)
+- Recommended: a properly instantiated and seeded DRBG (NIST SP 800-90A; entropy sources are covered by SP 800-90B) and appropriate Initialization Vectors (IV). 
+- Legacy sample (32-bit CMAC; not recommended for security-sensitive use; password shown only as an example):
   `OWNUNIT;5E;0195236D151A;66A3;R;;DDA6B526;53.32;8.11;0;5.5;21;22;;;FGS Bayern`
 
 ### 3.2 Encryption
-- Optional; prefer VPN. Minimum FIPS 140-2. Preferred:
+- Optional; prefer VPN. Use appropriately validated cryptographic modules where required. Preferred:
   - AES128/256 CFB/NoPadding (NIST SP 800-38A)
   - AES128/256 CTR/NoPadding (NIST SP 800-38A)
-  - AES128/256 GCM/NoPadding (NIST SP 800-38A)
-  - XOR (pseudo-encryption, ONLY testing/debugging/light obfuscation)
-- Recommended: MAC DRBG (NIST SP 800-90A/B).
+  - AES128/256 GCM/NoPadding (NIST SP 800-38D)
+- Recommended: a properly instantiated and seeded DRBG (NIST SP 800-90A; entropy sources are covered by SP 800-90B).
 - Encrypted data must be BASE64-encoded; the **whole message incl. header** is encrypted.
 - AES-CTR / AES-CFB: The IV must be prepended to the ciphertext.
 - AES-GCM: The nonce must be prepended to the ciphertext, followed by the authentication tag.
@@ -499,31 +498,86 @@ TIMESYNC;12;;FE2A;U;;;0191C643A8AF
 ```
 
 ### 6.15 KEYEXCHANGE
-Key exchange via Diffie-Hellman-Merkle or post-quantum ML-KEM/FrodoKEM when no other channel (mail, telco) is available. Prefer ECDH or standard DH with MAC DRBG. If possible use MAC authentication for these messages, otherwise plausibility checks. The current Phase defines which fields are mandatory. Either side can restart by sending Phase=0 again; the other side then restarts the whole process incl. generating new key pairs (ECDH/ML-KEM/FrodoKEM). ECDH has NO phase 1. The process always ends with a finalization confirmation. Key derivation from a larger secret: PBKDF2 with HMACSHA256, 1 iteration, no salt → 128/256-bit key.
+
+Purpose: establish common keying material between two peers when no independent key-distribution channel is available. Supported mechanisms are finite-field Diffie-Hellman (DH), ECDH with BrainpoolP256r1, ML-KEM and FrodoKEM.
+
+**Security requirement:** unauthenticated DH, ECDH and KEM do not prevent man-in-the-middle attacks. Plausibility checks are not authentication. Authenticate the handshake transcript from Phase 0 onward with a pre-shared-key MAC or an authenticated signature/certificate mechanism. Phase 2 is a cryptographic key-confirmation exchange; a peer must not consider the exchange complete until it has verified the other peer's confirmation value.
+
+Either peer may restart the exchange by sending a new Phase 0. On restart, both peers discard all previous ephemeral private keys, public values, salts, KEM ciphertexts and derived keys, then generate fresh ephemeral material.
+
+#### Wire format
+
+The following field order is normative. Empty fields MUST retain their semicolon positions. There is exactly one algorithm-dependent binary field named `PublicData`; there is no separate `PublicKey` or `Encapsulation` field.
 
 ```
 KEYEXCHANGE;<HDR>;<Recipient>;<AlgorithmType>(M);<Phase>(M);
-<KeyLengthSharedSecret>(M*);<KeyLengthKEM>(M*);<Prime>(M*);<NaturalNumber>(M*);<InitialisationVector>(M*);<PublicVariable/Key>(M*)
+<AESKeyLength>(M*);<DHParameterLength>(M*);<Prime>(M*);<Generator>(M*);
+<Salt>(M*);<PublicData>(M*)
 ```
-`(M*)` = whether it is required depends on the phase and the type of algorithm.
 
-| Field | Values |
-|---|---|
-| AlgorithmType | 0=DH (1024/2048 bit, NIST SP 800-56A/B & 90A/B), 1=ECDH (BrainpoolP256r1, 1024/2048/4096 bit), 2=ML-KEM-512, 3=ML-KEM-768, 4=ML-KEM-1024, 5=FrodoKEM-640 (AES), 6=FrodoKEM-976 (AES), 7=FrodoKEM-1344 (AES) |
-| Phase | 0, 1, 2 — current step of the exchange. |
-| KeyLengthSharedSecret | 128 or 256 (bits, Phase 0). |
-| KeyLengthKEM | 1024, 2048 or 4096 (bits of DH/KEM key, Phase 0). |
-| Prime (p) | HexString, public prime (>3000 bits / 375 bytes) (Phase 0, DH only). |
-| NaturalNumber (g) | HexString, public natural number < p (Phase 0, DH only). |
-| InitialisationVector (IV) | HexString, IV (for AES CFB/CTR encryption only). |
-| PublicVariable/Key | BASE64, sender's public variable/key. |
+`(M*)` means that the field is required only for the applicable algorithm and phase, as defined below.
 
-Samples (fields shortened for readability):
-```
-KEYEXCHANGE;00;0191C643A8AF;89AD;U;;;FE2A;0;128;1024;7FFFFFFF;822460DE
-KEYEXCHANGE;00;0191C643A8AF;FE2A;U;;;89AD;1;128;2048;;6E6026EFF9D9EBEB9D4A973CB5C287DBD77D75EDDD2
-```
-(The ICD additionally shows DH-, ECDH- and ML-KEM/FrodoKEM sequence diagrams — graphics, not reproduced here.)
+| Field | Values / encoding | Applicability |
+|---|---|---|
+| Recipient | ASCII identifier | Optional destination peer identifier. |
+| AlgorithmType | `0`=DH, `1`=ECDH BrainpoolP256r1, `2`=ML-KEM-512, `3`=ML-KEM-768, `4`=ML-KEM-1024, `5`=FrodoKEM-976-AES, `6`=FrodoKEM-1344-AES | Mandatory in every phase. The KEM parameter set is selected by this value; no separate KEM key-length field is used. |
+| Phase | `0`, `1`, `2` | Mandatory. `0`=initial parameters/key material, `1`=algorithm-specific response, `2`=key confirmation/finalization. |
+| AESKeyLength | Decimal integer `128` or `256` (bits) | Phase 0 only; length of each derived AES key. |
+| DHParameterLength | Decimal integer `2048`, `3072` or `4096` (bits) | Phase 0, DH only. Must equal the bit length of `p`. |
+| Prime (`p`) | Positive hexadecimal integer, no `0x` prefix | Phase 0, DH only. Must belong to the selected approved finite-field DH group and have the bit length specified by `DHParameterLength`. |
+| Generator (`g`) | Positive hexadecimal integer, no `0x` prefix | Phase 0, DH only. Must be the generator belonging to the selected approved group. |
+| Salt | BASE64; exactly 32 decoded bytes in this profile | DH: Phase 1, each peer sends its own fresh salt. ECDH and KEM: Phase 0, sent with the initial public key. |
+| PublicData | BASE64-encoded algorithm-specific binary data | Meaning depends on `AlgorithmType` and `Phase`, as defined immediately below. |
+
+`PublicData` has the following meaning:
+
+| Algorithm | Phase | Content of `PublicData` |
+|---|---:|---|
+| DH | 0 | Empty. DH group parameters are carried by `DHParameterLength`, `Prime` and `Generator`. |
+| DH | 1 | Sender's public DH variable/value. |
+| ECDH | 0 | Initiator's BrainpoolP256r1 public key. |
+| ECDH | 1 | Responder's BrainpoolP256r1 public key. |
+| ML-KEM / FrodoKEM | 0 | KEM public key of the key-pair owner. |
+| ML-KEM / FrodoKEM | 1 | Encapsulation ciphertext generated by the peer that encapsulates to the Phase-0 public key. |
+| All algorithms | 2 | Empty. The key-confirmation value is carried in the header `MAC` field. |
+
+The receiver MUST interpret `PublicData` according to both `AlgorithmType` and `Phase`. It MUST NOT assume that this field always contains a public key: for KEM in Phase 1 it contains the encapsulation ciphertext. The binary representation is algorithm-specific; BASE64 is only the wire encoding.
+
+#### Phase and message flow
+
+| Algorithm | Phase 0 | Phase 1 | Phase 2 |
+|---|---|---|---|
+| DH | Initiator sends `AESKeyLength`, `DHParameterLength`, `p` and `g`. | Each peer sends its public DH value and its own fresh 32-byte `Salt`. | Both peers send key-confirmation messages. |
+| ECDH | Initiator generates a BrainpoolP256r1 key pair and a fresh 32-byte salt; sends its public key and salt in `PublicData` and `Salt`. | Responder generates a fresh BrainpoolP256r1 key pair and sends its public key in `PublicData`. | Both peers send key-confirmation messages. |
+| ML-KEM / FrodoKEM | Key-pair owner generates the KEM key pair and a fresh 32-byte salt; sends the public key in `PublicData` and the salt in `Salt`. | Other peer encapsulates to that public key and sends the resulting ciphertext in `PublicData`; the key-pair owner decapsulates it. | Both peers send key-confirmation messages. |
+
+For DH, label the Phase-1 salts by role: `SaltA` is the fresh salt sent by the initiator and `SaltB` is the fresh salt sent by the responder. Both sides calculate the combined HKDF salt as `SHA-256(SaltA || SaltB)`, where `||` is byte concatenation in that fixed initiator/responder order. Do not concatenate in local/remote order, since that order would differ between peers.
+
+For ECDH and KEM, both sides use the single 32-byte salt sent in Phase 0. For KEM, the Phase-1 `PublicData` is the encapsulation ciphertext, not a second public key.
+
+#### Shared-secret derivation
+
+1. Compute the raw shared secret `Z` using the negotiated mechanism: DH, ECDH, or KEM encapsulation/decapsulation.
+2. Derive AES key material with **HKDF-SHA-256**, using `Z` as input keying material, the agreed salt as HKDF salt, and a protocol-/algorithm-specific `info` value for domain separation.
+3. Output exactly 16 bytes for AES-128 or 32 bytes for AES-256, as selected by `AESKeyLength`.
+4. For bidirectional encrypted traffic, derive separate transmit and receive keys with distinct direction-specific `info` values. Do not reuse one AES-GCM key in both directions with independently starting nonce counters.
+5. Erase intermediate secret material when it is no longer needed.
+
+**Argon2id is reserved for password-based derivation**, where the input is a human/password secret. It is not the KDF for the high-entropy DH/ECDH/KEM shared secret; use HKDF-SHA-256 for that. Password-derived keys require a unique random salt and fixed, versioned Argon2id parameters.
+
+#### Key confirmation and authentication
+
+Phase 2 is sent by both peers after they have derived the key material. Each confirmation authenticates the negotiated transcript (at minimum: protocol/version, both peer identities and roles, `AlgorithmType`, Phase-0 parameters, public values or KEM public key and encapsulation ciphertext, all salts, and `AESKeyLength`) using a dedicated confirmation key derived from the shared secret. Include a role-specific label in the MAC input to prevent reflection. The confirmation value is placed in the header `MAC` field. A Phase-2 message without a valid confirmation MAC MUST NOT complete the exchange. Use a 128-bit confirmation tag (16 bytes, represented by 32 hexadecimal characters); do not truncate KEYEXCHANGE confirmation tags to 32 bits.
+
+When a pre-shared key is available, authenticate all handshake messages from Phase 0 onward with a MAC derived from that key. Otherwise use an authenticated signature/certificate mechanism. Plausibility checks alone do not authenticate the peer.
+
+#### Implementation notes
+
+- DH uses approved, predefined groups. The Java profile uses RFC 7919 FFDHE-2048, FFDHE-3072 and FFDHE-4096. Therefore `bitLength(p)` MUST equal `DHParameterLength`; do not describe `p` as strictly greater than 3000 bits while also allowing a 2048-bit group.
+- BrainpoolP256r1 has a fixed 256-bit curve size; DH modulus lengths do not apply to ECDH.
+- `PublicData` is represented as `byte[]` in the Java message object and encoded as BASE64 in the wire format. The Java message parser decodes BASE64; the application layer must interpret and validate the decoded bytes according to the negotiated algorithm and phase.
+- **Serialization caveat in the currently supplied Java class:** `toString()` currently omits `Recipient` and writes the enum names for `Phase`, `AESKeyLength` and `DHParameterLength` instead of their numeric wire values. The parser expects the numeric values and the field order defined above. Correct `toString()` before relying on message serialization or parser/serializer round trips.
+- The phase-2 MAC validation in the current Java constructor uses the shared `MAC_MATCHER`. Ensure that matcher enforces exactly 32 hexadecimal characters if the implementation is to enforce the 128-bit confirmation-tag requirement above.
 
 ## 7. REST-API (JSON)
 
