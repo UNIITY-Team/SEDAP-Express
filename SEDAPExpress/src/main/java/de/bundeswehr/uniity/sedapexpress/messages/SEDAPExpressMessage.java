@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -47,6 +47,8 @@ import java.util.stream.Collectors;
 import de.bundeswehr.uniity.sedapexpress.messages.COMMAND.PowerState;
 
 /**
+ * Defines the common SEDAP-Express message header, parsing and serialization behavior.
+ * 
  * @author Volker Voß
  */
 public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMessage>, Serializable {
@@ -58,19 +60,37 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 		SEDAPExpressMessage.logger.setLevel(Level.ALL);
 	}
 
+	/**
+	 * Defines the common SEDAP-Express message header, parsing and serialization behavior.
+	 */
 	public enum MessageType {
 
 		ACKNOWLEDGE, COMMAND, CONTACT, POINT, EMISSION, GENERIC, GRAPHIC, HEARTBEAT, KEYEXCHANGE, METEO, OWNUNIT, RESEND, STATUS, TEXT, TIMESYNC;
 
+		/**
+		 * Resolves the corresponding value from the supplied representation.
+		 * 
+		 * @param type value for type
+		 * @return the result of the operation
+		 */
 		public static MessageType valueOfMessageType(String type) {
 			return MessageType.valueOf(type.toUpperCase());
 		}
 	}
 
+	/**
+	 * Defines the common SEDAP-Express message header, parsing and serialization behavior.
+	 */
 	public enum DeleteFlag {
 
 		FALSE, TRUE;
 
+		/**
+		 * Returns the value of delete flag.
+		 * 
+		 * @param flag value for flag
+		 * @return the value of delete flag
+		 */
 		public static DeleteFlag getValueOfDeleteFlag(boolean flag) {
 
 			if (flag)
@@ -80,17 +100,28 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 		}
 	}
 
+	/**
+	 * Defines the common SEDAP-Express message header, parsing and serialization behavior.
+	 */
 	public enum DataEncoding {
 
 		NONE, BASE64;
 	}
 
+	/**
+	 * Defines the common SEDAP-Express message header, parsing and serialization behavior.
+	 */
 	public enum Classification {
 
 		None('-'), Public('P'), Unclas('U'), Restricted('R'), Confidential('C'), Secret('S'), Top_Secret('T');
 
 		char classification;
 
+		/**
+		 * Returns the classification.
+		 * 
+		 * @return the classification
+		 */
 		public char getClassification() {
 			return this.classification;
 		}
@@ -99,6 +130,12 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 			this.classification = classification;
 		}
 
+		/**
+		 * Returns the value of classification.
+		 * 
+		 * @param classification value for classification
+		 * @return the value of classification
+		 */
 		public static Classification getValueOfClassification(char classification) {
 
 			return switch (classification) {
@@ -113,6 +150,11 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 			};
 		}
 
+		/**
+		 * Returns the textual representation of this instance.
+		 * 
+		 * @return the result of the operation
+		 */
 		@Override
 		public String toString() {
 			return String.valueOf(this.classification);
@@ -143,6 +185,9 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	public static final Classification Geheim = Classification.Secret;
 	public static final Classification Streng_Geheim = Classification.Top_Secret;
 
+	/**
+	 * Defines the common SEDAP-Express message header, parsing and serialization behavior.
+	 */
 	public enum Acknowledgement {
 
 		FALSE, TRUE;
@@ -155,10 +200,10 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	public static final Pattern NAME_MATCHER = Pattern.compile("^[a-zA-Z]+$"); // Name
 	public static final Pattern NUMBER_MATCHER = Pattern.compile("^[0-7][0-9A-F]$"); // Number 00-7F
 	public static final Pattern TIME_MATCHER = Pattern.compile("^[A-Fa-f0-9]{8,16}$"); // Time
-	public static final Pattern MAC_MATCHER = Pattern.compile("^[A-Fa-f0-9]{1,32}$"); // HexNumber
+	public static final Pattern MAC_MATCHER = Pattern.compile("^(?:[A-Fa-f0-9]{8}|[A-Fa-f0-9]{32}|[A-Fa-f0-9]{64})$"); // Supported 32/128/256-bit MAC values
 	public static final Pattern CLASSIFICATION_MATCHER = Pattern.compile("^[P,U,R,C,S,T]{1}$");
-	public static final Pattern HEXNUMBER_MATCHER = SEDAPExpressMessage.MAC_MATCHER;
-	public static final Pattern TEXTTYPE_MATCHER = Pattern.compile("^[0-4]$"); // Text type
+	public static final Pattern HEXNUMBER_MATCHER = Pattern.compile("^[A-Fa-f0-9]+$");
+	public static final Pattern TEXTTYPE_MATCHER = Pattern.compile("^0?[0-4]$"); // Text type (one or two decimal digits)
 
 	public static final Pattern DOUBLE_MATCHER = Pattern.compile("^-?\\d+.?\\d*$"); // Double
 	public static final Pattern POSITIVE_DOUBLE_MATCHER = Pattern.compile("^\\d+.?\\d*$"); // Double
@@ -175,7 +220,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	public static final Pattern ICAO_MATCHER = Pattern.compile("^[A-F0-9]{1,6}$"); // ICAO
 	public static final Pattern SOURCE_MATCHER = Pattern.compile("^[R,A,I,S,E,O,Y,M]+$"); // Source type
 	public static final Pattern CMDTYPE_MATCHER = Pattern.compile("^[A-Fa-f0-9]+$"); // Command type
-	public static final Pattern GRAPHICTYPE_MATCHER = Pattern.compile("^[0-9]$"); // Graphic type
+	public static final Pattern GRAPHICTYPE_MATCHER = Pattern.compile("^(?:0[0-9A-Ba-b]|[0-9])$"); // Graphic type (hexadecimal)
 	public static final Pattern RGBA_MATCHER = Pattern.compile("^[0-9A-F]{6,8}$"); // RGBA Format
 	public static final Pattern TECSTATUS_MATCHER = Pattern.compile("^[0-5]$"); // TecStatus
 	public static final Pattern OPSSTATUS_MATCHER = Pattern.compile("^[0-4]$"); // OpsStatus
@@ -183,6 +228,13 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	public static final Pattern DATA_ENCODING_MATCHER = Pattern.compile("^BASE64$|^NONE$");
 	public static final Pattern CONTENT_TYPE_MATCHER = Pattern.compile("^SEDAP$|^ASCII$|^NMEA$|^XML$|^JSON$|^BINARY$");
 
+	/**
+	 * Indicates whether the matches pattern condition is satisfied.
+	 * 
+	 * @param pattern value for pattern
+	 * @param value   value for value
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	public static boolean matchesPattern(Pattern pattern, String value) {
 		return pattern.matcher(value).matches();
 	}
@@ -199,73 +251,205 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 
 	private String mac;
 
+	/** Original serialized input retained for MAC verification without canonical re-serialization. */
+	private transient String receivedWireText;
+	private transient String receivedCanonicalText;
+
+	/**
+	 * Returns the number.
+	 * 
+	 * @return the number
+	 */
 	public Byte getNumber() {
 		return this.number;
 	}
 
+	/**
+	 * Sets the number.
+	 * 
+	 * @param number value for number
+	 */
 	public void setNumber(Byte number) {
 		this.number = number;
 	}
 
+	/**
+	 * Returns the time.
+	 * 
+	 * @return the time
+	 */
 	public Long getTime() {
 		return this.time;
 	}
 
+	/**
+	 * Sets the time.
+	 * 
+	 * @param time value for time
+	 */
 	public void setTime(Long time) {
 		this.time = time;
 	}
 
+	/**
+	 * Returns the sender.
+	 * 
+	 * @return the sender
+	 */
 	public String getSender() {
 		return this.sender;
 	}
 
+	/**
+	 * Sets the sender.
+	 * 
+	 * @param sender value for sender
+	 */
 	public void setSender(String sender) {
 		this.sender = sender;
 	}
 
+	/**
+	 * Returns the classification.
+	 * 
+	 * @return the classification
+	 */
 	public Classification getClassification() {
 		return this.classification;
 	}
 
+	/**
+	 * Sets the classification.
+	 * 
+	 * @param classification value for classification
+	 */
 	public void setClassification(Classification classification) {
 		this.classification = classification;
 	}
 
+	/**
+	 * Returns the acknowledgement.
+	 * 
+	 * @return the acknowledgement
+	 */
 	public Acknowledgement getAcknowledgement() {
 		return this.acknowledgement;
 	}
 
+	/**
+	 * Sets the acknowledgement.
+	 * 
+	 * @param acknowledgement value for acknowledgement
+	 */
 	public void setAcknowledgement(Acknowledgement acknowledgement) {
 		this.acknowledgement = acknowledgement;
 	}
 
+	/**
+	 * Returns the mac.
+	 * 
+	 * @return the mac
+	 */
 	public String getMAC() {
 		return this.mac;
 	}
 
+	/**
+	 * Returns the exact wire text used to deserialize this instance, or {@code null} if it was created locally.
+	 *
+	 * @return original serialized input, without modification
+	 */
+	public final String getReceivedWireText() {
+		return this.receivedWireText;
+	}
+
+	/**
+	 * Returns the canonical serialization captured immediately after deserialization.
+	 * It allows MAC verification to detect later field modifications without changing the message.
+	 *
+	 * @return canonical parsed representation, or {@code null} for locally created messages
+	 */
+	public final String getReceivedCanonicalText() {
+		return this.receivedCanonicalText;
+	}
+
+	/**
+	 * Sets the mac.
+	 * 
+	 * @param mac value for mac
+	 */
 	public void setMAC(String mac) {
 		this.mac = mac;
 	}
 
+	/**
+	 * Returns the message type.
+	 * 
+	 * @return the message type
+	 */
 	public MessageType getMessageType() {
 		return MessageType.valueOfMessageType(this.getClass().getSimpleName());
 	}
 
+	/**
+	 * Returns the result of the compare to operation.
+	 * 
+	 * @param otherMessage value for other message
+	 * @return the result of the operation
+	 */
 	@Override
 	public int compareTo(final SEDAPExpressMessage otherMessage) {
 
 		return this.getClass().getSimpleName().compareTo(otherMessage.getClass().getSimpleName());
 	}
 
-	@Override
-	public boolean equals(final Object obj) {
-
-		return super.equals(obj);
+	/**
+	 * Returns the canonical wire representation used for message equality.
+	 * Empty fields and fields omitted because they have their protocol default
+	 * therefore compare equal. A null result indicates an invalid/incomplete
+	 * object whose serializer cannot produce a wire representation.
+	 */
+	/**
+	 * Returns the canonical serialized representation used for equality and hashing.
+	 * 
+	 * @return canonical message text, or {@code null} if serialization fails
+	 */
+	protected final String equalityKey() {
+		try {
+			return toString();
+		} catch (RuntimeException exception) {
+			return null;
+		}
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * 
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
+	}
+
+	/**
+	 * Returns the hash code for this instance.
+	 * 
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
 	/**
@@ -356,7 +540,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	/**
 	 * Returns the textual representation of the given classification code.
 	 *
-	 * @param classification
+	 * @param classification value for classification
 	 * @return the matching textual representation
 	 */
 	public static String getClassificationFullNameFromClassification(final Classification classification) {
@@ -618,6 +802,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	}
 
 	/**
+	 * Returns the string from list.
 	 *
 	 * @param list List of elements
 	 * @return String with #-separated list elements
@@ -631,6 +816,12 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 		return str.toString();
 	}
 
+	/**
+	 * Returns the result of the object to csv operation.
+	 * 
+	 * @param obj value for obj
+	 * @return the result of the operation
+	 */
 	public static String objectToCSV(Object obj) {
 
 		if (obj == null)
@@ -696,7 +887,7 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 					\n
 				***************************************************
 				***************************************************
-				**   SEDAP-Express v1.5.3 (November 5th, 2026)   **
+				**   SEDAP-Express v1.5.5 (November 23th, 2026)  **
 				**    Licensed under the BSD-2-clause License    **
 				** (C)2024-2026, Federal Armed Forces of Germany **
 				***************************************************
@@ -704,13 +895,14 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	}
 
 	/**
+	 * Initializes the common SEDAP-Express message header.
 	 *
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac             Message Authentification Code
+	 * @param number          message sequence number
+	 * @param time            message timestamp
+	 * @param sender          sender identifier
+	 * @param classification  information classification
+	 * @param acknowledgement acknowledgement flag
+	 * @param mac             message authentication code, or {@code null} when absent
 	 */
 	protected SEDAPExpressMessage(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
 		super();
@@ -723,9 +915,9 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 	}
 
 	/**
-	 * Deserializes the header of a serialized SEDAP-Express message.
+	 * Parses the common header fields from the remaining serialized message fields.
 	 *
-	 * @param message
+	 * @param message iterator positioned at the first common-header field
 	 */
 	protected SEDAPExpressMessage(Iterator<String> message) {
 
@@ -839,7 +1031,10 @@ public abstract class SEDAPExpressMessage implements Comparable<SEDAPExpressMess
 				Constructor<?> constructor = SEDAPExpressMessage.messageNameToConstructor.get(messageArray.next());
 
 				if (constructor != null) {
-					return (SEDAPExpressMessage) constructor.newInstance(messageArray);
+					SEDAPExpressMessage message = (SEDAPExpressMessage) constructor.newInstance(messageArray);
+					message.receivedWireText = receivedMessage;
+					message.receivedCanonicalText = message.toString();
+					return message;
 				} else {
 					return null;
 				}

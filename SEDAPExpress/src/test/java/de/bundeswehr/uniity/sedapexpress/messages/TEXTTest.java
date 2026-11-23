@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -38,125 +38,124 @@ import de.bundeswehr.uniity.sedapexpress.messages.TEXT.TextType;
 
 class TEXTTest {
 
-    @Test
-    final void testConstructorValues() {
+	@Test
+	final void testConstructorValues() {
 
-	final TEXT text = new TEXT((byte) 55, 641244434L, "8F3A", Classification.Secret, Acknowledgement.TRUE, "4389F10D", "ORKA", TextType.Chat, DataEncoding.NONE, "TESTTEST", "5533");
+		final TEXT text = new TEXT((byte) 55, 641244434L, "8F3A", Classification.Secret, Acknowledgement.TRUE, "4389F10D", "ORKA", TextType.Chat, DataEncoding.NONE, "TESTTEST", "5533");
 
-	Assertions.assertEquals((byte) 55, text.getNumber());
-	Assertions.assertEquals(641244434L, text.getTime());
-	Assertions.assertEquals("8F3A", text.getSender());
-	Assertions.assertEquals(Classification.Secret, text.getClassification());
-	Assertions.assertEquals(Acknowledgement.TRUE, text.getAcknowledgement());
-	Assertions.assertEquals("4389F10D", text.getMAC());
-	Assertions.assertEquals("ORKA", text.getRecipient());
-	Assertions.assertEquals(TextType.Chat, text.getType());
-	Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
-	Assertions.assertEquals("TESTTEST", text.getTextContent());
-	Assertions.assertEquals("5533", text.getReference());
-    }
+		Assertions.assertEquals((byte) 55, text.getNumber());
+		Assertions.assertEquals(641244434L, text.getTime());
+		Assertions.assertEquals("8F3A", text.getSender());
+		Assertions.assertEquals(Classification.Secret, text.getClassification());
+		Assertions.assertEquals(Acknowledgement.TRUE, text.getAcknowledgement());
+		Assertions.assertEquals("4389F10D", text.getMAC());
+		Assertions.assertEquals("ORKA", text.getRecipient());
+		Assertions.assertEquals(TextType.Chat, text.getType());
+		Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
+		Assertions.assertEquals("TESTTEST", text.getTextContent());
+		Assertions.assertEquals("5533", text.getReference());
+	}
 
-    @Test
-    final void testConstructorString() {
+	@Test
+	final void testConstructorString() {
 
-	String message = "TEXT;13;661D44D2;324E;S;TRUE;;;1;NONE;\"This is an alert!\"";
+		String message = "TEXT;13;661D44D2;324E;S;TRUE;;;1;NONE;\"This is an alert!\"";
 
-	TEXT text = new TEXT(message);
+		TEXT text = new TEXT(message);
 
-	Assertions.assertEquals((byte) 0x13, text.getNumber());
-	Assertions.assertEquals(0x661D44D2L, text.getTime());
-	Assertions.assertEquals("324E", text.getSender());
-	Assertions.assertEquals(Classification.Secret, text.getClassification());
-	Assertions.assertEquals(Acknowledgement.TRUE, text.getAcknowledgement());
-	Assertions.assertNull(text.getMAC());
-	Assertions.assertNull(text.getRecipient());
-	Assertions.assertEquals(TextType.Alert, text.getType());
-	Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
-	Assertions.assertEquals("\"This is an alert!\"", text.getTextContent());
-	Assertions.assertNull(text.getReference());
+		Assertions.assertEquals((byte) 0x13, text.getNumber());
+		Assertions.assertEquals(0x661D44D2L, text.getTime());
+		Assertions.assertEquals("324E", text.getSender());
+		Assertions.assertEquals(Classification.Secret, text.getClassification());
+		Assertions.assertEquals(Acknowledgement.TRUE, text.getAcknowledgement());
+		Assertions.assertNull(text.getMAC());
+		Assertions.assertNull(text.getRecipient());
+		Assertions.assertEquals(TextType.Alert, text.getType());
+		Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
+		Assertions.assertEquals("\"This is an alert!\"", text.getTextContent());
+		Assertions.assertNull(text.getReference());
 
-	message = "TEXT;74;661D458E;324E;C;TRUE;;;2;NONE;\"This is a warning!\"";
+		message = "TEXT;74;661D458E;324E;C;TRUE;;;2;NONE;\"This is a warning!\"";
 
-	text = new TEXT(message);
+		text = new TEXT(message);
 
-	Assertions.assertEquals((byte) 0x74, text.getNumber());
-	Assertions.assertEquals(0x661D458EL, text.getTime());
-	Assertions.assertEquals("324E", text.getSender());
-	Assertions.assertEquals(Classification.Confidential, text.getClassification());
-	Assertions.assertEquals(Acknowledgement.TRUE, text.getAcknowledgement());
-	Assertions.assertNull(text.getMAC());
-	Assertions.assertNull(text.getRecipient());
-	Assertions.assertEquals(TextType.Warning, text.getType());
-	Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
-	Assertions.assertEquals("\"This is a warning!\"", text.getTextContent());
-	Assertions.assertNull(text.getReference());
+		Assertions.assertEquals((byte) 0x74, text.getNumber());
+		Assertions.assertEquals(0x661D458EL, text.getTime());
+		Assertions.assertEquals("324E", text.getSender());
+		Assertions.assertEquals(Classification.Confidential, text.getClassification());
+		Assertions.assertEquals(Acknowledgement.TRUE, text.getAcknowledgement());
+		Assertions.assertNull(text.getMAC());
+		Assertions.assertNull(text.getRecipient());
+		Assertions.assertEquals(TextType.Warning, text.getType());
+		Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
+		Assertions.assertEquals("\"This is a warning!\"", text.getTextContent());
+		Assertions.assertNull(text.getReference());
 
-	message = "TEXT;15;661D6565;324E;R;;;;3;;\"This is a notice!\";1133";
+		message = "TEXT;15;661D6565;324E;R;;;;3;;\"This is a notice!\";1133";
 
-	text = new TEXT(message);
+		text = new TEXT(message);
 
-	Assertions.assertEquals((byte) 0x15, text.getNumber());
-	Assertions.assertEquals(0x661D6565L, text.getTime());
-	Assertions.assertEquals("324E", text.getSender());
-	Assertions.assertEquals(Classification.Restricted, text.getClassification());
-	Assertions.assertEquals(Acknowledgement.FALSE, text.getAcknowledgement());
-	Assertions.assertNull(text.getMAC());
-	Assertions.assertNull(text.getRecipient());
-	Assertions.assertEquals(TextType.Notice, text.getType());
-	Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
-	Assertions.assertEquals("\"This is a notice!\"", text.getTextContent());
-	Assertions.assertEquals("1133", text.getReference());
+		Assertions.assertEquals((byte) 0x15, text.getNumber());
+		Assertions.assertEquals(0x661D6565L, text.getTime());
+		Assertions.assertEquals("324E", text.getSender());
+		Assertions.assertEquals(Classification.Restricted, text.getClassification());
+		Assertions.assertEquals(Acknowledgement.FALSE, text.getAcknowledgement());
+		Assertions.assertNull(text.getMAC());
+		Assertions.assertNull(text.getRecipient());
+		Assertions.assertEquals(TextType.Notice, text.getType());
+		Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
+		Assertions.assertEquals("\"This is a notice!\"", text.getTextContent());
+		Assertions.assertEquals("1133", text.getReference());
 
-	message = "TEXT;26;661D7032;324E;U;;;E4F1;4;BASE64;IlRoaXMgaXMgYSBjaGF0IG1lc3NhZ2UhIg==";
+		message = "TEXT;26;661D7032;324E;U;;;E4F1;4;BASE64;IlRoaXMgaXMgYSBjaGF0IG1lc3NhZ2UhIg==";
 
-	text = new TEXT(message);
+		text = new TEXT(message);
 
-	Assertions.assertEquals((byte) 0x26, text.getNumber());
-	Assertions.assertEquals(0x661D7032L, text.getTime());
-	Assertions.assertEquals("324E", text.getSender());
-	Assertions.assertEquals(Classification.Unclas, text.getClassification());
-	Assertions.assertEquals(Acknowledgement.FALSE, text.getAcknowledgement());
-	Assertions.assertNull(text.getMAC());
-	Assertions.assertEquals("E4F1", text.getRecipient());
-	Assertions.assertEquals(TextType.Chat, text.getType());
-	Assertions.assertEquals(DataEncoding.BASE64, text.getEncoding());
-	Assertions.assertEquals("\"This is a chat message!\"", text.getTextContent());
-	Assertions.assertNull(text.getReference());
-    }
+		Assertions.assertEquals((byte) 0x26, text.getNumber());
+		Assertions.assertEquals(0x661D7032L, text.getTime());
+		Assertions.assertEquals("324E", text.getSender());
+		Assertions.assertEquals(Classification.Unclas, text.getClassification());
+		Assertions.assertEquals(Acknowledgement.FALSE, text.getAcknowledgement());
+		Assertions.assertNull(text.getMAC());
+		Assertions.assertEquals("E4F1", text.getRecipient());
+		Assertions.assertEquals(TextType.Chat, text.getType());
+		Assertions.assertEquals(DataEncoding.BASE64, text.getEncoding());
+		Assertions.assertEquals("\"This is a chat message!\"", text.getTextContent());
+		Assertions.assertNull(text.getReference());
+	}
 
-    @Test
-    final void testConstructorIterator() {
+	@Test
+	final void testConstructorIterator() {
 
-	Iterator<String> it = Arrays.asList("55", "1B351C87", "5BCD", "S", "TRUE", "4389F10D", "7D31", "3", "NONE", "10.0.0.1").iterator();
+		Iterator<String> it = Arrays.asList("55", "1B351C87", "5BCD", "S", "TRUE", "4389F10D", "7D31", "3", "NONE", "10.0.0.1").iterator();
 
-	final TEXT text = new TEXT(it);
+		final TEXT text = new TEXT(it);
 
-	Assertions.assertEquals((byte) 0x55, text.getNumber());
-	Assertions.assertEquals(0x1B351C87L, text.getTime());
-	Assertions.assertEquals("5BCD", text.getSender());
-	Assertions.assertEquals(Classification.Secret, text.getClassification());
-	Assertions.assertEquals(Acknowledgement.TRUE, text.getAcknowledgement());
-	Assertions.assertEquals("4389F10D", text.getMAC());
-	Assertions.assertEquals(TEXT.TextType.Notice, text.getType());
-	Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
-	Assertions.assertEquals("10.0.0.1", text.getTextContent());
-	Assertions.assertEquals("7D31", text.getRecipient());
-	Assertions.assertNull(text.getReference());
+		Assertions.assertEquals((byte) 0x55, text.getNumber());
+		Assertions.assertEquals(0x1B351C87L, text.getTime());
+		Assertions.assertEquals("5BCD", text.getSender());
+		Assertions.assertEquals(Classification.Secret, text.getClassification());
+		Assertions.assertEquals(Acknowledgement.TRUE, text.getAcknowledgement());
+		Assertions.assertEquals("4389F10D", text.getMAC());
+		Assertions.assertEquals(TEXT.TextType.Notice, text.getType());
+		Assertions.assertEquals(DataEncoding.NONE, text.getEncoding());
+		Assertions.assertEquals("10.0.0.1", text.getTextContent());
+		Assertions.assertEquals("7D31", text.getRecipient());
+		Assertions.assertNull(text.getReference());
 
-    }
+	}
 
-    @Test
-    final void testSamplesFromDocu() {
+	@Test
+	final void testSamplesFromDocu() {
 
-	String[] messages = new String[] {
-		"TEXT;78;0195238E25AD;324E;S;TRUE;;;1;NONE;\"This is an alert!\";1000",
-		"TEXT;79;0195238E25CC;324E;C;TRUE;;;2;NONE;\"This is a warning!\"",
-		"TEXT;7A;0195238E25EF;324E;R;;;;3;NONE;\"This is a notice!\"",
-		"TEXT;7B;0195238E285B;324E;U;;;ORKA;4;BASE64;IlRoaXMgaXMgYSBjaGF0IG1lc3NhZ2UhIg=="
-	};
+		String[] messages = new String[] {
+				"TEXT;78;0195238E25AD;324E;S;TRUE;;;01;NONE;\"This is an alert!\";1000",
+				"TEXT;79;0195238E25CC;324E;C;TRUE;;;02;NONE;\"This is a warning!\"",
+				"TEXT;7A;0195238E25EF;324E;R;;;;03;NONE;\"This is a notice!\"",
+				"TEXT;7B;0195238E285B;324E;U;;;ORKA;04;BASE64;IlRoaXMgaXMgYSBjaGF0IG1lc3NhZ2UhIg==" };
 
-	Arrays.asList(messages).forEach(msg -> Assertions.assertEquals(msg, new TEXT(msg).toString()));
+		Arrays.asList(messages).forEach(msg -> Assertions.assertEquals(msg, new TEXT(msg).toString()));
 
-    }
+	}
 
 }

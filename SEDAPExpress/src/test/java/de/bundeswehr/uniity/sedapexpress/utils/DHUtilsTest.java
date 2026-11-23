@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -33,22 +33,25 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
-import java.util.HexFormat;
 
 import javax.crypto.spec.DHParameterSpec;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.AESKeyLength;
-import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.DHKEMKeyLength;
+import de.bundeswehr.uniity.sedapexpress.messages.KEYEXCHANGE.AESKeyLength;
+import de.bundeswehr.uniity.sedapexpress.messages.KEYEXCHANGE.DHParameterLength;
 
 class DHUtilsTest {
 
 	@Test
-	void testDHKeyExchange() throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
+	void testDHKeyExchangeHKDFSHA256()
+			throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
 
-		for (DHKEMKeyLength keyLengthDHKEM : DHKEMKeyLength.values()) {
+		byte[] salt = new byte[32];
+		EncryptionUtils.random.nextBytes(salt);
+
+		for (DHParameterLength keyLengthDHKEM : DHParameterLength.values()) {
 
 			for (AESKeyLength keyLengthSharedSecret : AESKeyLength.values()) {
 
@@ -66,26 +69,16 @@ class DHUtilsTest {
 				KeyPair serverKeyPair = DHUtils.generateKeyPair(parameterSpecsClient);
 
 				// Client
-				byte[] secretClient = DHUtils.getSharedSecretKey(clientKeyPair.getPrivate(), serverKeyPair.getPublic(), keyLengthSharedSecret);
+				byte[] secretClient = DHUtils.getSharedSecretKeyHKDFSHA256(clientKeyPair.getPrivate(), serverKeyPair.getPublic(), keyLengthSharedSecret, salt);
 
 				// Server
-				byte[] secretServer = DHUtils.getSharedSecretKey(serverKeyPair.getPrivate(), clientKeyPair.getPublic(), keyLengthSharedSecret);
+				byte[] secretServer = DHUtils.getSharedSecretKeyHKDFSHA256(serverKeyPair.getPrivate(), clientKeyPair.getPublic(), keyLengthSharedSecret, salt);
 
+				Assertions.assertEquals(keyLengthSharedSecret.getIntValue() / 8, secretClient.length,
+						"The derived key must have the negotiated AES key length.");
 				Assertions.assertArrayEquals(secretClient, secretServer);
-
-				System.out.println();
-				System.out.println();
-				System.out.println("Key length for DH:        " + keyLengthDHKEM.getIntValue());
-				System.out.println("p:                        " + p);
-				System.out.println("g:                        " + g);
-				System.out.println();
-				System.out.println("Public key client:        " + HexFormat.of().withUpperCase().formatHex(clientKeyPair.getPublic().getEncoded()));
-				System.out.println("Public key server:        " + HexFormat.of().withUpperCase().formatHex(serverKeyPair.getPublic().getEncoded()));
-				System.out.println();
-				System.out.println("Key length shared secret: " + keyLengthSharedSecret.getIntValue());
-				System.out.println("Shared secret client:     " + HexFormat.of().withUpperCase().formatHex(secretClient));
-				System.out.println("Shared secret sever:      " + HexFormat.of().withUpperCase().formatHex(secretServer));
 			}
 		}
 	}
+
 }

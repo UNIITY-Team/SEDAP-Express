@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
+ * Represents or provides the command functionality.
  * 
  * @author Volker Voß
  *
@@ -42,9 +43,17 @@ public class COMMAND extends SEDAPExpressMessage {
 
 	private static final long serialVersionUID = -5662357406861380560L;
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public enum PowerState {
 		ON, OFF;
 
+	/**
+	 * Resolves the corresponding value from the supplied representation.
+	 * @param input value for input
+	 * @return the result of the operation
+	 */
 		public static PowerState parseState(String input) {
 			if (input == null)
 				return OFF;
@@ -56,12 +65,19 @@ public class COMMAND extends SEDAPExpressMessage {
 		}
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public enum CommandFlag {
 
 		Add((byte) 0), Replace((byte) 1), CancelLast((byte) 2), CancelAll((byte) 3);
 
 		byte flag;
 
+	/**
+	 * Returns the flag value.
+	 * @return the flag value
+	 */
 		public byte getFlagValue() {
 
 			return this.flag;
@@ -71,6 +87,11 @@ public class COMMAND extends SEDAPExpressMessage {
 			this.flag = flag;
 		}
 
+	/**
+	 * Resolves the corresponding value from the supplied representation.
+	 * @param type value for type
+	 * @return the result of the operation
+	 */
 		public static CommandFlag valueOfCommandFlag(byte type) {
 
 			return switch (type) {
@@ -82,6 +103,10 @@ public class COMMAND extends SEDAPExpressMessage {
 			};
 		}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 		@Override
 		public String toString() {
 			return String.valueOf(this.flag);
@@ -89,6 +114,9 @@ public class COMMAND extends SEDAPExpressMessage {
 
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public enum CommandType {
 
 		// 00 Group: System & Basics
@@ -128,6 +156,10 @@ public class COMMAND extends SEDAPExpressMessage {
 			this.type = type;
 		}
 
+	/**
+	 * Returns the type value.
+	 * @return the type value
+	 */
 		public byte getTypeValue() {
 			return this.type;
 		}
@@ -135,11 +167,17 @@ public class COMMAND extends SEDAPExpressMessage {
 		/**
 		 * Ermittelt den CommandType anhand des Byte-Wertes. Liefert GenericAction
 		 * zurück, falls der Wert unbekannt ist.
+ * @param type value for type
+ * @return the result of the operation
 		 */
 		public static CommandType valueOfCommandType(byte type) {
 			return CommandType.LOOKUP.getOrDefault(type, GenericAction);
 		}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 		@Override
 		public String toString() {
 			return String.valueOf(this.type);
@@ -147,189 +185,424 @@ public class COMMAND extends SEDAPExpressMessage {
 
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public enum CameraMode {
 		DL, // Day Light
 		IR, // Infra Red
 		LI // Light Intensifier
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public interface CommandObject {
 	};
 
 	// 00 Group: System & Basics
+/**
+ * Carries the parameters for the PowerOff command.
+  * @param powerOnTimestamp power on timestamp value.
+ */
 	public record PowerOff(long powerOnTimestamp) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record Restart() implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param wakeupTimestamp wakeup timestamp value.
+ */
 	public record Standby(long wakeupTimestamp) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param ntpServer ntp server value.
+ */
 	public record SyncTime(String ntpServer) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record CalibrateGyro() implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record CalibrateCompass() implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record SendStatus() implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record SetManualMode() implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record SetSemiAutonomousMode() implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record SetAutonomousMode() implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record SetFailsafeMode() implements CommandObject {
 	}
 
 	// 10 Group: Propulsion & Hardware
+/**
+ * Represents or provides the command functionality.
+ */
 	public record StartEngine() implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record TestEngine() implements CommandObject {
 	}
 
 	/**
+ * Represents or provides the set engine power functionality.
 	 * @param powerLevel 0-100%
 	 */
 	public record SetEnginePower(Double powerLevel) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record StopEngine() implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record StopMovement() implements CommandObject {
 	}
 
 	/**
+ * Represents or provides the toggle lights functionality.
 	 * @param brightness 0-100%
-	 */
+	  * @param powerState power state value.
+  * @param strobePeriod strobe period value.
+ */
 	public record ToggleLights(PowerState powerState, Double brightness, Double strobePeriod) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record DeployParachute() implements CommandObject {
 	}
 
 	// 20 Group: Navigation & Movement
+/**
+ * Represents or provides the command functionality.
+  * @param headingAngle heading angle value.
+ */
 	public record SetHeading(Double headingAngle) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param altitude altitude value.
+ */
 	public record SetAltitude(Double altitude) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param speed speed value.
+ */
 	public record SetSpeed(Double speed) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param heading heading value.
+  * @param roll roll value.
+  * @param pitch pitch value.
+ */
 	public record Rotate(Double heading, Double roll, Double pitch) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param latitude latitude value.
+  * @param longitude longitude value.
+  * @param altitude altitude value.
+  * @param tolerance tolerance value.
+  * @param timestamp timestamp value.
+ */
 	public record MoveTo(Double latitude, Double longitude, Double altitude, Double tolerance, Long timestamp) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param contactId contact id value.
+ */
 	public record FollowContact(String contactId) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param tolerance tolerance value.
+  * @param timestamp timestamp value.
+ */
 	public record ReturnHome(Double tolerance, long timestamp) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param latitude latitude value.
+  * @param longitude longitude value.
+  * @param altitude altitude value.
+  * @param tolerance tolerance value.
+ */
 	public record SetHomeLocation(Double latitude, Double longitude, Double altitude, Double tolerance) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param latitude latitude value.
+  * @param longitude longitude value.
+  * @param direction direction value.
+ */
 	public record TakeOff(Double latitude, Double longitude, Double direction) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param latitude latitude value.
+  * @param longitude longitude value.
+  * @param direction direction value.
+ */
 	public record Land(Double latitude, Double longitude, Double direction) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param depth depth value.
+ */
 	public record Submerge(Double depth) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record Surface() implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param latitude latitude value.
+  * @param longitude longitude value.
+  * @param direction direction value.
+ */
 	public record Dock(Double latitude, Double longitude, Double direction) implements CommandObject {
 	}
 
 	// 30 Group: Mission & Sensors
+/**
+ * Represents or provides the command functionality.
+  * @param latitude latitude value.
+  * @param longitude longitude value.
+  * @param altitude altitude value.
+  * @param radius radius value.
+ */
 	public record Loiter(Double latitude, Double longitude, Double altitude, Double radius) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param latitude latitude value.
+  * @param longitude longitude value.
+  * @param altitude altitude value.
+ */
 	public record Scan(Double latitude, Double longitude, Double altitude) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param latitude1 latitude1 value.
+  * @param lon1 lon1 value.
+  * @param latitude2 latitude2 value.
+  * @param lon2 lon2 value.
+  * @param altitude altitude value.
+  * @param rotation rotation value.
+ */
 	public record ScanArea(Double latitude1, Double lon1, Double latitude2, Double lon2, Double altitude, Double rotation) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param cameraId camera id value.
+ */
 	public record TakePhoto(String cameraId) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param cameraId camera id value.
+  * @param powerState power state value.
+  * @param duration duration value.
+ */
 	public record RecordVideo(String cameraId, PowerState powerState, Integer duration) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param cameraId camera id value.
+  * @param powerState power state value.
+ */
 	public record StreamVideo(String cameraId, PowerState powerState) implements CommandObject {
 	}
 
 	/**
+ * Represents or provides the set camera parameters functionality.
 	 * 
 	 * @param zoom 0-100%
 	 *
-	 */
+	  * @param cameraId camera id value.
+  * @param mode mode value.
+ */
 	public record SetCameraParameters(String cameraId, Double zoom, CameraMode mode) implements CommandObject {
 	} // Mode: DayLight, InfraRed, etc.
 
+/**
+ * Represents or provides the command functionality.
+  * @param cameraId camera id value.
+  * @param azimuth azimuth value.
+  * @param elevation elevation value.
+ */
 	public record SetOrientationOfCamera(String cameraId, Double azimuth, Double elevation) implements CommandObject {
 	}
 
 	// 40 Groupe: Actuatorics
+/**
+ * Represents or provides the command functionality.
+  * @param actuatorId actuator id value.
+ */
 	public record ActuatorCheck(String actuatorId) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param actuatorId actuator id value.
+  * @param azimuth azimuth value.
+  * @param elevation elevation value.
+ */
 	public record SetOrientationOfActuator(String actuatorId, Double azimuth, Double elevation) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param actuatorId actuator id value.
+ */
 	public record ActuatorPickUpObject(String actuatorId) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param actuatorId actuator id value.
+ */
 	public record ActuatorReleaseObject(String actuatorId) implements CommandObject {
 	}
 
 	// 50 Group: Combat & Arming
+/**
+ * Represents or provides the command functionality.
+  * @param weaponId weapon id value.
+ */
 	public record PreArmCheck(String weaponId) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param weaponId weapon id value.
+ */
 	public record Arm(String weaponId) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param weaponId weapon id value.
+ */
 	public record Disarm(String weaponId) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param weaponId weapon id value.
+  * @param azimuth azimuth value.
+  * @param elevation elevation value.
+ */
 	public record SetOrientationOfWeapon(String weaponId, Double azimuth, Double elevation) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param weaponId weapon id value.
+  * @param targetId target id value.
+ */
 	public record StartEngagement(String weaponId, String targetId) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param weaponId weapon id value.
+  * @param targetId target id value.
+ */
 	public record HoldEngagement(String weaponId, String targetId) implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param weaponId weapon id value.
+  * @param targetId target id value.
+ */
 	public record StopEngagement(String weaponId, String targetId) implements CommandObject {
 	}
 
 	// // Special & Emergency
+/**
+ * Represents or provides the command functionality.
+ */
 	public record SanitizeSystem() implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+ */
 	public record SelfDestruction() implements CommandObject {
 	}
 
+/**
+ * Represents or provides the command functionality.
+  * @param kindOfAction kind of action value.
+ */
 	public record GenericAction(String kindOfAction) implements CommandObject {
 	}
 
@@ -345,50 +618,98 @@ public class COMMAND extends SEDAPExpressMessage {
 
 	private CommandObject cmdObject;
 
+	/**
+	 * Returns the recipient.
+	 * @return the recipient
+	 */
 	public String getRecipient() {
 		return this.recipient;
 	}
 
+	/**
+	 * Sets the recipient.
+	 * @param recipient value for recipient
+	 */
 	public void setRecipient(String recipient) {
 		this.recipient = recipient;
 	}
 
+	/**
+	 * Returns the cmd id.
+	 * @return the cmd id
+	 */
 	public Short getCmdId() {
 		return this.cmdId;
 	}
 
+	/**
+	 * Sets the cmd id.
+	 * @param cmdId value for cmd id
+	 */
 	public void setCmdId(Short cmdId) {
 		this.cmdId = cmdId;
 	}
 
+	/**
+	 * Returns the cmd flag.
+	 * @return the cmd flag
+	 */
 	public CommandFlag getCmdFlag() {
 		return this.cmdFlag;
 	}
 
+	/**
+	 * Sets the cmd flag.
+	 * @param cmdFlag value for cmd flag
+	 */
 	public void setCmdFlag(CommandFlag cmdFlag) {
 		this.cmdFlag = cmdFlag;
 	}
 
+	/**
+	 * Returns the cmd ex time.
+	 * @return the cmd ex time
+	 */
 	public Long getCmdExTime() {
 		return this.cmdExTime;
 	}
 
+	/**
+	 * Sets the cmd ex time.
+	 * @param cmdExTime value for cmd ex time
+	 */
 	public void setCmdExTime(Long cmdExTime) {
 		this.cmdExTime = cmdExTime;
 	}
 
+	/**
+	 * Returns the cmd type.
+	 * @return the cmd type
+	 */
 	public CommandType getCmdType() {
 		return this.cmdType;
 	}
 
+	/**
+	 * Sets the cmd type.
+	 * @param cmdType value for cmd type
+	 */
 	public void setCmdType(CommandType cmdType) {
 		this.cmdType = cmdType;
 	}
 
+	/**
+	 * Returns the cmd object.
+	 * @return the cmd object
+	 */
 	public CommandObject getCmdObject() {
 		return this.cmdObject;
 	}
 
+	/**
+	 * Sets the cmd object.
+	 * @param cmdObject value for cmd object
+	 */
 	public void setCmdObject(CommandObject cmdObject) {
 		this.cmdObject = cmdObject;
 	}
@@ -410,17 +731,17 @@ public class COMMAND extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new COMMAND message
 	 * 
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param recipient
-	 * @param cmdId
-	 * @param cmdFlag
-	 * @param cmdExTime
-	 * @param cmdType
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param recipient value for recipient
+	 * @param cmdId value for cmd id
+	 * @param cmdFlag value for cmd flag
+	 * @param cmdExTime value for cmd ex time
+	 * @param cmdType value for cmd type
 	 */
 	public COMMAND(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient, Short cmdId, CommandFlag cmdFlag,
 			Long cmdExTime, CommandType cmdType) {
@@ -438,17 +759,17 @@ public class COMMAND extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new COMMAND message
 	 * 
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param recipient
-	 * @param cmdId
-	 * @param cmdFlag
-	 * @param cmdExTime
-	 * @param cmdObject
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param recipient value for recipient
+	 * @param cmdId value for cmd id
+	 * @param cmdFlag value for cmd flag
+	 * @param cmdExTime value for cmd ex time
+	 * @param cmdObject value for cmd object
 	 */
 	public COMMAND(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient, Short cmdId, CommandFlag cmdFlag,
 			Long cmdExTime, CommandObject cmdObject) {
@@ -584,7 +905,7 @@ public class COMMAND extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new COMMAND message from a serialized message
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public COMMAND(String message) {
 
@@ -594,7 +915,7 @@ public class COMMAND extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new COMMAND message from a paramter list
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public COMMAND(Iterator<String> message) {
 
@@ -928,34 +1249,38 @@ public class COMMAND extends SEDAPExpressMessage {
 
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-
-		if (obj == null) {
-			return false;
-		} else if (!(obj instanceof COMMAND)) {
-			return false;
-		} else {
-			return super.equals(obj) &&
-
-					(((this.recipient == null) && (((COMMAND) obj).recipient == null)) || ((this.recipient != null) && this.recipient.equals(((COMMAND) obj).recipient))) &&
-
-					(this.cmdFlag.equals(((COMMAND) obj).cmdFlag)) &&
-
-					(this.cmdExTime == (((COMMAND) obj).cmdExTime)) &&
-
-					(this.cmdType == (((COMMAND) obj).cmdType)) &&
-
-					(((this.cmdObject == null) && (((COMMAND) obj).cmdObject == null)) || ((this.cmdObject != null) && this.cmdObject.equals(((COMMAND) obj).cmdObject)));
-
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
 	}
 
+	/**
+	 * Returns the hash code for this instance.
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 

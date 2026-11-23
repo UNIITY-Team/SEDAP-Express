@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -107,4 +107,17 @@ class ACKNOWLEDGETest {
 	Arrays.asList(messages).forEach(msg -> Assertions.assertEquals(msg, new ACKNOWLEDGE(msg).toString()));
 
     }
+    @Test
+    final void emptyAcknowledgementAndFalseDefaultAreEqual() {
+
+        ACKNOWLEDGE withoutAcknowledgement = new ACKNOWLEDGE((byte) 1, 100L, "A", Classification.Public, null, null,
+                "B", MessageType.COMMAND, (byte) 2);
+        ACKNOWLEDGE withFalseAcknowledgement = new ACKNOWLEDGE((byte) 1, 100L, "A", Classification.Public,
+                Acknowledgement.FALSE, null, "B", MessageType.COMMAND, (byte) 2);
+
+        Assertions.assertEquals(withoutAcknowledgement.toString(), withFalseAcknowledgement.toString());
+        Assertions.assertEquals(withoutAcknowledgement, withFalseAcknowledgement);
+        Assertions.assertEquals(withoutAcknowledgement.hashCode(), withFalseAcknowledgement.hashCode());
+    }
+
 }

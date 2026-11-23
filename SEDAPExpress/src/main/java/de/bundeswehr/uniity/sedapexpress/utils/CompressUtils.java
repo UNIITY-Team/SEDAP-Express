@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -26,10 +26,11 @@
 package de.bundeswehr.uniity.sedapexpress.utils;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.Deflater;
-import java.util.zip.DeflaterInputStream;
+import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
@@ -38,49 +39,90 @@ import org.bouncycastle.util.encoders.Base64;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
 
 /**
- * 
- * @author Volker Voß
+ * Provides raw-DEFLATE compression and decompression for SEDAP-Express
+ * messages. Each operation uses its own codec instance, allowing concurrent
+ * use without a global compression lock. Decompression is limited to
+ * {@link #MAX_DECOMPRESSED_SIZE} bytes; invalid or oversized input is rejected.
  *
+ * @author Volker Voß
  */
 public class CompressUtils {
 
+	/** Maximum uncompressed payload accepted by {@link #decompressMessage(String)} (32 MiB). */
+	public static final int MAX_DECOMPRESSED_SIZE = 32 * 1024 * 1024;
+
+	/**
+	 * @deprecated Legacy shared compressor instance retained for source compatibility. Compression
+	 *             methods now use independent instances and do not access this field.
+	 */
+	@Deprecated(forRemoval = false)
 	public static final Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION, true);
+
+	/**
+	 * @deprecated Legacy shared inflater instance retained for source compatibility. Decompression
+	 *             methods now use independent instances and do not access this field.
+	 */
+	@Deprecated(forRemoval = false)
 	public static final Inflater inflater = new Inflater(true);
 
 	/**
-	 * Compresses a SEDAPExpressMessage to a byte array.
-	 * 
-	 * @param message SEDAPExpressMessage to compress
-	 * @return Compressed message as byte array
+	 * Compresses a SEDAP-Express message to a Base64-encoded raw DEFLATE payload.
+	 * A new compressor is used for every call, so concurrent calls do not serialize on
+	 * shared compression state.
+	 *
+	 * @param message SEDAP-Express message to compress
+	 * @return compressed message encoded as Base64, or {@code null} if compression fails
+	 * @throws NullPointerException if {@code message} is {@code null}
 	 */
 	public static String compressMessage(SEDAPExpressMessage message) {
+		byte[] input = message.toString().getBytes(StandardCharsets.ISO_8859_1);
+		try (Deflater localDeflater = new Deflater(Deflater.BEST_COMPRESSION, true)) {
 
-		synchronized (CompressUtils.deflater) {
-			CompressUtils.deflater.reset();
-			try {
-				return Base64.toBase64String(new DeflaterInputStream(new ByteArrayInputStream(message.toString().getBytes(StandardCharsets.ISO_8859_1)), CompressUtils.deflater).readAllBytes());
-			} catch (final IOException e) {
-				return null;
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			try (DeflaterOutputStream stream = new DeflaterOutputStream(output, localDeflater)) {
+				stream.write(input);
 			}
+			return Base64.toBase64String(output.toByteArray());
+		} catch (IOException exception) {
+			return null;
 		}
 	}
 
 	/**
-	 * Decompresses a byte array to a SEDAPExpressMessage
+	 * Decompresses a Base64-encoded raw DEFLATE payload into a SEDAP-Express message.
+	 * Decompression is limited to {@value #MAX_DECOMPRESSED_SIZE} bytes to prevent
+	 * unbounded memory consumption from compressed input. Invalid Base64, invalid
+	 * compressed data, oversized output, and unparsable messages return {@code null}.
 	 *
-	 * @param compressedMessage Compressed message
-	 * @return Decompressed message
+	 * @param compressedMessage Base64-encoded compressed message
+	 * @return decompressed message, or {@code null} if the input is invalid or exceeds the size limit
 	 */
 	public static SEDAPExpressMessage decompressMessage(final String compressedMessage) {
+		if (compressedMessage == null) {
+			return null;
+		}
+		try (Inflater localInflater = new Inflater(true)) {
 
-		synchronized (CompressUtils.inflater) {
-			CompressUtils.inflater.reset();
-			try {
-				return SEDAPExpressMessage.deserialize(
-						new String(new InflaterInputStream(new ByteArrayInputStream(Base64.decode(compressedMessage)), CompressUtils.inflater).readAllBytes(), StandardCharsets.ISO_8859_1));
-			} catch (final IOException e) {
+			byte[] compressed = Base64.decode(compressedMessage);
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			try (InflaterInputStream stream = new InflaterInputStream(new ByteArrayInputStream(compressed), localInflater)) {
+				byte[] buffer = new byte[8192];
+				int total = 0;
+				int read;
+				while ((read = stream.read(buffer)) != -1) {
+					if (read > MAX_DECOMPRESSED_SIZE - total) {
+						return null;
+					}
+					total += read;
+					output.write(buffer, 0, read);
+				}
+			}
+			if (!localInflater.finished()) {
 				return null;
 			}
+			return SEDAPExpressMessage.deserialize(output.toString(StandardCharsets.ISO_8859_1));
+		} catch (IOException | RuntimeException exception) {
+			return null;
 		}
 	}
 

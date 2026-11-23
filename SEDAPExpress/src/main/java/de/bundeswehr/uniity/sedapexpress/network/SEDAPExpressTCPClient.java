@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -71,6 +71,11 @@ public class SEDAPExpressTCPClient extends SEDAPExpressCommunicator implements R
 
 	private Thread ownThread;
 
+	/**
+	 * Returns the host.
+	 * 
+	 * @return the host
+	 */
 	public String getHost() {
 
 		return this.host;
@@ -119,6 +124,11 @@ public class SEDAPExpressTCPClient extends SEDAPExpressCommunicator implements R
 
 	}
 
+	/**
+	 * Establishes the connection to the configured endpoint.
+	 * 
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	public boolean connect() {
 
 		if (this.clients.isEmpty())
@@ -175,6 +185,9 @@ public class SEDAPExpressTCPClient extends SEDAPExpressCommunicator implements R
 
 	}
 
+	/**
+	 * Processes the incoming communication or work item.
+	 */
 	@Override
 	public void run() {
 
@@ -239,6 +252,13 @@ public class SEDAPExpressTCPClient extends SEDAPExpressCommunicator implements R
 		}
 	}
 
+	/**
+	 * Sends the supplied message through the configured transport.
+	 * 
+	 * @param message value for message
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 * @throws IOException if the operation cannot be completed because of this condition
+	 */
 	@Override
 	public boolean sendSEDAPExpressMessage(SEDAPExpressMessage message) throws IOException {
 
@@ -255,11 +275,19 @@ public class SEDAPExpressTCPClient extends SEDAPExpressCommunicator implements R
 
 	}
 
+	/**
+	 * Indicates whether the status condition is met.
+	 * 
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	public boolean isStatus() {
 
 		return this.status;
 	}
 
+	/**
+	 * Stops the communication resource and releases its active connection.
+	 */
 	@Override
 	public void stopCommunicator() {
 
@@ -277,6 +305,11 @@ public class SEDAPExpressTCPClient extends SEDAPExpressCommunicator implements R
 
 	}
 
+	/**
+	 * Returns the last exception.
+	 * 
+	 * @return the last exception
+	 */
 	@Override
 	public Exception getLastException() {
 

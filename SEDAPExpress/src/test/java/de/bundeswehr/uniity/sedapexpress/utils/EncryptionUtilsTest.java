@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -40,7 +40,7 @@ import org.bouncycastle.util.encoders.Base64;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.AESKeyLength;
+import de.bundeswehr.uniity.sedapexpress.messages.KEYEXCHANGE.AESKeyLength;
 
 class EncryptionUtilsTest {
 
@@ -50,17 +50,13 @@ class EncryptionUtilsTest {
 		byte[] key128 = Base64.decode(EncryptionUtils.generatesKey(AESKeyLength.KEY_LENGTH_128_BITS));
 
 		Assertions.assertEquals(16, key128.length);
-		double sum = 0;
-		for (int i : key128)
-			sum += i;
-		Assertions.assertNotEquals(0, sum);
+		Assertions.assertFalse(Arrays.equals(key128, new byte[key128.length]),
+				"A generated AES key must not consist entirely of zero bytes.");
 
 		byte[] key256 = Base64.decode(EncryptionUtils.generatesKey(AESKeyLength.KEY_LENGTH_256_BITS));
 		Assertions.assertEquals(32, key256.length);
-		sum = 0;
-		for (int i : key256)
-			sum += i;
-		Assertions.assertNotEquals(0, sum);
+		Assertions.assertFalse(Arrays.equals(key256, new byte[key256.length]),
+				"A generated AES key must not consist entirely of zero bytes.");
 
 	}
 
@@ -129,8 +125,7 @@ class EncryptionUtilsTest {
 		Assertions.assertNotNull(nonce2);
 		Assertions.assertEquals(12, nonce1.length, "A GCM nonce must be 96 bits (12 bytes).");
 		Assertions.assertEquals(12, nonce2.length, "A GCM nonce must be 96 bits (12 bytes).");
-		Assertions.assertFalse(Arrays.equals(nonce1, nonce2), "Consecutive nonces from the same generator must be different.");
-		Assertions.assertArrayEquals(Arrays.copyOfRange(nonce1, 0, 4), Arrays.copyOfRange(nonce2, 0, 4), "The session identifier must remain constant for one generator.");
+		Assertions.assertFalse(Arrays.equals(nonce1, nonce2), "Consecutive random nonces should be different.");
 	}
 
 	@Test
@@ -157,6 +152,36 @@ class EncryptionUtilsTest {
 		long counter2 = buffer2.getLong();
 
 		Assertions.assertEquals(counter1 + 1, counter2);
+	}
+
+	@Test
+	void testPasswordDerivationArgon2id() {
+
+		char[] password = "SEDAP-Express test password".toCharArray();
+		byte[] salt = new byte[32];
+		EncryptionUtils.random.nextBytes(salt);
+
+		try {
+			for (AESKeyLength keyLength : AESKeyLength.values()) {
+
+				byte[] derivedKey = EncryptionUtils.deriveKeyFromPasswordArgon2id(password, keyLength, salt);
+
+				Assertions.assertNotNull(derivedKey);
+				Assertions.assertEquals(keyLength.getIntValue() / 8, derivedKey.length);
+
+				// The same password, salt and parameters must always produce the same key.
+				byte[] repeatedKey = EncryptionUtils.deriveKeyFromPasswordArgon2id(password, keyLength, salt);
+				Assertions.assertArrayEquals(derivedKey, repeatedKey);
+
+				// A different salt must produce a different derived key.
+				byte[] differentSalt = salt.clone();
+				differentSalt[0] ^= 0x01;
+				byte[] differentKey = EncryptionUtils.deriveKeyFromPasswordArgon2id(password, keyLength, differentSalt);
+				Assertions.assertFalse(java.util.Arrays.equals(derivedKey, differentKey), "A different salt must produce a different derived key.");
+			}
+		} finally {
+			java.util.Arrays.fill(password, '\0');
+		}
 	}
 
 	@Test
@@ -236,5 +261,4 @@ class EncryptionUtilsTest {
 
 		Assertions.assertThrows(BadPaddingException.class, () -> EncryptionUtils.decrypt_AES_GCM(encryptedData, key), "Decryption must fail if the encrypted data or authentication tag was modified.");
 	}
-
 }

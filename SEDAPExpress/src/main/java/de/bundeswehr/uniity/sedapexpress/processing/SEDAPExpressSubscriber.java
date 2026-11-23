@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -28,11 +28,16 @@ package de.bundeswehr.uniity.sedapexpress.processing;
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
 
 /**
+ * Represents or provides the sedapexpress subscriber functionality.
  * 
  * @author Volker Voß
  *
  */
 public interface SEDAPExpressSubscriber {
 
+	/**
+	 * Performs the process sedapexpress message operation.
+	 * @param message value for message
+	 */
 	public void processSEDAPExpressMessage(SEDAPExpressMessage message);
 }

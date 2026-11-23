@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -53,7 +53,7 @@ public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements 
 
 	protected static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	static {
-		SEDAPExpressTCPClient.logger.setLevel(Level.ALL);
+		SEDAPExpressRESTServer.logger.setLevel(Level.ALL);
 	}
 
 	private Exception lastException = null;
@@ -82,6 +82,11 @@ public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements 
 		this.port = port;
 	}
 
+	/**
+	 * Establishes the connection to the configured endpoint.
+	 * 
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	public boolean connect() {
 
 		SEDAPExpressRESTServer.logger.logp(Level.INFO, "SEDAPExpressRESTServer", "run()", "Starting REST server");
@@ -109,6 +114,12 @@ public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements 
 
 	}
 
+	/**
+	 * Processes the incoming communication or work item.
+	 * 
+	 * @param exchange value for exchange
+	 * @throws IOException if the operation cannot be completed because of this condition
+	 */
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 
@@ -169,6 +180,12 @@ public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements 
 
 	}
 
+	/**
+	 * Sends the supplied message through the configured transport.
+	 * 
+	 * @param message value for message
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean sendSEDAPExpressMessage(SEDAPExpressMessage message) {
 
@@ -186,6 +203,9 @@ public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements 
 		return true;
 	}
 
+	/**
+	 * Stops the communication resource and releases its active connection.
+	 */
 	@Override
 	public void stopCommunicator() {
 
@@ -197,6 +217,11 @@ public class SEDAPExpressRESTServer extends SEDAPExpressCommunicator implements 
 		logInput("REST server stopped");
 	}
 
+	/**
+	 * Returns the last exception.
+	 * 
+	 * @return the last exception
+	 */
 	@Override
 	public Exception getLastException() {
 

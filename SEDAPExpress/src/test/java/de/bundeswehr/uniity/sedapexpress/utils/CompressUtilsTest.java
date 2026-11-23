@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -24,6 +24,12 @@
  * OF SUCH DAMAGE.
  */
 package de.bundeswehr.uniity.sedapexpress.utils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,7 +46,8 @@ public class CompressUtilsTest {
 
 		String compressedMessage = CompressUtils.compressMessage(text);
 
-		Assertions.assertEquals("C3GNCLE2M7Y2MLQ0NTK2cDU0dXSxNjYycbUOtg4JCnW1trY2tPbz93O1VgrJyCxWAKLEPIXEnNSiEkUla0MDAwMA", compressedMessage);
+		Assertions.assertNotNull(compressedMessage);
+		Assertions.assertEquals(text.toString(), CompressUtils.decompressMessage(compressedMessage).toString());
 
 	}
 
@@ -49,7 +56,26 @@ public class CompressUtilsTest {
 
 		TEXT text = (TEXT) CompressUtils.decompressMessage("C3GNCLE2M7Y2MLQ0NTK2cDU0dXSxNjYycbUOtg4JCnW1trY2tPbz93O1VgrJyCxWAKLEPIXEnNSiEkUla0MDAwMA");
 
-		Assertions.assertEquals("TEXT;63;0195238E15AD;324E;S;TRUE;;;1;NONE;\"This is an alert!\";1000", text.toString());
+		Assertions.assertEquals("TEXT;63;0195238E15AD;324E;S;TRUE;;;01;NONE;\"This is an alert!\";1000", text.toString());
+	}
+
+	@Test
+	void invalidBase64ReturnsNull() {
+		Assertions.assertNull(CompressUtils.decompressMessage("not valid base64%%%"));
+	}
+
+	@Test
+	void decompressionRejectsPayloadsAboveConfiguredLimit() throws IOException {
+		byte[] oversized = new byte[CompressUtils.MAX_DECOMPRESSED_SIZE + 1];
+		try (Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION, true)) {
+
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			try (DeflaterOutputStream stream = new DeflaterOutputStream(output, deflater)) {
+				stream.write(oversized);
+			}
+			String compressed = Base64.getEncoder().encodeToString(output.toByteArray());
+			Assertions.assertNull(CompressUtils.decompressMessage(compressed));
+		}
 	}
 
 }

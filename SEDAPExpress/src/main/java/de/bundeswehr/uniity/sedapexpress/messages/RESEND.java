@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 /**
+ * Represents or provides the resend functionality.
  * 
  * @author Volker Voß
  *
@@ -43,26 +44,50 @@ public class RESEND extends SEDAPExpressMessage {
 
 	private Byte numberOfTheMissingMessage;
 
+	/**
+	 * Returns the recipient.
+	 * @return the recipient
+	 */
 	public String getRecipient() {
 		return this.recipient;
 	}
 
+	/**
+	 * Sets the recipient.
+	 * @param recipient value for recipient
+	 */
 	public void setRecipient(String recipient) {
 		this.recipient = recipient;
 	}
 
+	/**
+	 * Returns the name of the missing message.
+	 * @return the name of the missing message
+	 */
 	public MessageType getNameOfTheMissingMessage() {
 		return this.nameOfTheMissingMessage;
 	}
 
+	/**
+	 * Sets the name of the missing message.
+	 * @param nameOfTheMissingMessage value for name of the missing message
+	 */
 	public void setNameOfTheMissingMessage(MessageType nameOfTheMissingMessage) {
 		this.nameOfTheMissingMessage = nameOfTheMissingMessage;
 	}
 
+	/**
+	 * Returns the number of the missing message.
+	 * @return the number of the missing message
+	 */
 	public Byte getNumberOfTheMissingMessage() {
 		return this.numberOfTheMissingMessage;
 	}
 
+	/**
+	 * Sets the number of the missing message.
+	 * @param numberOfTheMissingMessage value for number of the missing message
+	 */
 	public void setNumberOfTheMissingMessage(Byte numberOfTheMissingMessage) {
 		this.numberOfTheMissingMessage = numberOfTheMissingMessage;
 	}
@@ -83,15 +108,15 @@ public class RESEND extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new RESEND message
 	 *
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param recipient
-	 * @param nameOfTheMissingMessage
-	 * @param numberOfTheMissingMessage
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param recipient value for recipient
+	 * @param nameOfTheMissingMessage value for name of the missing message
+	 * @param numberOfTheMissingMessage value for number of the missing message
 	 */
 	public RESEND(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient, MessageType nameOfTheMissingMessage,
 			Byte numberOfTheMissingMessage) {
@@ -104,8 +129,9 @@ public class RESEND extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a resend instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public RESEND(String message) {
 
@@ -113,8 +139,9 @@ public class RESEND extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a resend instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public RESEND(Iterator<String> message) {
 
@@ -159,31 +186,38 @@ public class RESEND extends SEDAPExpressMessage {
 		}
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-
-		if (obj == null) {
-			return false;
-		} else if (!(obj instanceof RESEND)) {
-			return false;
-		} else {
-			return super.equals(obj) &&
-
-					(((this.recipient == null) && (((RESEND) obj).recipient == null)) || ((this.recipient != null) && this.recipient.equals(((RESEND) obj).recipient))) &&
-
-					(((this.nameOfTheMissingMessage == null) && (((RESEND) obj).nameOfTheMissingMessage == null))
-							|| ((this.nameOfTheMissingMessage != null) && this.nameOfTheMissingMessage.equals(((RESEND) obj).nameOfTheMissingMessage)))
-					&&
-
-					(this.numberOfTheMissingMessage == (((RESEND) obj).numberOfTheMissingMessage));
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
 	}
 
+	/**
+	 * Returns the hash code for this instance.
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 		return SEDAPExpressMessage.removeSemicolons(

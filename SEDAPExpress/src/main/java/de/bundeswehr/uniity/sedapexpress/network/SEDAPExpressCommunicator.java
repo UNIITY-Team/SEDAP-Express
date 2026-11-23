@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -50,6 +50,7 @@ import de.bundeswehr.uniity.sedapexpress.processing.SEDAPExpressSubscriber;
 import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils;
 
 /**
+ * Represents or provides the sedapexpress communicator functionality.
  *
  * @author Volker Voß
  *
@@ -112,6 +113,10 @@ public abstract class SEDAPExpressCommunicator {
 
 	protected ConcurrentHashMap<MessageType, Set<SEDAPExpressSubscriber>> subscriptions = new ConcurrentHashMap<>();
 
+	/**
+	 * Returns the subscriptions.
+	 * @return the subscriptions
+	 */
 	public ConcurrentHashMap<MessageType, Set<SEDAPExpressSubscriber>> getSubscriptions() {
 		return this.subscriptions;
 	}
@@ -181,9 +186,9 @@ public abstract class SEDAPExpressCommunicator {
 	}
 
 	/**
-	 * Distribute a message to the subscribers
+	 * Distributes a received message to subscribers registered for its message type.
 	 *
-	 * @param message
+	 * @param message received message to distribute; {@code null} is ignored
 	 */
 	protected void distributeReceivedSEDAPExpressMessage(SEDAPExpressMessage message) {
 
@@ -264,7 +269,7 @@ public abstract class SEDAPExpressCommunicator {
 	 * Sets the shared secret key, which will be used if encryption or
 	 * authentication has been enabled
 	 * 
-	 * @param sharedSecretKey
+	 * @param sharedSecretKey value for shared secret key
 	 */
 	public static void setSharedSecretKey(byte[] sharedSecretKey) {
 		SEDAPExpressCommunicator.sharedSecretKey = sharedSecretKey;
@@ -305,6 +310,9 @@ public abstract class SEDAPExpressCommunicator {
 
 		TIMESYNC timesyncAnswer;
 
+	/**
+	 * Processes the incoming communication or work item.
+	 */
 		@Override
 		public void run() {
 			SEDAPExpressCommunicator.logger.logp(Level.INFO, "SEDAPExpressCommunicator", "doTimesync()", "Started time synchronization process...");
@@ -389,6 +397,10 @@ public abstract class SEDAPExpressCommunicator {
 			}
 		}
 
+	/**
+	 * Performs the process sedapexpress message operation.
+	 * @param message value for message
+	 */
 		@Override
 		public void processSEDAPExpressMessage(SEDAPExpressMessage message) {
 			this.timesyncAnswer = (TIMESYNC) message;
@@ -405,6 +417,10 @@ public abstract class SEDAPExpressCommunicator {
 		new TimeSyncRunnable().start();
 	}
 
+	/**
+	 * Generates and returns the sender id.
+	 * @return the result of the operation
+	 */
 	public String createSenderId() {
 
 		return HexFormat.of().toHexDigits((short) Math.round(Math.random() * 65535));
@@ -415,6 +431,10 @@ public abstract class SEDAPExpressCommunicator {
 	 */
 	public abstract void stopCommunicator();
 
+	/**
+	 * Returns the last exception.
+	 * @return the last exception
+	 */
 	public abstract Exception getLastException();
 
 }

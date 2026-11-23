@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
-Created-By: 27+35 (Temurin)
+Created-By: 27.0.1.0.3+1-2
 Built-By: Volker Voss (volker.v@gmx.net)
-Build-Jdk: 27+35
+Build-Jdk: 27.0.1.0.3+1-2
 Sealed: true
 Specification-Title: SEDAP-Express Framework
-Specification-Version: 1.5.3
+Specification-Version: 1.5.5
 Specification-Vendor: Federal Armed Forces of Germany
 Implementation-Title: SEDAP-Express Framework
-Implementation-Version: 1.5.3
+Implementation-Version: 1.5.5
 Implementation-Vendor: Federal Armed Forces of Germany
 Main-Class: de.bundeswehr.uniity.sedapexpress.ReleaseInfo
 Class-Path: . 

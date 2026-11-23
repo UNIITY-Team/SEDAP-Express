@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -26,7 +26,6 @@
 package de.bundeswehr.uniity.sedapexpress.messages;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -36,6 +35,7 @@ import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.DecoderException;
 
 /**
+ * Represents or provides the contact functionality.
  * 
  * @author Volker Voß
  *
@@ -44,12 +44,19 @@ public class CONTACT extends SEDAPExpressMessage {
 
 	private static final long serialVersionUID = 5990524206762624628L;
 
+/**
+ * Represents or provides the contact functionality.
+ */
 	public enum Source {
 
 		None(' '), Radar('R'), AIS('A'), IFF('I'), Sonar('S'), EW('E'), Optical('O'), Synthetic('Y'), Manual('M');
 
 		char source;
 
+	/**
+	 * Returns the source value.
+	 * @return the source value
+	 */
 		public char getSourceValue() {
 
 			return this.source;
@@ -59,6 +66,11 @@ public class CONTACT extends SEDAPExpressMessage {
 			this.source = source;
 		}
 
+	/**
+	 * Resolves the corresponding value from the supplied representation.
+	 * @param source value for source
+	 * @return the result of the operation
+	 */
 		public static Source valueOfSource(char source) {
 
 			return switch (source) {
@@ -75,6 +87,10 @@ public class CONTACT extends SEDAPExpressMessage {
 			};
 		}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 		@Override
 		public String toString() {
 			return String.valueOf(this.source);
@@ -116,192 +132,382 @@ public class CONTACT extends SEDAPExpressMessage {
 	private String comment;
 
 	private Comparator<Source> sourceComparator = new Comparator<Source>() {
+	/**
+	 * Returns the result of the compare operation.
+	 * @param o1 value for o1
+	 * @param o2 value for o2
+	 * @return the result of the operation
+	 */
 		@Override
 		public int compare(Source o1, Source o2) {
 			return Integer.compare(o1.source, o2.source);
 		}
 	};
 
+	/**
+	 * Returns the contact id.
+	 * @return the contact id
+	 */
 	public String getContactID() {
 		return this.contactID;
 	}
 
+	/**
+	 * Sets the contact id.
+	 * @param contactID value for contact id
+	 */
 	public void setContactID(String contactID) {
 		this.contactID = contactID;
 	}
 
+	/**
+	 * Returns the delete flag.
+	 * @return the delete flag
+	 */
 	public DeleteFlag getDeleteFlag() {
 		return this.deleteFlag;
 	}
 
+	/**
+	 * Sets the delete flag.
+	 * @param deleteFlag value for delete flag
+	 */
 	public void setDeleteFlag(DeleteFlag deleteFlag) {
 		this.deleteFlag = deleteFlag;
 	}
 
+	/**
+	 * Returns the latitude.
+	 * @return the latitude
+	 */
 	public Double getLatitude() {
 		return this.latitude;
 	}
 
+	/**
+	 * Sets the latitude.
+	 * @param latitude value for latitude
+	 */
 	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
+	/**
+	 * Returns the longitude.
+	 * @return the longitude
+	 */
 	public Double getLongitude() {
 		return this.longitude;
 	}
 
+	/**
+	 * Sets the longitude.
+	 * @param longitude value for longitude
+	 */
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
+	/**
+	 * Returns the altitude.
+	 * @return the altitude
+	 */
 	public Double getAltitude() {
 		return this.altitude;
 	}
 
+	/**
+	 * Sets the altitude.
+	 * @param altitude value for altitude
+	 */
 	public void setAltitude(Double altitude) {
 		this.altitude = altitude;
 	}
 
+	/**
+	 * Returns the relative xdistance.
+	 * @return the relative xdistance
+	 */
 	public Double getRelativeXDistance() {
 		return this.relativeXDistance;
 	}
 
+	/**
+	 * Sets the relative xdistance.
+	 * @param relativeXDistance value for relative xdistance
+	 */
 	public void setRelativeXDistance(Double relativeXDistance) {
 		this.relativeXDistance = relativeXDistance;
 	}
 
+	/**
+	 * Returns the relative ydistance.
+	 * @return the relative ydistance
+	 */
 	public Double getRelativeYDistance() {
 		return this.relativeYDistance;
 	}
 
+	/**
+	 * Sets the relative ydistance.
+	 * @param relativeYDistance value for relative ydistance
+	 */
 	public void setRelativeYDistance(Double relativeYDistance) {
 		this.relativeYDistance = relativeYDistance;
 	}
 
+	/**
+	 * Returns the relative zdistance.
+	 * @return the relative zdistance
+	 */
 	public Double getRelativeZDistance() {
 		return this.relativeZDistance;
 	}
 
+	/**
+	 * Sets the relative zdistance.
+	 * @param relativeZDistance value for relative zdistance
+	 */
 	public void setRelativeZDistance(Double relativeZDistance) {
 		this.relativeZDistance = relativeZDistance;
 	}
 
+	/**
+	 * Returns the speed.
+	 * @return the speed
+	 */
 	public Double getSpeed() {
 		return this.speed;
 	}
 
+	/**
+	 * Sets the speed.
+	 * @param speed value for speed
+	 */
 	public void setSpeed(Double speed) {
 		this.speed = speed;
 	}
 
+	/**
+	 * Returns the course.
+	 * @return the course
+	 */
 	public Double getCourse() {
 		return this.course;
 	}
 
+	/**
+	 * Sets the course.
+	 * @param course value for course
+	 */
 	public void setCourse(Double course) {
 		this.course = course;
 	}
 
+	/**
+	 * Returns the heading.
+	 * @return the heading
+	 */
 	public Double getHeading() {
 		return this.heading;
 	}
 
+	/**
+	 * Sets the heading.
+	 * @param heading value for heading
+	 */
 	public void setHeading(Double heading) {
 		this.heading = heading;
 	}
 
+	/**
+	 * Returns the roll.
+	 * @return the roll
+	 */
 	public Double getRoll() {
 		return this.roll;
 	}
 
+	/**
+	 * Sets the roll.
+	 * @param roll value for roll
+	 */
 	public void setRoll(Double roll) {
 		this.roll = roll;
 	}
 
+	/**
+	 * Returns the pitch.
+	 * @return the pitch
+	 */
 	public Double getPitch() {
 		return this.pitch;
 	}
 
+	/**
+	 * Sets the pitch.
+	 * @param pitch value for pitch
+	 */
 	public void setPitch(Double pitch) {
 		this.pitch = pitch;
 	}
 
+	/**
+	 * Returns the width.
+	 * @return the width
+	 */
 	public Double getWidth() {
 		return this.width;
 	}
 
+	/**
+	 * Sets the width.
+	 * @param width value for width
+	 */
 	public void setWidth(Double width) {
 		this.width = width;
 	}
 
+	/**
+	 * Returns the length.
+	 * @return the length
+	 */
 	public Double getLength() {
 		return this.length;
 	}
 
+	/**
+	 * Sets the length.
+	 * @param length value for length
+	 */
 	public void setLength(Double length) {
 		this.length = length;
 	}
 
+	/**
+	 * Returns the height.
+	 * @return the height
+	 */
 	public Double getHeight() {
 		return this.height;
 	}
 
+	/**
+	 * Sets the height.
+	 * @param height value for height
+	 */
 	public void setHeight(Double height) {
 		this.height = height;
 	}
 
+	/**
+	 * Returns the name.
+	 * @return the name
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * Sets the name.
+	 * @param name value for name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Returns the source.
+	 * @return the source
+	 */
 	public TreeSet<Source> getSource() {
 		return this.source;
 	}
 
+	/**
+	 * Sets the source.
+	 * @param source value for source
+	 */
 	public void setSource(TreeSet<Source> source) {
 		this.source = source;
 	}
 
+	/**
+	 * Returns the sidc.
+	 * @return the sidc
+	 */
 	public char[] getSIDC() {
 		return this.sidc;
 	}
 
+	/**
+	 * Sets the sidc.
+	 * @param sidc value for sidc
+	 */
 	public void setSIDC(char[] sidc) {
 		this.sidc = sidc;
 	}
 
+	/**
+	 * Returns the mmsi.
+	 * @return the mmsi
+	 */
 	public String getMMSI() {
 		return this.mmsi;
 	}
 
+	/**
+	 * Sets the mmsi.
+	 * @param mmsi value for mmsi
+	 */
 	public void setMMSI(String mmsi) {
 		this.mmsi = mmsi;
 	}
 
+	/**
+	 * Returns the icao.
+	 * @return the icao
+	 */
 	public String getICAO() {
 		return this.icao;
 	}
 
+	/**
+	 * Sets the icao.
+	 * @param icao value for icao
+	 */
 	public void setICAO(String icao) {
 		this.icao = icao;
 	}
 
+	/**
+	 * Returns the multimedia data.
+	 * @return the multimedia data
+	 */
 	public byte[] getMultimediaData() {
 		return this.multimediaData;
 	}
 
+	/**
+	 * Sets the multimedia data.
+	 * @param multimediaData value for multimedia data
+	 */
 	public void setMultimediaData(byte[] multimediaData) {
 		this.multimediaData = multimediaData;
 	}
 
+	/**
+	 * Returns the comment.
+	 * @return the comment
+	 */
 	public String getComment() {
 		return this.comment;
 	}
 
+	/**
+	 * Sets the comment.
+	 * @param comment value for comment
+	 */
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
@@ -341,35 +547,35 @@ public class CONTACT extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new CONTACT message
 	 * 
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param contactID
-	 * @param deleteFlag
-	 * @param latitude
-	 * @param longitude
-	 * @param altitude
-	 * @param relativeXDistance
-	 * @param relativeYDistance
-	 * @param relativeZDistance
-	 * @param speed
-	 * @param course
-	 * @param heading
-	 * @param roll
-	 * @param pitch
-	 * @param width
-	 * @param length
-	 * @param height
-	 * @param name
-	 * @param source
-	 * @param sidc
-	 * @param mmsi
-	 * @param icao
-	 * @param multimediaData
-	 * @param comment
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param contactID value for contact id
+	 * @param deleteFlag value for delete flag
+	 * @param latitude value for latitude
+	 * @param longitude value for longitude
+	 * @param altitude value for altitude
+	 * @param relativeXDistance value for relative xdistance
+	 * @param relativeYDistance value for relative ydistance
+	 * @param relativeZDistance value for relative zdistance
+	 * @param speed value for speed
+	 * @param course value for course
+	 * @param heading value for heading
+	 * @param roll value for roll
+	 * @param pitch value for pitch
+	 * @param width value for width
+	 * @param length value for length
+	 * @param height value for height
+	 * @param name value for name
+	 * @param source value for source
+	 * @param sidc value for sidc
+	 * @param mmsi value for mmsi
+	 * @param icao value for icao
+	 * @param multimediaData value for multimedia data
+	 * @param comment value for comment
 	 */
 	public CONTACT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String contactID, DeleteFlag deleteFlag, Double latitude,
 			Double longitude, Double altitude, Double relativeXDistance, Double relativeYDistance, Double relativeZDistance, Double speed, Double course, Double heading, Double roll, Double pitch,
@@ -383,35 +589,35 @@ public class CONTACT extends SEDAPExpressMessage {
 	 * 
 	 * Instantiate a new CONTACT message
 	 *
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param contactID
-	 * @param deleteFlag
-	 * @param latitude
-	 * @param longitude
-	 * @param altitude
-	 * @param relativeXDistance
-	 * @param relativeYDistance
-	 * @param relativeZDistance
-	 * @param speed
-	 * @param course
-	 * @param heading
-	 * @param roll
-	 * @param pitch
-	 * @param width
-	 * @param length
-	 * @param height
-	 * @param name
-	 * @param source
-	 * @param sidc
-	 * @param mmsi
-	 * @param icao
-	 * @param multimediaData
-	 * @param comment
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param contactID value for contact id
+	 * @param deleteFlag value for delete flag
+	 * @param latitude value for latitude
+	 * @param longitude value for longitude
+	 * @param altitude value for altitude
+	 * @param relativeXDistance value for relative xdistance
+	 * @param relativeYDistance value for relative ydistance
+	 * @param relativeZDistance value for relative zdistance
+	 * @param speed value for speed
+	 * @param course value for course
+	 * @param heading value for heading
+	 * @param roll value for roll
+	 * @param pitch value for pitch
+	 * @param width value for width
+	 * @param length value for length
+	 * @param height value for height
+	 * @param name value for name
+	 * @param source value for source
+	 * @param sidc value for sidc
+	 * @param mmsi value for mmsi
+	 * @param icao value for icao
+	 * @param multimediaData value for multimedia data
+	 * @param comment value for comment
 	 */
 	public CONTACT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String contactID, DeleteFlag deleteFlag, Double latitude,
 			Double longitude, Double altitude, Double relativeXDistance, Double relativeYDistance, Double relativeZDistance, Double speed, Double course, Double heading, Double roll, Double pitch,
@@ -448,7 +654,7 @@ public class CONTACT extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new CONTACT message from a serialized message
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public CONTACT(String message) {
 
@@ -458,7 +664,7 @@ public class CONTACT extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new CONTACT message from a paramter list
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public CONTACT(Iterator<String> message) {
 
@@ -831,53 +1037,38 @@ public class CONTACT extends SEDAPExpressMessage {
 		}
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-
-		if (obj == null) {
-			return false;
-		} else if (!(obj instanceof CONTACT)) {
-			return false;
-		} else {
-			return super.equals(obj) &&
-
-					(((this.contactID == null) && (((CONTACT) obj).contactID == null)) || ((this.contactID != null) && this.contactID.equals(((CONTACT) obj).contactID))) &&
-
-					(this.deleteFlag == ((CONTACT) obj).deleteFlag) &&
-
-					(this.latitude == ((CONTACT) obj).latitude) && (this.longitude == ((CONTACT) obj).longitude) && (this.altitude == ((CONTACT) obj).altitude) &&
-
-					(this.relativeXDistance == ((CONTACT) obj).relativeXDistance) && (this.relativeYDistance == ((CONTACT) obj).relativeYDistance)
-					&& (this.relativeZDistance == ((CONTACT) obj).relativeZDistance) &&
-
-					(this.speed == ((CONTACT) obj).speed) && (this.course == ((CONTACT) obj).course) &&
-
-					(this.heading == ((CONTACT) obj).heading) && (this.roll == ((CONTACT) obj).roll) && (this.pitch == ((CONTACT) obj).pitch) &&
-
-					(this.width == ((CONTACT) obj).width) && (this.length == ((CONTACT) obj).length) && (this.height == ((CONTACT) obj).height) &&
-
-					(((this.name == null) && (((CONTACT) obj).name == null)) || ((this.name != null) && this.name.equals(((CONTACT) obj).name))) &&
-
-					(((this.source == null) && (((CONTACT) obj).source == null)) || ((this.source != null) && this.source.equals(((CONTACT) obj).source))) &&
-
-					Arrays.equals(this.sidc, ((CONTACT) obj).sidc) &&
-
-					(((this.mmsi == null) && (((CONTACT) obj).mmsi == null)) || ((this.mmsi != null) && this.mmsi.equals(((CONTACT) obj).mmsi))) &&
-
-					(((this.icao == null) && (((CONTACT) obj).icao == null)) || ((this.icao != null) && this.icao.equals(((CONTACT) obj).icao))) &&
-
-					Arrays.equals(this.multimediaData, ((CONTACT) obj).multimediaData) &&
-
-					(((this.comment == null) && (((CONTACT) obj).comment == null)) || ((this.comment != null) && this.comment.equals(((CONTACT) obj).comment)));
-
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
 	}
 
+	/**
+	 * Returns the hash code for this instance.
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 

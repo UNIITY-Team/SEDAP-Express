@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -36,6 +36,7 @@ import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.DecoderException;
 
 /**
+ * Represents or provides the status functionality.
  * 
  * @author Volker Voß
  *
@@ -44,12 +45,19 @@ public class STATUS extends SEDAPExpressMessage {
 
 	private static final long serialVersionUID = -6681575300891302102L;
 
+/**
+ * Represents or provides the status functionality.
+ */
 	public enum TechnicalState {
 
 		Off_absent(0), Initializing(1), Degraded(2), Operational(3), Fault(4);
 
 		int state;
 
+	/**
+	 * Returns the state.
+	 * @return the state
+	 */
 		public int getState() {
 			return this.state;
 		}
@@ -58,6 +66,11 @@ public class STATUS extends SEDAPExpressMessage {
 			this.state = state;
 		}
 
+	/**
+	 * Resolves the corresponding value from the supplied representation.
+	 * @param state value for state
+	 * @return the result of the operation
+	 */
 		public static TechnicalState valueOfTechnicalState(int state) {
 
 			return switch (state) {
@@ -70,12 +83,19 @@ public class STATUS extends SEDAPExpressMessage {
 			};
 		}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 		@Override
 		public String toString() {
 			return String.valueOf(this.state);
 		}
 	}
 
+/**
+ * Represents or provides the status functionality.
+ */
 	public enum OperationalState {
 
 		Not_operational(0), Degraded(1), Operational(2), Operational_semi_autonomous(3), Operational_autonomous(4);
@@ -86,10 +106,19 @@ public class STATUS extends SEDAPExpressMessage {
 			this.state = state;
 		}
 
+	/**
+	 * Returns the state.
+	 * @return the state
+	 */
 		public int getState() {
 			return this.state;
 		}
 
+	/**
+	 * Resolves the corresponding value from the supplied representation.
+	 * @param state value for state
+	 * @return the result of the operation
+	 */
 		public static OperationalState valueOfOperationalState(int state) {
 
 			return switch (state) {
@@ -102,18 +131,29 @@ public class STATUS extends SEDAPExpressMessage {
 			};
 		}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 		@Override
 		public String toString() {
 			return String.valueOf(this.state);
 		}
 	}
 
+/**
+ * Represents or provides the status functionality.
+ */
 	public enum CommandState {
 
 		Undefined(0), Executed_successfully(1), Partially_executed_successfully(2), Executed_not_successfully(3), Execution_not_possible(4), Will_execute_at(5);
 
 		int state;
 
+	/**
+	 * Returns the state.
+	 * @return the state
+	 */
 		public int getState() {
 			return this.state;
 		}
@@ -122,6 +162,11 @@ public class STATUS extends SEDAPExpressMessage {
 			this.state = status;
 		}
 
+	/**
+	 * Resolves the corresponding value from the supplied representation.
+	 * @param state value for state
+	 * @return the result of the operation
+	 */
 		public static CommandState valueOfMessageType(int state) {
 
 			return switch (state) {
@@ -135,6 +180,10 @@ public class STATUS extends SEDAPExpressMessage {
 			};
 		}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 		@Override
 		public String toString() {
 			return String.valueOf(this.state);
@@ -163,122 +212,242 @@ public class STATUS extends SEDAPExpressMessage {
 
 	private String freeText;
 
+	/**
+	 * Returns the tec state.
+	 * @return the tec state
+	 */
 	public TechnicalState getTecState() {
 		return this.tecState;
 	}
 
+	/**
+	 * Sets the tec state.
+	 * @param tecState value for tec state
+	 */
 	public void setTecState(TechnicalState tecState) {
 		this.tecState = tecState;
 	}
 
+	/**
+	 * Returns the ops state.
+	 * @return the ops state
+	 */
 	public OperationalState getOpsState() {
 		return this.opsState;
 	}
 
+	/**
+	 * Sets the ops state.
+	 * @param opsState value for ops state
+	 */
 	public void setOpsState(OperationalState opsState) {
 		this.opsState = opsState;
 	}
 
+	/**
+	 * Returns the ammunition levels.
+	 * @return the ammunition levels
+	 */
 	public List<Double> getAmmunitionLevels() {
 		return this.ammunitionLevels;
 	}
 
+	/**
+	 * Sets the ammunition levels.
+	 * @param ammunitionLevels value for ammunition levels
+	 */
 	public void setAmmunitionLevels(List<Double> ammunitionLevels) {
 		this.ammunitionLevels = ammunitionLevels;
 	}
 
+	/**
+	 * Returns the fuel levels.
+	 * @return the fuel levels
+	 */
 	public List<Double> getFuelLevels() {
 		return this.fuelLevels;
 	}
 
+	/**
+	 * Sets the fuel levels.
+	 * @param fuelLevels value for fuel levels
+	 */
 	public void setFuelLevels(List<Double> fuelLevels) {
 		this.fuelLevels = fuelLevels;
 	}
 
+	/**
+	 * Returns the battery levels.
+	 * @return the battery levels
+	 */
 	public List<Double> getBatteryLevels() {
 		return this.batteryLevels;
 	}
 
+	/**
+	 * Sets the battery levels.
+	 * @param batteryLevels value for battery levels
+	 */
 	public void setBatteryLevels(List<Double> batteryLevels) {
 		this.batteryLevels = batteryLevels;
 	}
 
+	/**
+	 * Returns the ammunition level names.
+	 * @return the ammunition level names
+	 */
 	public List<String> getAmmunitionLevelNames() {
 		return this.ammunitionLevelNames;
 	}
 
+	/**
+	 * Sets the ammunition level names.
+	 * @param ammunitionLevelNames value for ammunition level names
+	 */
 	public void setAmmunitionLevelNames(List<String> ammunitionLevelNames) {
 		this.ammunitionLevelNames = ammunitionLevelNames;
 	}
 
+	/**
+	 * Returns the fuel level names.
+	 * @return the fuel level names
+	 */
 	public List<String> getFuelLevelNames() {
 		return this.fuelLevelNames;
 	}
 
+	/**
+	 * Sets the fuel level names.
+	 * @param fuelLevelNames value for fuel level names
+	 */
 	public void setFuelLevelNames(List<String> fuelLevelNames) {
 		this.fuelLevelNames = fuelLevelNames;
 	}
 
+	/**
+	 * Returns the battery level names.
+	 * @return the battery level names
+	 */
 	public List<String> getBatteryLevelNames() {
 		return this.batteryLevelNames;
 	}
 
+	/**
+	 * Sets the battery level names.
+	 * @param batteryLevelNames value for battery level names
+	 */
 	public void setBatteryLevelNames(List<String> batteryLevelNames) {
 		this.batteryLevelNames = batteryLevelNames;
 	}
 
+	/**
+	 * Returns the storage levels.
+	 * @return the storage levels
+	 */
 	public List<Double> getStorageLevels() {
 		return this.storageLevels;
 	}
 
+	/**
+	 * Sets the storage levels.
+	 * @param storageLevels value for storage levels
+	 */
 	public void setStorageLevels(List<Double> storageLevels) {
 		this.storageLevels = storageLevels;
 	}
 
+	/**
+	 * Returns the storage level names.
+	 * @return the storage level names
+	 */
 	public List<String> getStorageLevelNames() {
 		return this.storageLevelNames;
 	}
 
+	/**
+	 * Sets the storage level names.
+	 * @param storageLevelNames value for storage level names
+	 */
 	public void setStorageLevelNames(List<String> storageLevelNames) {
 		this.storageLevelNames = storageLevelNames;
 	}
 
+	/**
+	 * Returns the cmd id.
+	 * @return the cmd id
+	 */
 	public Integer getCmdId() {
 		return this.cmdId;
 	}
 
+	/**
+	 * Sets the cmd id.
+	 * @param cmdId value for cmd id
+	 */
 	public void setCmdId(Integer cmdId) {
 		this.cmdId = cmdId;
 	}
 
+	/**
+	 * Returns the cmd state.
+	 * @return the cmd state
+	 */
 	public CommandState getCmdState() {
 		return this.cmdState;
 	}
 
+	/**
+	 * Sets the cmd state.
+	 * @param cmdState value for cmd state
+	 */
 	public void setCmdState(CommandState cmdState) {
 		this.cmdState = cmdState;
 	}
 
+	/**
+	 * Returns the hostname.
+	 * @return the hostname
+	 */
 	public String getHostname() {
 		return this.hostname;
 	}
 
+	/**
+	 * Sets the hostname.
+	 * @param hostname value for hostname
+	 */
 	public void setHostname(String hostname) {
 		this.hostname = hostname;
 	}
 
+	/**
+	 * Returns the media urls.
+	 * @return the media urls
+	 */
 	public List<String> getMediaUrls() {
 		return this.mediaUrls;
 	}
 
+	/**
+	 * Sets the media urls.
+	 * @param mediaUrls value for media urls
+	 */
 	public void setMediaUrls(List<String> mediaUrls) {
 		this.mediaUrls = mediaUrls;
 	}
 
+	/**
+	 * Returns the free text.
+	 * @return the free text
+	 */
 	public String getFreeText() {
 		return this.freeText;
 	}
 
+	/**
+	 * Sets the free text.
+	 * @param freeText value for free text
+	 */
 	public void setFreeText(String freeText) {
 		this.freeText = freeText;
 	}
@@ -308,25 +477,25 @@ public class STATUS extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new STATUS message
 	 *
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param tecState
-	 * @param opsState
-	 * @param ammunitionLevelNames
-	 * @param ammunitionLevels
-	 * @param fuelLevelNames
-	 * @param fuelLevels
-	 * @param batterieLevelNames
-	 * @param batterieLevels
-	 * @param cmdId
-	 * @param cmdState
-	 * @param hostname
-	 * @param mediaUrls
-	 * @param freeText
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param tecState value for tec state
+	 * @param opsState value for ops state
+	 * @param ammunitionLevelNames value for ammunition level names
+	 * @param ammunitionLevels value for ammunition levels
+	 * @param fuelLevelNames value for fuel level names
+	 * @param fuelLevels value for fuel levels
+	 * @param batterieLevelNames value for batterie level names
+	 * @param batterieLevels value for batterie levels
+	 * @param cmdId value for cmd id
+	 * @param cmdState value for cmd state
+	 * @param hostname value for hostname
+	 * @param mediaUrls value for media urls
+	 * @param freeText value for free text
 	 */
 	public STATUS(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, TechnicalState tecState, OperationalState opsState,
 			String[] ammunitionLevelNames, Double[] ammunitionLevels, String[] fuelLevelNames, Double[] fuelLevels, String[] batterieLevelNames, Double[] batterieLevels, Integer cmdId,
@@ -339,25 +508,25 @@ public class STATUS extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new STATUS message
 	 *
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param tecState
-	 * @param opsState
-	 * @param ammunitionLevelName
-	 * @param ammunitionLevel
-	 * @param fuelLevelName
-	 * @param fuelLevel
-	 * @param batterieLevelName
-	 * @param batterieLevel
-	 * @param cmdId
-	 * @param cmdState
-	 * @param hostname
-	 * @param mediaUrls
-	 * @param freeText
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param tecState value for tec state
+	 * @param opsState value for ops state
+	 * @param ammunitionLevelName value for ammunition level name
+	 * @param ammunitionLevel value for ammunition level
+	 * @param fuelLevelName value for fuel level name
+	 * @param fuelLevel value for fuel level
+	 * @param batterieLevelName value for batterie level name
+	 * @param batterieLevel value for batterie level
+	 * @param cmdId value for cmd id
+	 * @param cmdState value for cmd state
+	 * @param hostname value for hostname
+	 * @param mediaUrls value for media urls
+	 * @param freeText value for free text
 	 */
 	public STATUS(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, TechnicalState tecState, OperationalState opsState,
 			String ammunitionLevelName, Double ammunitionLevel, String fuelLevelName, Double fuelLevel, String batterieLevelName, Double batterieLevel, Integer cmdId, CommandState cmdState,
@@ -370,25 +539,25 @@ public class STATUS extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new STATUS message
 	 *
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param tecState
-	 * @param opsState
-	 * @param ammunitionLevelNames
-	 * @param ammunitionLevels
-	 * @param fuelLevelNames
-	 * @param fuelLevels
-	 * @param batterieLevelNames
-	 * @param batterieLevels
-	 * @param cmdId
-	 * @param cmdState
-	 * @param hostname
-	 * @param mediaUrls
-	 * @param freeText
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param tecState value for tec state
+	 * @param opsState value for ops state
+	 * @param ammunitionLevelNames value for ammunition level names
+	 * @param ammunitionLevels value for ammunition levels
+	 * @param fuelLevelNames value for fuel level names
+	 * @param fuelLevels value for fuel levels
+	 * @param batterieLevelNames value for batterie level names
+	 * @param batterieLevels value for batterie levels
+	 * @param cmdId value for cmd id
+	 * @param cmdState value for cmd state
+	 * @param hostname value for hostname
+	 * @param mediaUrls value for media urls
+	 * @param freeText value for free text
 	 */
 	public STATUS(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, TechnicalState tecState, OperationalState opsState,
 			List<String> ammunitionLevelNames, List<Double> ammunitionLevels, List<String> fuelLevelNames, List<Double> fuelLevels, List<String> batterieLevelNames, List<Double> batterieLevels,
@@ -414,7 +583,7 @@ public class STATUS extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new STATUS message from a serialized message
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public STATUS(String message) {
 
@@ -424,7 +593,7 @@ public class STATUS extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new STATUS message from a paramter list
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public STATUS(Iterator<String> message) {
 
@@ -600,38 +769,38 @@ public class STATUS extends SEDAPExpressMessage {
 
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-
-		if (obj == null) {
-			return false;
-		} else if (!(obj instanceof STATUS)) {
-			return false;
-		} else {
-			return super.equals(obj) &&
-
-					(this.tecState == ((STATUS) obj).tecState) && (this.opsState == ((STATUS) obj).opsState) &&
-
-					(this.ammunitionLevelNames.equals(((STATUS) obj).ammunitionLevelNames)) && (this.fuelLevelNames.equals(((STATUS) obj).fuelLevelNames))
-					&& (this.batteryLevelNames.equals(((STATUS) obj).batteryLevelNames)) &&
-
-					(this.ammunitionLevels.equals(((STATUS) obj).ammunitionLevels)) && (this.fuelLevels.equals(((STATUS) obj).fuelLevels)) && (this.batteryLevels.equals(((STATUS) obj).batteryLevels))
-					&&
-
-					(((this.hostname == null) && (((STATUS) obj).hostname == null)) || ((this.hostname != null) && this.hostname.equals(((STATUS) obj).hostname))) &&
-
-					(((this.mediaUrls == null) && (((STATUS) obj).mediaUrls == null)) || ((this.mediaUrls != null) && this.mediaUrls.equals(((STATUS) obj).mediaUrls))) &&
-
-					(((this.freeText == null) && (((STATUS) obj).freeText == null)) || ((this.freeText != null) && this.freeText.equals(((STATUS) obj).freeText)));
-
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
 	}
 
+	/**
+	 * Returns the hash code for this instance.
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 

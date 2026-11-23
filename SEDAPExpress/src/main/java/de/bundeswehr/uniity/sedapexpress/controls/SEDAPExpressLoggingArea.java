@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -49,6 +49,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
+ * Represents or provides the sedapexpress logging area functionality.
  *
  * @author Volker Voß
  *
@@ -72,12 +73,17 @@ public class SEDAPExpressLoggingArea extends GridPane {
 
 	private boolean selected;
 
+	/**
+	 * Returns the text.
+	 * @return the text
+	 */
 	@FXML
 	public String getText() {
 		return this.text;
 	}
 
 	/**
+ * Sets the text.
 	 * @param text the text to set
 	 */
 	public void setText(final String text) {
@@ -85,6 +91,7 @@ public class SEDAPExpressLoggingArea extends GridPane {
 	}
 
 	/**
+ * Returns the max log entries.
 	 * @return the maxLogEntries
 	 */
 	public int getMaxLogEntries() {
@@ -92,6 +99,7 @@ public class SEDAPExpressLoggingArea extends GridPane {
 	}
 
 	/**
+ * Sets the max log entries.
 	 * @param maxLogEntries the maxLogEntries to set
 	 */
 	public void setMaxLogEntries(final int maxLogEntries) {
@@ -99,6 +107,7 @@ public class SEDAPExpressLoggingArea extends GridPane {
 	}
 
 	/**
+ * Returns the delete size.
 	 * @return the deleteSize
 	 */
 	public int getDeleteSize() {
@@ -106,12 +115,16 @@ public class SEDAPExpressLoggingArea extends GridPane {
 	}
 
 	/**
+ * Sets the delete size.
 	 * @param deleteSize the deleteSize to set
 	 */
 	public void setDeleteSize(final int deleteSize) {
 		this.deleteSize = deleteSize;
 	}
 
+	/**
+	 * Creates a sedapexpress logging area instance.
+	 */
 	public SEDAPExpressLoggingArea() {
 
 		final Button saveButton = new Button("Save");
@@ -187,8 +200,9 @@ public class SEDAPExpressLoggingArea extends GridPane {
 	}
 
 	/**
+ * Performs the log operation.
 	 *
-	 * @param logText
+	 * @param logText value for log text
 	 */
 	public void log(final String logText) {
 
@@ -214,6 +228,9 @@ public class SEDAPExpressLoggingArea extends GridPane {
 		}
 	}
 
+	/**
+	 * Performs the new line operation.
+	 */
 	public void newLine() {
 		if (this.pause) {
 			return;
@@ -221,24 +238,41 @@ public class SEDAPExpressLoggingArea extends GridPane {
 		this.textList.getItems().add("\n");
 	}
 
+	/**
+	 * Performs the clear log operation.
+	 */
 	public void clearLog() {
 		this.textList.getItems().clear();
 	}
 
+	/**
+	 * Sets the tooltip text.
+	 * @param text value for text
+	 */
 	public void setTooltipText(final String text) {
 		this.textList.setTooltip(new Tooltip(text));
 	}
 
+	/**
+	 * Performs the deactivate logging operation.
+	 */
 	public void deactivateLogging() {
 		this.startStopLoggingButton.setSelected(true);
 		this.selected = true;
 	}
 
+	/**
+	 * Performs the activate logging operation.
+	 */
 	public void activateLogging() {
 		this.startStopLoggingButton.setSelected(false);
 		this.selected = false;
 	}
 
+	/**
+	 * Indicates whether the logging active condition is met.
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	public boolean isLoggingActive() {
 
 		return !this.selected;

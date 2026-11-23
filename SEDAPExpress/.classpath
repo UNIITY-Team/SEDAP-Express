@@ -11,33 +11,32 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFx">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Bouncycastle/bcpkix-jdk18on-1.86.jar">
+	<classpathentry kind="lib" path="libs/Bouncycastle/bcpkix-jdk18on-1.87.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bcpkix-jdk18on-1.86-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bcpkix-jdk18on-1.87-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Bouncycastle/bcprov-jdk18on-1.86.jar">
+	<classpathentry kind="lib" path="libs/Bouncycastle/bcprov-jdk18on-1.87.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bcprov-jdk18on-1.86-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bcprov-jdk18on-1.87-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Bouncycastle/bcutil-jdk18on-1.86.jar">
+	<classpathentry kind="lib" path="libs/Bouncycastle/bcutil-jdk18on-1.87.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bcutil-jdk18on-1.86-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bcutil-jdk18on-1.87-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/Bouncycastle/bctls-jdk18on-1.86.2.jar">
+	<classpathentry kind="lib" path="libs/Bouncycastle/bctls-jdk18on-1.87.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bctls-jdk18on-1.86.2-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/SEDAPExpress/libs/Bouncycastle/bctls-jdk18on-1.87-javadoc.jar!/"/>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
@@ -88,5 +87,16 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/JNA/jna-5.19.1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/JNA/jna-platform-5.19.1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/6"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

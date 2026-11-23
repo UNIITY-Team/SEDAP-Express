@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -30,6 +30,9 @@ import javax.annotation.processing.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Represents or provides the message functionality.
+ */
 @Generated("jsonschema2pojo")
 public class Message {
 
@@ -37,18 +40,44 @@ public class Message {
 	@Expose
 	private String message;
 
+	/**
+	 * Returns the message.
+	 * 
+	 * @return the message
+	 */
 	public String getMessage() {
 		return this.message;
 	}
 
+	/**
+	 * Sets the message.
+	 * 
+	 * @param message value for message
+	 */
 	public void setMessage(String message) {
 		this.message = message;
 	}
 
+	/**
+	 * Creates an empty message instance.
+	 */
+	public Message() {
+	}
+
+	/**
+	 * Creates a message instance.
+	 * 
+	 * @param message value for message
+	 */
 	public Message(String message) {
 		this.message = message;
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * 
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

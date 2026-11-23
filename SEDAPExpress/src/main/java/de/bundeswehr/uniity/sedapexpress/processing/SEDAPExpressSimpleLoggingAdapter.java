@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -33,15 +33,26 @@ package de.bundeswehr.uniity.sedapexpress.processing;
  */
 public class SEDAPExpressSimpleLoggingAdapter implements SEDAPExpressInputLoggingSubscriber, SEDAPExpressOutputLoggingSubscriber {
 
+	/**
+	 * Creates a sedapexpress simple logging adapter instance.
+	 */
 	public SEDAPExpressSimpleLoggingAdapter() {
 		// Nothing to do
 	}
 
+	/**
+	 * Performs the process sedapexpress output logging message operation.
+	 * @param message value for message
+	 */
 	@Override
 	public void processSEDAPExpressOutputLoggingMessage(String message) {
 		System.out.println(message);
 	}
 
+	/**
+	 * Performs the process sedapexpress input logging message operation.
+	 * @param message value for message
+	 */
 	@Override
 	public void processSEDAPExpressInputLoggingMessage(String message) {
 		System.out.println(message);

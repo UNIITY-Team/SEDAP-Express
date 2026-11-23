@@ -55,6 +55,9 @@ module sedapexpress {
 
 	requires transitive jssc;
 
+	requires transitive com.sun.jna;
+	requires transitive com.sun.jna.platform;
+
 	requires transitive com.google.gson;
 
 	requires transitive com.google.protobuf;
@@ -68,4 +71,6 @@ module sedapexpress {
 	requires java.compiler;
 	requires jakarta.annotation;
 	requires jakarta.validation;
+	requires java.desktop;
+
 }

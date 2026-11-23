@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -53,7 +53,7 @@ public class SEDAPExpressUDPClient extends SEDAPExpressCommunicator implements R
 
 	protected static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	static {
-		SEDAPExpressTCPClient.logger.setLevel(Level.ALL);
+		SEDAPExpressUDPClient.logger.setLevel(Level.ALL);
 	}
 
 	private Exception lastException = null;
@@ -82,6 +82,11 @@ public class SEDAPExpressUDPClient extends SEDAPExpressCommunicator implements R
 		this.port = port;
 	}
 
+	/**
+	 * Establishes the connection to the configured endpoint.
+	 * 
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	public boolean connect() {
 
 		try {
@@ -120,6 +125,9 @@ public class SEDAPExpressUDPClient extends SEDAPExpressCommunicator implements R
 
 	}
 
+	/**
+	 * Processes the incoming communication or work item.
+	 */
 	@Override
 	public void run() {
 
@@ -176,6 +184,13 @@ public class SEDAPExpressUDPClient extends SEDAPExpressCommunicator implements R
 		}
 	}
 
+	/**
+	 * Sends the supplied message through the configured transport.
+	 * 
+	 * @param message value for message
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 * @throws IOException if the operation cannot be completed because of this condition
+	 */
 	@Override
 	public boolean sendSEDAPExpressMessage(SEDAPExpressMessage message) throws IOException {
 
@@ -190,6 +205,9 @@ public class SEDAPExpressUDPClient extends SEDAPExpressCommunicator implements R
 		return false;
 	}
 
+	/**
+	 * Stops the communication resource and releases its active connection.
+	 */
 	@Override
 	public void stopCommunicator() {
 
@@ -203,6 +221,11 @@ public class SEDAPExpressUDPClient extends SEDAPExpressCommunicator implements R
 		logInput("UDP server stopped");
 	}
 
+	/**
+	 * Returns the last exception.
+	 * 
+	 * @return the last exception
+	 */
 	@Override
 	public Exception getLastException() {
 

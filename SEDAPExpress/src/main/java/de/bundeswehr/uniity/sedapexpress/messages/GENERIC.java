@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 /**
+ * Represents or provides the generic functionality.
  * 
  * @author Volker Voß
  *
@@ -37,6 +38,9 @@ public class GENERIC extends SEDAPExpressMessage {
 
 	private static final long serialVersionUID = 3541277880391552711L;
 
+/**
+ * Represents or provides the generic functionality.
+ */
 	public enum ContentType {
 
 		SEDAP, ASCII, NMEA, XML, JSON, BINARY
@@ -48,26 +52,50 @@ public class GENERIC extends SEDAPExpressMessage {
 
 	private String content;
 
+	/**
+	 * Returns the content type.
+	 * @return the content type
+	 */
 	public ContentType getContentType() {
 		return this.contentType;
 	}
 
+	/**
+	 * Sets the content type.
+	 * @param contentType value for content type
+	 */
 	public void setContentType(ContentType contentType) {
 		this.contentType = contentType;
 	}
 
+	/**
+	 * Returns the encoding.
+	 * @return the encoding
+	 */
 	public DataEncoding getEncoding() {
 		return this.encoding;
 	}
 
+	/**
+	 * Sets the encoding.
+	 * @param encoding value for encoding
+	 */
 	public void setEncoding(DataEncoding encoding) {
 		this.encoding = encoding;
 	}
 
+	/**
+	 * Returns the content.
+	 * @return the content
+	 */
 	public String getContent() {
 		return this.content;
 	}
 
+	/**
+	 * Sets the content.
+	 * @param content value for content
+	 */
 	public void setContent(String content) {
 		this.content = content;
 	}
@@ -87,15 +115,15 @@ public class GENERIC extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new GENERIC message
 	 *
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param contentType
-	 * @param encoding
-	 * @param content
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param contentType value for content type
+	 * @param encoding value for encoding
+	 * @param content value for content
 	 */
 	public GENERIC(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, ContentType contentType, DataEncoding encoding, String content) {
 
@@ -107,8 +135,9 @@ public class GENERIC extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a generic instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public GENERIC(String message) {
 
@@ -116,8 +145,9 @@ public class GENERIC extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a generic instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public GENERIC(Iterator<String> message) {
 
@@ -169,29 +199,38 @@ public class GENERIC extends SEDAPExpressMessage {
 		}
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-
-		if (obj == null) {
-			return false;
-		} else if (!(obj instanceof RESEND)) {
-			return false;
-		} else {
-			return super.equals(obj) &&
-
-					(((this.contentType == null) && (((GENERIC) obj).contentType == null)) || ((this.contentType != null) && this.contentType.equals(((GENERIC) obj).contentType))) &&
-
-					(((this.encoding == null) && (((GENERIC) obj).encoding == null)) || ((this.encoding != null) && this.encoding.equals(((GENERIC) obj).encoding))) &&
-
-					(((this.content == null) && (((GENERIC) obj).content == null)) || ((this.content != null) && this.content.equals(((GENERIC) obj).content)));
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
 	}
 
+	/**
+	 * Returns the hash code for this instance.
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 

@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -25,11 +25,11 @@
  */
 package de.bundeswehr.uniity.sedapexpress.messages;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
 
 /**
+ * Represents or provides the ownunit functionality.
  * 
  * @author Volker Voß
  *
@@ -53,82 +53,162 @@ public class OWNUNIT extends SEDAPExpressMessage {
 
 	private char[] sidc;
 
+	/**
+	 * Returns the latitude.
+	 * @return the latitude
+	 */
 	public Double getLatitude() {
 		return this.latitude;
 	}
 
+	/**
+	 * Sets the latitude.
+	 * @param latitude value for latitude
+	 */
 	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
+	/**
+	 * Returns the longitude.
+	 * @return the longitude
+	 */
 	public Double getLongitude() {
 		return this.longitude;
 	}
 
+	/**
+	 * Sets the longitude.
+	 * @param longitude value for longitude
+	 */
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
+	/**
+	 * Returns the altitude.
+	 * @return the altitude
+	 */
 	public Double getAltitude() {
 		return this.altitude;
 	}
 
+	/**
+	 * Sets the altitude.
+	 * @param altitude value for altitude
+	 */
 	public void setAltitude(Double altitude) {
 		this.altitude = altitude;
 	}
 
+	/**
+	 * Returns the speed.
+	 * @return the speed
+	 */
 	public Double getSpeed() {
 		return this.speed;
 	}
 
+	/**
+	 * Sets the speed.
+	 * @param speed value for speed
+	 */
 	public void setSpeed(Double speed) {
 		this.speed = speed;
 	}
 
+	/**
+	 * Returns the course.
+	 * @return the course
+	 */
 	public Double getCourse() {
 		return this.course;
 	}
 
+	/**
+	 * Sets the course.
+	 * @param course value for course
+	 */
 	public void setCourse(Double course) {
 		this.course = course;
 	}
 
+	/**
+	 * Returns the heading.
+	 * @return the heading
+	 */
 	public Double getHeading() {
 		return this.heading;
 	}
 
+	/**
+	 * Sets the heading.
+	 * @param heading value for heading
+	 */
 	public void setHeading(Double heading) {
 		this.heading = heading;
 	}
 
+	/**
+	 * Returns the roll.
+	 * @return the roll
+	 */
 	public Double getRoll() {
 		return this.roll;
 	}
 
+	/**
+	 * Sets the roll.
+	 * @param roll value for roll
+	 */
 	public void setRoll(Double roll) {
 		this.roll = roll;
 	}
 
+	/**
+	 * Returns the pitch.
+	 * @return the pitch
+	 */
 	public Double getPitch() {
 		return this.pitch;
 	}
 
+	/**
+	 * Sets the pitch.
+	 * @param pitch value for pitch
+	 */
 	public void setPitch(Double pitch) {
 		this.pitch = pitch;
 	}
 
+	/**
+	 * Returns the name.
+	 * @return the name
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * Sets the name.
+	 * @param name value for name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Returns the sidc.
+	 * @return the sidc
+	 */
 	public char[] getSIDC() {
 		return this.sidc;
 	}
 
+	/**
+	 * Sets the sidc.
+	 * @param sidc value for sidc
+	 */
 	public void setSIDC(char[] sidc) {
 		this.sidc = sidc;
 	}
@@ -155,22 +235,22 @@ public class OWNUNIT extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new OWNUNIT message
 	 *
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param latitude
-	 * @param longitude
-	 * @param altitude
-	 * @param speed
-	 * @param course
-	 * @param heading
-	 * @param roll
-	 * @param pitch
-	 * @param name
-	 * @param sidc
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param latitude value for latitude
+	 * @param longitude value for longitude
+	 * @param altitude value for altitude
+	 * @param speed value for speed
+	 * @param course value for course
+	 * @param heading value for heading
+	 * @param roll value for roll
+	 * @param pitch value for pitch
+	 * @param name value for name
+	 * @param sidc value for sidc
 	 */
 	public OWNUNIT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, Double latitude, Double longitude, Double altitude, Double speed,
 			Double course, Double heading, Double roll, Double pitch, String name, char[] sidc) {
@@ -192,7 +272,7 @@ public class OWNUNIT extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new OWNUNIT message from a serialized message
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public OWNUNIT(String message) {
 
@@ -202,7 +282,7 @@ public class OWNUNIT extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new OWNUNIT message from a paramter list
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public OWNUNIT(Iterator<String> message) {
 
@@ -329,34 +409,38 @@ public class OWNUNIT extends SEDAPExpressMessage {
 
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-
-		if (obj == null) {
-			return false;
-		} else if (!(obj instanceof OWNUNIT)) {
-			return false;
-		} else {
-			return super.equals(obj) &&
-
-					(this.latitude == ((OWNUNIT) obj).latitude) && (this.longitude == ((OWNUNIT) obj).longitude) && (this.altitude == ((OWNUNIT) obj).altitude) &&
-
-					(this.speed == ((OWNUNIT) obj).speed) && (this.course == ((OWNUNIT) obj).course) &&
-
-					(this.heading == ((OWNUNIT) obj).heading) && (this.roll == ((OWNUNIT) obj).roll) && (this.pitch == ((OWNUNIT) obj).pitch) &&
-
-					this.name.equals(((OWNUNIT) obj).name) &&
-
-					Arrays.equals(this.sidc, ((OWNUNIT) obj).sidc);
-
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
 	}
 
+	/**
+	 * Returns the hash code for this instance.
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 

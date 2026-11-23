@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -34,6 +34,9 @@ import com.google.gson.annotations.SerializedName;
 import jakarta.annotation.Generated;
 import jakarta.validation.Valid;
 
+/**
+ * Represents or provides the sedapexpress jsonmessage functionality.
+ */
 @Generated("jsonschema2pojo")
 public class SEDAPExpressJSONMessage {
 
@@ -42,14 +45,26 @@ public class SEDAPExpressJSONMessage {
 	@Valid
 	private List<Message> messages = new ArrayList<Message>();
 
+	/**
+	 * Returns the messages.
+	 * @return the messages
+	 */
 	public List<Message> getMessages() {
 		return this.messages;
 	}
 
+	/**
+	 * Sets the messages.
+	 * @param messages value for messages
+	 */
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

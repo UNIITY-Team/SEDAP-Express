@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -33,6 +33,7 @@ import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.DecoderException;
 
 /**
+ * Represents a SEDAP-Express TEXT message with optional text encoding and recipient metadata.
  * 
  * @author Volker Voß
  *
@@ -41,12 +42,19 @@ public class TEXT extends SEDAPExpressMessage {
 
 	private static final long serialVersionUID = 1140074068439618568L;
 
+/**
+ * Represents a SEDAP-Express TEXT message with optional text encoding and recipient metadata.
+ */
 	public enum TextType {
 
 		Undefined(0), Alert(1), Warning(2), Notice(3), Chat(4);
 
 		int type;
 
+	/**
+	 * Returns the type.
+	 * @return the type
+	 */
 		public int getType() {
 			return this.type;
 		}
@@ -55,6 +63,11 @@ public class TEXT extends SEDAPExpressMessage {
 			this.type = type;
 		}
 
+	/**
+	 * Resolves the corresponding value from the supplied representation.
+	 * @param type value for type
+	 * @return the result of the operation
+	 */
 		public static TextType valueOfTextType(int type) {
 
 			return switch (type) {
@@ -67,9 +80,13 @@ public class TEXT extends SEDAPExpressMessage {
 			};
 		}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 		@Override
 		public String toString() {
-			return String.valueOf(this.type);
+			return String.format(java.util.Locale.ROOT, "%02d", this.type);
 		}
 	}
 
@@ -83,42 +100,82 @@ public class TEXT extends SEDAPExpressMessage {
 
 	private String reference;
 
+	/**
+	 * Returns the type.
+	 * @return the type
+	 */
 	public TextType getType() {
 		return this.type;
 	}
 
+	/**
+	 * Sets the type.
+	 * @param type value for type
+	 */
 	public void setType(TextType type) {
 		this.type = type;
 	}
 
+	/**
+	 * Returns the encoding.
+	 * @return the encoding
+	 */
 	public DataEncoding getEncoding() {
 		return this.encoding;
 	}
 
+	/**
+	 * Sets the encoding.
+	 * @param encoding value for encoding
+	 */
 	public void setEncoding(DataEncoding encoding) {
 		this.encoding = encoding;
 	}
 
+	/**
+	 * Returns the text content.
+	 * @return the text content
+	 */
 	public String getTextContent() {
 		return this.textContent;
 	}
 
+	/**
+	 * Sets the text content.
+	 * @param text value for text
+	 */
 	public void setTextContent(String text) {
 		this.textContent = text;
 	}
 
+	/**
+	 * Returns the recipient.
+	 * @return the recipient
+	 */
 	public String getRecipient() {
 		return this.recipient;
 	}
 
+	/**
+	 * Sets the recipient.
+	 * @param recipient value for recipient
+	 */
 	public void setRecipient(String recipient) {
 		this.recipient = recipient;
 	}
 
+	/**
+	 * Returns the reference.
+	 * @return the reference
+	 */
 	public String getReference() {
 		return this.reference;
 	}
 
+	/**
+	 * Sets the reference.
+	 * @param reference value for reference
+	 */
 	public void setReference(String reference) {
 		this.reference = reference;
 	}
@@ -140,17 +197,17 @@ public class TEXT extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new TEXT message
 	 * 
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param recipient
-	 * @param type
-	 * @param encoding
-	 * @param textContent
-	 * @param reference
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param recipient value for recipient
+	 * @param type value for type
+	 * @param encoding value for encoding
+	 * @param textContent value for text content
+	 * @param reference value for reference
 	 */
 	public TEXT(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient, TextType type, DataEncoding encoding,
 			String textContent, String reference) {
@@ -166,8 +223,9 @@ public class TEXT extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a text instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public TEXT(String message) {
 
@@ -175,8 +233,9 @@ public class TEXT extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a text instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public TEXT(Iterator<String> message) {
 
@@ -259,31 +318,38 @@ public class TEXT extends SEDAPExpressMessage {
 
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-
-		if (obj == null) {
-			return false;
-		} else if (!(obj instanceof TEXT)) {
-			return false;
-		} else {
-			return super.equals(obj) && (this.type == ((TEXT) obj).type) &&
-
-					(((this.encoding == null) && (((TEXT) obj).encoding == null)) || ((this.encoding != null) && this.encoding.equals(((TEXT) obj).encoding))) &&
-
-					(((this.textContent == null) && (((TEXT) obj).textContent == null)) || ((this.textContent != null) && this.textContent.equals(((TEXT) obj).textContent))) &&
-
-					(((this.recipient == null) && (((TEXT) obj).recipient == null)) || ((this.recipient != null) && this.recipient.equals(((TEXT) obj).recipient))) &&
-
-					(((this.reference == null) && (((TEXT) obj).reference == null)) || ((this.reference != null) && this.reference.equals(((TEXT) obj).reference)));
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
 	}
 
+	/**
+	 * Returns the hash code for this instance.
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 

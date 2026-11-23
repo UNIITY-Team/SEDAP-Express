@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -37,6 +37,7 @@ import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.DecoderException;
 
 /**
+ * Represents or provides the graphic functionality.
  * 
  * @author Volker Voß
  *
@@ -45,6 +46,9 @@ public class GRAPHIC extends SEDAPExpressMessage {
 
 	private static final long serialVersionUID = 341163682644789657L;
 
+/**
+ * Identifies the geometric or tactical graphic-object type used on the wire.
+ */
 	public enum GraphicType {
 
 		Point(0x00), Path(0x01), Polygon(0x02), Rectangle(0x03), Square(0x04), Circle(0x05), Ellipse(0x06), Block(0x07), Sphere(0x08), Ellipsoid(0x09), SensorFieldOfView(0x0A),
@@ -63,6 +67,10 @@ public class GRAPHIC extends SEDAPExpressMessage {
 			this.type = type;
 		}
 
+	/**
+	 * Returns the type.
+	 * @return the type
+	 */
 		public int getType() {
 			return this.type;
 		}
@@ -70,55 +78,141 @@ public class GRAPHIC extends SEDAPExpressMessage {
 		/**
 		 * Sucht den GraphicType anhand des Integer-Werts.
 		 * 
+ * @param type value for type
 		 * @return Der passende Typ oder Point als Standardwert.
 		 */
 		public static GraphicType valueOfGraphicType(int type) {
 			return GraphicType.LOOKUP.getOrDefault(type, Point);
 		}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 		@Override
 		public String toString() {
-			return String.valueOf(this.type);
+			return String.format("%02X", this.type);
 		}
 	}
 
+/** Marker interface for geometric and tactical graphic objects. */
 	public interface GraphicObject {
 	};
 
+	/** A point represented by latitude, longitude and altitude.
+	 * @param latitude latitude in degrees
+	 * @param longitude longitude in degrees
+	 * @param laltitude altitude in metres
+	 */
 	public record Point(double latitude, double longitude, double laltitude) implements GraphicObject {
 	};
 
+	/** An ordered path represented by coordinate tuples.
+	 * @param latLonAlt ordered latitude/longitude/altitude tuples
+	 */
 	public record Path(List<double[]> latLonAlt) implements GraphicObject {
 	};
 
+	/** A closed polygon represented by coordinate tuples.
+	 * @param latLonAlt ordered latitude/longitude/altitude tuples
+	 */
 	public record Polygon(List<double[]> latLonAlt) implements GraphicObject {
 	};
 
+	/** A rectangle defined by its centre, dimensions and rotation.
+	 * @param latitude centre latitude in degrees
+	 * @param longitude centre longitude in degrees
+	 * @param altitude centre altitude in metres
+	 * @param width width in metres
+	 * @param length length in metres
+	 * @param rotation rotation in degrees
+	 */
 	public record Rectangle(double latitude, double longitude, double altitude, double width, double length, double rotation) implements GraphicObject {
 	};
 
+	/** A square defined by its centre, side width and rotation.
+	 * @param latitude centre latitude in degrees
+	 * @param longitude centre longitude in degrees
+	 * @param altitude centre altitude in metres
+	 * @param width side width in metres
+	 * @param rotation rotation in degrees
+	 */
 	public record Square(double latitude, double longitude, double altitude, double width, double rotation) implements GraphicObject {
 	};
 
+	/** A circle or arc defined by its centre, radius and angular range.
+	 * @param latitude centre latitude in degrees
+	 * @param longitude centre longitude in degrees
+	 * @param altitude centre altitude in metres
+	 * @param radius radius in metres
+	 * @param startAngle start angle in degrees
+	 * @param endAngle end angle in degrees
+	 */
 	public record Circle(double latitude, double longitude, double altitude, double radius, double startAngle, double endAngle) implements GraphicObject {
 	};
 
+	/** An ellipse defined by its centre, radii and rotation.
+	 * @param centerLatitude centre latitude in degrees
+	 * @param centerLongitude centre longitude in degrees
+	 * @param centerAltitude centre altitude in metres
+	 * @param radiusX X-axis radius in metres
+	 * @param radiusY Y-axis radius in metres
+	 * @param rotation rotation in degrees
+	 */
 	public record Ellipse(double centerLatitude, double centerLongitude, double centerAltitude, double radiusX, double radiusY, double rotation) implements GraphicObject {
 	};
 
+	/** A three-dimensional rectangular block with position and orientation.
+	 * @param latitude centre latitude in degrees
+	 * @param longitude centre longitude in degrees
+	 * @param altitude centre altitude in metres
+	 * @param width width in metres
+	 * @param length length in metres
+	 * @param height height in metres
+	 * @param rotationX rotation about the X axis in degrees
+	 * @param rotationY rotation about the Y axis in degrees
+	 * @param rotationZ rotation about the Z axis in degrees
+	 */
 	public record Block(double latitude, double longitude, double altitude, double width, double length, double height, double rotationX, double rotationY, double rotationZ) implements GraphicObject {
 	};
 
+	/** A sphere defined by its centre and radius.
+	 * @param latitude centre latitude in degrees
+	 * @param longitude centre longitude in degrees
+	 * @param altitude centre altitude in metres
+	 * @param radius radius in metres
+	 */
 	public record Sphere(double latitude, double longitude, double altitude, double radius) implements GraphicObject {
 	};
 
+	/** A three-dimensional ellipsoid defined by its centre, radii and orientation.
+	 * @param centerLatitude centre latitude in degrees
+	 * @param centerLongitude centre longitude in degrees
+	 * @param centerAltitude centre altitude in metres
+	 * @param radiusX X-axis radius in metres
+	 * @param radiusY Y-axis radius in metres
+	 * @param radiusZ Z-axis radius in metres
+	 * @param rotationX rotation about the X axis in degrees
+	 * @param rotationY rotation about the Y axis in degrees
+	 * @param rotationZ rotation about the Z axis in degrees
+	 */
 	public record Ellipsoid(double centerLatitude, double centerLongitude, double centerAltitude, double radiusX, double radiusY, double radiusZ, double rotationX, double rotationY, double rotationZ)
 			implements GraphicObject {
 	};
 
+	/** A sensor field-of-view sector.
+	 * @param azimuth azimuth angle in degrees
+	 * @param elevation elevation angle in degrees
+	 * @param latLonAlt sector boundary coordinate tuples
+	 */
 	public record SensorFieldOfView(double azimuth, double elevation, List<double[]> latLonAlt) implements GraphicObject {
 	};
 
+	/** A weapon field-of-fire sector.
+	 * @param azimuth azimuth angle in degrees
+	 * @param elevation elevation angle in degrees
+	 * @param latLonAlt sector boundary coordinate tuples
+	 */
 	public record WeaponFieldOfFire(double azimuth, double elevation, List<double[]> latLonAlt) implements GraphicObject {
 	};
 
@@ -142,82 +236,162 @@ public class GRAPHIC extends SEDAPExpressMessage {
 
 	private String annotation;
 
+	/**
+	 * Returns the graphic id.
+	 * @return the graphic id
+	 */
 	public String getGraphicID() {
 		return this.graphicID;
 	}
 
+	/**
+	 * Sets the graphic id.
+	 * @param graphicID value for graphic id
+	 */
 	public void setGraphicID(String graphicID) {
 		this.graphicID = graphicID;
 	}
 
+	/**
+	 * Returns the delete flag.
+	 * @return the delete flag
+	 */
 	public DeleteFlag getDeleteFlag() {
 		return this.deleteFlag;
 	}
 
+	/**
+	 * Sets the delete flag.
+	 * @param deleteFlag value for delete flag
+	 */
 	public void setDeleteFlag(DeleteFlag deleteFlag) {
 		this.deleteFlag = deleteFlag;
 	}
 
+	/**
+	 * Returns the graphic type.
+	 * @return the graphic type
+	 */
 	public GraphicType getGraphicType() {
 		return this.graphicType;
 	}
 
+	/**
+	 * Sets the graphic type.
+	 * @param graphicType value for graphic type
+	 */
 	public void setGraphicType(GraphicType graphicType) {
 		this.graphicType = graphicType;
 	}
 
+	/**
+	 * Returns the line width.
+	 * @return the line width
+	 */
 	public Double getLineWidth() {
 		return this.lineWidth;
 	}
 
+	/**
+	 * Sets the line width.
+	 * @param lineWidth value for line width
+	 */
 	public void setLineWidth(Double lineWidth) {
 		this.lineWidth = lineWidth;
 	}
 
+	/**
+	 * Returns the line color.
+	 * @return the line color
+	 */
 	public Long getLineColor() {
 		return this.lineColor;
 	}
 
+	/**
+	 * Sets the line color.
+	 * @param lineColor value for line color
+	 */
 	public void setLineColor(Long lineColor) {
 		this.lineColor = lineColor;
 	}
 
+	/**
+	 * Returns the fill color.
+	 * @return the fill color
+	 */
 	public Long getFillColor() {
 		return this.fillColor;
 	}
 
+	/**
+	 * Sets the fill color.
+	 * @param fillColor value for fill color
+	 */
 	public void setFillColor(Long fillColor) {
 		this.fillColor = fillColor;
 	}
 
+	/**
+	 * Returns the text color.
+	 * @return the text color
+	 */
 	public Long getTextColor() {
 		return this.textColor;
 	}
 
+	/**
+	 * Sets the text color.
+	 * @param textColor value for text color
+	 */
 	public void setTextColor(Long textColor) {
 		this.textColor = textColor;
 	}
 
+	/**
+	 * Returns the encoding.
+	 * @return the encoding
+	 */
 	public DataEncoding getEncoding() {
 		return this.encoding;
 	}
 
+	/**
+	 * Sets the encoding.
+	 * @param encoding value for encoding
+	 */
 	public void setEncoding(DataEncoding encoding) {
 		this.encoding = encoding;
 	}
 
+	/**
+	 * Returns the annotation.
+	 * @return the annotation
+	 */
 	public String getAnnotation() {
 		return this.annotation;
 	}
 
+	/**
+	 * Sets the annotation.
+	 * @param annotation value for annotation
+	 */
 	public void setAnnotation(String annotation) {
 		this.annotation = annotation;
 	}
 
+	/**
+	 * Returns the graphic object.
+	 * @return the graphic object
+	 */
 	public GraphicObject getGraphicObject() {
 		return this.graphicObject;
 	}
 
+	/**
+	 * Sets the graphic object.
+	 * @param graphicObject value for graphic object
+	 */
 	public void setGraphicObject(GraphicObject graphicObject) {
 		this.graphicObject = graphicObject;
 	}
@@ -242,19 +416,19 @@ public class GRAPHIC extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new GRAPHIC message
 	 * 
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param graphicType
-	 * @param lineWidth
-	 * @param lineColor
-	 * @param fillColor
-	 * @param textColor
-	 * @param encoding
-	 * @param annotation
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param graphicType value for graphic type
+	 * @param lineWidth value for line width
+	 * @param lineColor value for line color
+	 * @param fillColor value for fill color
+	 * @param textColor value for text color
+	 * @param encoding value for encoding
+	 * @param annotation value for annotation
 	 */
 	public GRAPHIC(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, GraphicType graphicType, Double lineWidth, Long lineColor,
 			Long fillColor, Long textColor, DataEncoding encoding, String annotation) {
@@ -274,19 +448,19 @@ public class GRAPHIC extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new GRAPHIC message
 	 * 
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param lineWidth
-	 * @param lineColor
-	 * @param fillColor
-	 * @param textColor
-	 * @param encoding
-	 * @param annotation
-	 * @param graphicObject
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param lineWidth value for line width
+	 * @param lineColor value for line color
+	 * @param fillColor value for fill color
+	 * @param textColor value for text color
+	 * @param encoding value for encoding
+	 * @param annotation value for annotation
+	 * @param graphicObject value for graphic object
 	 */
 	public GRAPHIC(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, Double lineWidth, Long lineColor, Long fillColor, Long textColor,
 			DataEncoding encoding, String annotation, GraphicObject graphicObject) {
@@ -332,14 +506,19 @@ public class GRAPHIC extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a graphic instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public GRAPHIC(String message) {
 
 		this(SEDAPExpressMessage.splitMessage(message.substring(message.indexOf(';') + 1)).iterator());
 	}
 
+	/**
+	 * Creates a graphic instance.
+	 * @param message value for message
+	 */
 	public GRAPHIC(Iterator<String> message) {
 
 		super(message);
@@ -374,7 +553,7 @@ public class GRAPHIC extends SEDAPExpressMessage {
 		if (message.hasNext()) {
 			value = message.next();
 			if (SEDAPExpressMessage.matchesPattern(SEDAPExpressMessage.GRAPHICTYPE_MATCHER, value)) {
-				this.graphicType = GraphicType.valueOfGraphicType(Integer.parseInt(value));
+				this.graphicType = GraphicType.valueOfGraphicType(Integer.parseInt(value, 16));
 			} else if (value.isBlank()) {
 				SEDAPExpressMessage.logger.logp(Level.SEVERE, "GRAPHIC", "GRAPHIC(Iterator<String> message)", "Mandatory field \"graphicType\" is empty!", value);
 			} else {
@@ -574,36 +753,38 @@ public class GRAPHIC extends SEDAPExpressMessage {
 		}
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-
-		if (obj == null) {
-			return false;
-		} else if (!(obj instanceof GRAPHIC)) {
-			return false;
-		} else {
-			return super.equals(obj) &&
-
-					(((this.graphicID == null) && (((GRAPHIC) obj).graphicID == null)) || ((this.graphicID != null) && this.graphicID.equals(((GRAPHIC) obj).graphicID))) &&
-
-					(this.deleteFlag == ((GRAPHIC) obj).deleteFlag) &&
-
-					(this.graphicType == (((GRAPHIC) obj).graphicType)) && (this.lineWidth == (((GRAPHIC) obj).lineWidth)) && (this.lineColor == (((GRAPHIC) obj).lineColor))
-					&& (this.fillColor == (((GRAPHIC) obj).fillColor)) && (this.textColor == (((GRAPHIC) obj).textColor))
-					&& (((this.encoding == null) && (((GRAPHIC) obj).encoding == null)) || ((this.encoding != null) && this.encoding.equals(((GRAPHIC) obj).encoding))) &&
-
-					(((this.annotation == null) && (((GRAPHIC) obj).annotation == null)) || ((this.annotation != null) && this.annotation.equals(((GRAPHIC) obj).annotation)) &&
-
-							(((this.graphicObject == null) && (((GRAPHIC) obj).graphicObject == null)) || ((this.graphicObject != null) && this.graphicObject.equals(((GRAPHIC) obj).graphicObject))));
-
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
 	}
 
+	/**
+	 * Returns the hash code for this instance.
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 

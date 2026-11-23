@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 /**
+ * Represents or provides the acknowledge functionality.
  * 
  * @author Volker Voß
  *
@@ -43,26 +44,50 @@ public class ACKNOWLEDGE extends SEDAPExpressMessage {
 
 	private Byte numberOfTheMessage;
 
+	/**
+	 * Returns the recipient.
+	 * @return the recipient
+	 */
 	public String getRecipient() {
 		return this.recipient;
 	}
 
+	/**
+	 * Sets the recipient.
+	 * @param recipient value for recipient
+	 */
 	public void setRecipient(String recipient) {
 		this.recipient = recipient;
 	}
 
+	/**
+	 * Returns the type of the message.
+	 * @return the type of the message
+	 */
 	public MessageType getTypeOfTheMessage() {
 		return this.typeOfTheMessage;
 	}
 
+	/**
+	 * Sets the type of the message.
+	 * @param typeOfTheMessage value for type of the message
+	 */
 	public void setTypeOfTheMessage(MessageType typeOfTheMessage) {
 		this.typeOfTheMessage = typeOfTheMessage;
 	}
 
+	/**
+	 * Returns the number of the message.
+	 * @return the number of the message
+	 */
 	public Byte getNumberOfTheMessage() {
 		return this.numberOfTheMessage;
 	}
 
+	/**
+	 * Sets the number of the message.
+	 * @param numberOfTheMessage value for number of the message
+	 */
 	public void setNumberOfTheMessage(Byte numberOfTheMessage) {
 		this.numberOfTheMessage = numberOfTheMessage;
 	}
@@ -82,15 +107,15 @@ public class ACKNOWLEDGE extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new ACKNOWLEDGE message
 	 *
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param recipient
-	 * @param nameOfTheMessage
-	 * @param numberOfTheMessage
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param recipient value for recipient
+	 * @param nameOfTheMessage value for name of the message
+	 * @param numberOfTheMessage value for number of the message
 	 */
 	public ACKNOWLEDGE(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String recipient, MessageType nameOfTheMessage,
 			Byte numberOfTheMessage) {
@@ -104,8 +129,9 @@ public class ACKNOWLEDGE extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a acknowledge instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public ACKNOWLEDGE(String message) {
 
@@ -113,8 +139,9 @@ public class ACKNOWLEDGE extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a acknowledge instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public ACKNOWLEDGE(Iterator<String> message) {
 
@@ -159,31 +186,38 @@ public class ACKNOWLEDGE extends SEDAPExpressMessage {
 		}
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-
-		if (obj == null) {
-			return false;
-		} else if (!(obj instanceof ACKNOWLEDGE)) {
-			return false;
-		} else {
-			return super.equals(obj) &&
-
-					(((this.recipient == null) && (((ACKNOWLEDGE) obj).recipient == null)) || ((this.recipient != null) && this.recipient.equals(((ACKNOWLEDGE) obj).recipient))) &&
-
-					(((this.typeOfTheMessage == null) && (((ACKNOWLEDGE) obj).typeOfTheMessage == null))
-							|| ((this.typeOfTheMessage != null) && this.typeOfTheMessage.equals(((ACKNOWLEDGE) obj).typeOfTheMessage)))
-					&&
-
-					(this.numberOfTheMessage == (((ACKNOWLEDGE) obj).numberOfTheMessage));
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
 	}
 
+	/**
+	 * Returns the hash code for this instance.
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 

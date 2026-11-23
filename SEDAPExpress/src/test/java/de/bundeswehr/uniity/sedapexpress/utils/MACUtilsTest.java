@@ -1,14 +1,22 @@
 package de.bundeswehr.uniity.sedapexpress.utils;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.security.SecureRandom;
+import java.nio.charset.StandardCharsets;
+import java.util.HexFormat;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
+import de.bundeswehr.uniity.sedapexpress.messages.TEXT;
 
 /**
  * Tests MAC generation and verification.
@@ -88,6 +96,65 @@ class MACUtilsTest {
 		assertTruncatedMacMatchesFullMac(
 				m -> MACUtils.setMACFieldWithGMAC(key, iv, m),
 				m -> MACUtils.setMACFieldWith32BitGMAC(key, iv, m));
+	}
+
+	@Test
+	void hmac128GenerationAndVerificationWorksForKeyConfirmation() {
+		TestMessage message = new TestMessage(PAYLOAD, null);
+		MACUtils.setMACFieldWith128BitHMAC(key, message);
+		assertEquals(32, message.getMAC().length());
+		assertTrue(MACUtils.isMessageAuthenticWith128BitHMAC(key, message));
+	}
+
+	@Test
+	void cmac128GenerationAndVerificationWorks() {
+		TestMessage message = new TestMessage(PAYLOAD, null);
+		MACUtils.setMACFieldWith128BitCMAC(key, message);
+		assertEquals(32, message.getMAC().length());
+		assertTrue(MACUtils.isMessageAuthentic(key, message));
+	}
+
+	@Test
+	void gmac128GenerationAndVerificationWorks() {
+		TestMessage message = new TestMessage(PAYLOAD, null);
+		MACUtils.setMACFieldWith128BitGMAC(key, iv, message);
+		assertEquals(32, message.getMAC().length());
+		assertTrue(MACUtils.isMessageAuthentic(key, iv, message));
+	}
+
+	@Test
+	void verifiesMacAgainstExactReceivedWireText() throws Exception {
+		String unsignedWire = "TEXT;01;0195238E25AD;NODE;U;FALSE;;PEER;01;NONE;Hello";
+		Mac hmac = Mac.getInstance("HmacSHA256");
+		hmac.init(new SecretKeySpec(key, "HmacSHA256"));
+		String macValue = HexFormat.of().withUpperCase().formatHex(hmac.doFinal(unsignedWire.getBytes(StandardCharsets.ISO_8859_1)));
+		String signedWire = unsignedWire.replace(";FALSE;;PEER;", ";FALSE;" + macValue + ";PEER;");
+		SEDAPExpressMessage parsed = SEDAPExpressMessage.deserialize(signedWire);
+		assertNotNull(parsed);
+		assertTrue(MACUtils.isMessageAuthentic(key, parsed));
+		assertFalse(parsed.toString().equals(signedWire), "The test must exercise a non-canonical received wire representation.");
+	}
+
+	@Test
+	void macVerificationAcceptsLowerCaseHex() {
+		TestMessage message = new TestMessage(PAYLOAD, null);
+		MACUtils.setMACFieldWith128BitHMAC(key, message);
+		message.setMAC(message.getMAC().toLowerCase(java.util.Locale.ROOT));
+		assertTrue(MACUtils.isMessageAuthenticWith128BitHMAC(key, message));
+	}
+
+	@Test
+	void hmac256TagIsAcceptedAfterMessageDeserialization() throws Exception {
+		String unsignedWire = "TEXT;01;0195238E25AD;NODE;U;FALSE;;PEER;01;NONE;Hello";
+		Mac hmac = Mac.getInstance("HmacSHA256");
+		hmac.init(new SecretKeySpec(key, "HmacSHA256"));
+		String macValue = HexFormat.of().withUpperCase().formatHex(hmac.doFinal(unsignedWire.getBytes(StandardCharsets.ISO_8859_1)));
+		String signedWire = unsignedWire.replace(";FALSE;;PEER;", ";FALSE;" + macValue + ";PEER;");
+
+		SEDAPExpressMessage parsed = SEDAPExpressMessage.deserialize(signedWire);
+		assertNotNull(parsed);
+		assertEquals(64, parsed.getMAC().length());
+		assertTrue(MACUtils.isMessageAuthentic(key, parsed));
 	}
 
 	@Test

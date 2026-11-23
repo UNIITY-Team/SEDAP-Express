@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -25,6 +25,9 @@
  */
 package de.bundeswehr.uniity.sedapexpress.utils;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -32,18 +35,21 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
-import java.util.HexFormat;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import de.bundeswehr.uniity.sedapexpress.utils.EncryptionUtils.AESKeyLength;
+import de.bundeswehr.uniity.sedapexpress.messages.KEYEXCHANGE.AESKeyLength;
 
 class ECDHUtilsTest {
 
 	@Test
-	void testECDHKeyExchange()
+	void testECDHKeyExchangeHKDFSHA256()
 			throws InvalidParameterSpecException, NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException, InvalidKeySpecException {
+
+		byte[] salt = new byte[32];
+		EncryptionUtils.random.nextBytes(salt);
 
 		for (AESKeyLength keyLengthSharedSecret : AESKeyLength.values()) {
 
@@ -54,19 +60,30 @@ class ECDHUtilsTest {
 			KeyPair serverKeyPair = ECDHUtils.generateKeyPair();
 
 			// Client
-			byte[] secretClient = ECDHUtils.getSharedSecretKey(clientKeyPair.getPrivate(), serverKeyPair.getPublic(), keyLengthSharedSecret);
+			byte[] secretClient = ECDHUtils.getSharedSecretKeyHKDFSHA256(clientKeyPair.getPrivate(), serverKeyPair.getPublic(), keyLengthSharedSecret, salt);
 
 			// Server
-			byte[] secretServer = ECDHUtils.getSharedSecretKey(serverKeyPair.getPrivate(), clientKeyPair.getPublic(), keyLengthSharedSecret);
+			byte[] secretServer = ECDHUtils.getSharedSecretKeyHKDFSHA256(serverKeyPair.getPrivate(), clientKeyPair.getPublic(), keyLengthSharedSecret, salt);
 
+			Assertions.assertEquals(keyLengthSharedSecret.getIntValue() / 8, secretClient.length,
+					"The derived key must have the negotiated AES key length.");
 			Assertions.assertArrayEquals(secretClient, secretServer);
-
-			System.out.println("Public key client:        " + HexFormat.of().withUpperCase().formatHex(clientKeyPair.getPublic().getEncoded()));
-			System.out.println("Public key server:        " + HexFormat.of().withUpperCase().formatHex(serverKeyPair.getPublic().getEncoded()));
-			System.out.println();
-			System.out.println("Key length shared secret: " + keyLengthSharedSecret.getIntValue());
-			System.out.println("Shared secret client:     " + HexFormat.of().withUpperCase().formatHex(secretClient));
-			System.out.println("Shared secret sever:      " + HexFormat.of().withUpperCase().formatHex(secretServer));
 		}
 	}
+
+	@Test
+	void generateKeyPairCreatesUsableKeyPairs() throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
+
+		KeyPair first = ECDHUtils.generateKeyPair();
+		KeyPair second = ECDHUtils.generateKeyPair();
+
+		assertNotNull(first);
+		assertNotNull(first.getPrivate());
+		assertNotNull(first.getPublic());
+		assertNotNull(second);
+		assertNotNull(second.getPrivate());
+		assertNotNull(second.getPublic());
+		assertFalse(Arrays.equals(first.getPublic().getEncoded(), second.getPublic().getEncoded()), "Two independently generated key pairs should have different public keys");
+	}
+
 }

@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -25,12 +25,12 @@
  */
 package de.bundeswehr.uniity.sedapexpress.messages;
 
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
 /**
+ * Represents or provides the emission functionality.
  * 
  * @author Volker Voß
  *
@@ -39,12 +39,19 @@ public class EMISSION extends SEDAPExpressMessage {
 
 	private static final long serialVersionUID = -421710238402316680L;
 
+/**
+ * Represents or provides the emission functionality.
+ */
 	public enum FreqAgility {
 
 		Stable_Fixed(0), Agile(1), Periodic(2), Hopper(3), Batch_Hopper(4), Unknown(5);
 
 		int freqAgility;
 
+	/**
+	 * Returns the freq agility.
+	 * @return the freq agility
+	 */
 		public int getFreqAgility() {
 			return this.freqAgility;
 		}
@@ -53,6 +60,11 @@ public class EMISSION extends SEDAPExpressMessage {
 			this.freqAgility = freqAgility;
 		}
 
+	/**
+	 * Resolves the corresponding value from the supplied representation.
+	 * @param freqAgility value for freq agility
+	 * @return the result of the operation
+	 */
 		public static FreqAgility valueOfFreqAgility(int freqAgility) {
 
 			return switch (freqAgility) {
@@ -66,18 +78,29 @@ public class EMISSION extends SEDAPExpressMessage {
 			};
 		}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 		@Override
 		public String toString() {
 			return String.valueOf(this.freqAgility);
 		}
 	}
 
+/**
+ * Represents or provides the emission functionality.
+ */
 	public enum PRFAgility {
 
 		Fixed_periodic(0), Staggered(1), Jittered(2), Wobbulated(3), Sliding(4), Dwell_switch(5), CW(6), UnknownPRF(7);
 
 		int prfAgility;
 
+	/**
+	 * Returns the prfagility.
+	 * @return the prfagility
+	 */
 		public int getPRFAgility() {
 			return this.prfAgility;
 		}
@@ -86,6 +109,11 @@ public class EMISSION extends SEDAPExpressMessage {
 			this.prfAgility = prfAgility;
 		}
 
+	/**
+	 * Resolves the corresponding value from the supplied representation.
+	 * @param prfAgility value for prf agility
+	 * @return the result of the operation
+	 */
 		public static PRFAgility valueOfPRFAgility(int prfAgility) {
 
 			return switch (prfAgility) {
@@ -102,12 +130,19 @@ public class EMISSION extends SEDAPExpressMessage {
 			};
 		}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 		@Override
 		public String toString() {
 			return String.valueOf(this.prfAgility);
 		}
 	}
 
+/**
+ * Represents or provides the emission functionality.
+ */
 	public enum Function {
 
 		Unknown(0), ESM_Beacon_Transponder(1), ESM_Navigation(2), ESM_Voice_Communication(3), ESM_Data_Communication(4), ESM_Radar(5), ESM_Iff(6), ESM_Guidance(7), ESM_Weapon(8), ESM_Jammer(9),
@@ -117,6 +152,10 @@ public class EMISSION extends SEDAPExpressMessage {
 
 		int function;
 
+	/**
+	 * Returns the function.
+	 * @return the function
+	 */
 		public int getFunction() {
 			return this.function;
 		}
@@ -125,6 +164,11 @@ public class EMISSION extends SEDAPExpressMessage {
 			this.function = function;
 		}
 
+	/**
+	 * Resolves the corresponding value from the supplied representation.
+	 * @param function value for function
+	 * @return the result of the operation
+	 */
 		public static Function valueOfFunction(int function) {
 
 			return switch (function) {
@@ -164,6 +208,10 @@ public class EMISSION extends SEDAPExpressMessage {
 			};
 		}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 		@Override
 		public String toString() {
 			return String.valueOf(this.function);
@@ -189,146 +237,290 @@ public class EMISSION extends SEDAPExpressMessage {
 	private char[] sidc;
 	private String comment;
 
+	/**
+	 * Returns the emission id.
+	 * @return the emission id
+	 */
 	public String getEmissionID() {
 		return this.emissionID;
 	}
 
+	/**
+	 * Sets the emission id.
+	 * @param emissionID value for emission id
+	 */
 	public void setEmissionID(String emissionID) {
 		this.emissionID = emissionID;
 	}
 
+	/**
+	 * Returns the delete flag.
+	 * @return the delete flag
+	 */
 	public DeleteFlag getDeleteFlag() {
 		return this.deleteFlag;
 	}
 
+	/**
+	 * Sets the delete flag.
+	 * @param deleteFlag value for delete flag
+	 */
 	public void setDeleteFlag(DeleteFlag deleteFlag) {
 		this.deleteFlag = deleteFlag;
 	}
 
+	/**
+	 * Returns the sensor latitude.
+	 * @return the sensor latitude
+	 */
 	public Double getSensorLatitude() {
 		return this.sensorLatitude;
 	}
 
+	/**
+	 * Sets the sensor latitude.
+	 * @param sensorLatitude value for sensor latitude
+	 */
 	public void setSensorLatitude(Double sensorLatitude) {
 		this.sensorLatitude = sensorLatitude;
 	}
 
+	/**
+	 * Returns the sensor longitude.
+	 * @return the sensor longitude
+	 */
 	public Double getSensorLongitude() {
 		return this.sensorLongitude;
 	}
 
+	/**
+	 * Sets the sensor longitude.
+	 * @param sensorLongitude value for sensor longitude
+	 */
 	public void setSensorLongitude(Double sensorLongitude) {
 		this.sensorLongitude = sensorLongitude;
 	}
 
+	/**
+	 * Returns the sensor altitude.
+	 * @return the sensor altitude
+	 */
 	public Double getSensorAltitude() {
 		return this.sensorAltitude;
 	}
 
+	/**
+	 * Sets the sensor altitude.
+	 * @param sensorAltitude value for sensor altitude
+	 */
 	public void setSensorAltitude(Double sensorAltitude) {
 		this.sensorAltitude = sensorAltitude;
 	}
 
+	/**
+	 * Returns the emitter latitude.
+	 * @return the emitter latitude
+	 */
 	public Double getEmitterLatitude() {
 		return this.emitterLatitude;
 	}
 
+	/**
+	 * Sets the emitter latitude.
+	 * @param emitterLatitude value for emitter latitude
+	 */
 	public void setEmitterLatitude(Double emitterLatitude) {
 		this.emitterLatitude = emitterLatitude;
 	}
 
+	/**
+	 * Returns the emitter longitude.
+	 * @return the emitter longitude
+	 */
 	public Double getEmitterLongitude() {
 		return this.emitterLongitude;
 	}
 
+	/**
+	 * Sets the emitter longitude.
+	 * @param emitterLongitude value for emitter longitude
+	 */
 	public void setEmitterLongitude(Double emitterLongitude) {
 		this.emitterLongitude = emitterLongitude;
 	}
 
+	/**
+	 * Returns the emitter altitude.
+	 * @return the emitter altitude
+	 */
 	public Double getEmitterAltitude() {
 		return this.emitterAltitude;
 	}
 
+	/**
+	 * Sets the emitter altitude.
+	 * @param emitterAltitude value for emitter altitude
+	 */
 	public void setEmitterAltitude(Double emitterAltitude) {
 		this.emitterAltitude = emitterAltitude;
 	}
 
+	/**
+	 * Returns the bearing.
+	 * @return the bearing
+	 */
 	public Double getBearing() {
 		return this.bearing;
 	}
 
+	/**
+	 * Sets the bearing.
+	 * @param bearing value for bearing
+	 */
 	public void setBearing(Double bearing) {
 		this.bearing = bearing;
 	}
 
+	/**
+	 * Returns the frequency.
+	 * @return the frequency
+	 */
 	public List<Double> getFrequency() {
 		return this.frequencies;
 	}
 
+	/**
+	 * Sets the frequency.
+	 * @param frequency value for frequency
+	 */
 	public void setFrequency(List<Double> frequency) {
 		this.frequencies = frequency;
 	}
 
+	/**
+	 * Returns the bandwidth.
+	 * @return the bandwidth
+	 */
 	public Double getBandwidth() {
 		return this.bandwidth;
 	}
 
+	/**
+	 * Sets the bandwidth.
+	 * @param bandwidth value for bandwidth
+	 */
 	public void setBandwidth(Double bandwidth) {
 		this.bandwidth = bandwidth;
 	}
 
+	/**
+	 * Returns the power.
+	 * @return the power
+	 */
 	public Double getPower() {
 		return this.power;
 	}
 
+	/**
+	 * Sets the power.
+	 * @param power value for power
+	 */
 	public void setPower(Double power) {
 		this.power = power;
 	}
 
+	/**
+	 * Returns the freq agility.
+	 * @return the freq agility
+	 */
 	public FreqAgility getFreqAgility() {
 		return this.freqAgility;
 	}
 
+	/**
+	 * Sets the freq agility.
+	 * @param freqAgility value for freq agility
+	 */
 	public void setFreqAgility(FreqAgility freqAgility) {
 		this.freqAgility = freqAgility;
 	}
 
+	/**
+	 * Returns the prf agility.
+	 * @return the prf agility
+	 */
 	public PRFAgility getPrfAgility() {
 		return this.prfAgility;
 	}
 
+	/**
+	 * Sets the prf agility.
+	 * @param prfAgility value for prf agility
+	 */
 	public void setPrfAgility(PRFAgility prfAgility) {
 		this.prfAgility = prfAgility;
 	}
 
+	/**
+	 * Returns the function.
+	 * @return the function
+	 */
 	public Function getFunction() {
 		return this.function;
 	}
 
+	/**
+	 * Sets the function.
+	 * @param function value for function
+	 */
 	public void setFunction(Function function) {
 		this.function = function;
 	}
 
+	/**
+	 * Returns the spot number.
+	 * @return the spot number
+	 */
 	public Integer getSpotNumber() {
 		return this.spotNumber;
 	}
 
+	/**
+	 * Sets the spot number.
+	 * @param spotNumber value for spot number
+	 */
 	public void setSpotNumber(Integer spotNumber) {
 		this.spotNumber = spotNumber;
 	}
 
+	/**
+	 * Returns the sidc.
+	 * @return the sidc
+	 */
 	public char[] getSidc() {
 		return this.sidc;
 	}
 
+	/**
+	 * Sets the sidc.
+	 * @param sidc value for sidc
+	 */
 	public void setSidc(char[] sidc) {
 		this.sidc = sidc;
 	}
 
+	/**
+	 * Returns the comment.
+	 * @return the comment
+	 */
 	public String getComment() {
 		return this.comment;
 	}
 
+	/**
+	 * Sets the comment.
+	 * @param comment value for comment
+	 */
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
@@ -363,30 +555,30 @@ public class EMISSION extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new EMISSION message
 	 *
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param emissionID
-	 * @param deleteFlag
-	 * @param sensorLatitude
-	 * @param sensorLongitude
-	 * @param sensorAltitude
-	 * @param emitterLatitude
-	 * @param emitterLongitude
-	 * @param emitterAltitude
-	 * @param bearing
-	 * @param frequency
-	 * @param bandwidth
-	 * @param power
-	 * @param freqAgility
-	 * @param prfAgility
-	 * @param function
-	 * @param spotNumber
-	 * @param sidc
-	 * @param comment
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param emissionID value for emission id
+	 * @param deleteFlag value for delete flag
+	 * @param sensorLatitude value for sensor latitude
+	 * @param sensorLongitude value for sensor longitude
+	 * @param sensorAltitude value for sensor altitude
+	 * @param emitterLatitude value for emitter latitude
+	 * @param emitterLongitude value for emitter longitude
+	 * @param emitterAltitude value for emitter altitude
+	 * @param bearing value for bearing
+	 * @param frequency value for frequency
+	 * @param bandwidth value for bandwidth
+	 * @param power value for power
+	 * @param freqAgility value for freq agility
+	 * @param prfAgility value for prf agility
+	 * @param function value for function
+	 * @param spotNumber value for spot number
+	 * @param sidc value for sidc
+	 * @param comment value for comment
 	 */
 	public EMISSION(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, String emissionID, DeleteFlag deleteFlag, Double sensorLatitude,
 			Double sensorLongitude, Double sensorAltitude, Double emitterLatitude, Double emitterLongitude, Double emitterAltitude, Double bearing, List<Double> frequency, Double bandwidth,
@@ -415,8 +607,9 @@ public class EMISSION extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a emission instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public EMISSION(String message) {
 
@@ -424,8 +617,9 @@ public class EMISSION extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a emission instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public EMISSION(Iterator<String> message) {
 
@@ -664,34 +858,38 @@ public class EMISSION extends SEDAPExpressMessage {
 		}
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		} else if (!(obj instanceof EMISSION)) {
-			return false;
-		} else {
-			return super.equals(obj) &&
-
-					(((this.emissionID == null) && (((EMISSION) obj).emissionID == null)) || ((this.emissionID != null) && this.emissionID.equals(((EMISSION) obj).emissionID))) &&
-
-					(this.deleteFlag == ((EMISSION) obj).deleteFlag) && (this.sensorLatitude == ((EMISSION) obj).sensorLatitude) && (this.sensorLongitude == ((EMISSION) obj).sensorLongitude)
-					&& (this.sensorAltitude == ((EMISSION) obj).sensorAltitude) && (this.emitterLatitude == ((EMISSION) obj).emitterLatitude)
-					&& (this.emitterLongitude == ((EMISSION) obj).emitterLongitude) && (this.emitterAltitude == ((EMISSION) obj).emitterAltitude) && (this.bearing == ((EMISSION) obj).bearing)
-					&& (this.frequencies == ((EMISSION) obj).frequencies) && (this.bandwidth == ((EMISSION) obj).bandwidth) && (this.power == ((EMISSION) obj).power)
-					&& (this.freqAgility == ((EMISSION) obj).freqAgility) && (this.prfAgility == ((EMISSION) obj).prfAgility) && (this.function == ((EMISSION) obj).function)
-					&& (this.spotNumber == ((EMISSION) obj).spotNumber) && Arrays.equals(this.sidc, ((EMISSION) obj).sidc) &&
-
-					(((this.comment == null) && (((EMISSION) obj).comment == null)) || ((this.comment != null) && this.comment.equals(((EMISSION) obj).comment)));
-
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
 	}
 
+	/**
+	 * Returns the hash code for this instance.
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 

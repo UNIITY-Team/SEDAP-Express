@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 /**
+ * Represents or provides the meteo functionality.
  * 
  * @author Volker Voß
  *
@@ -54,122 +55,242 @@ public class METEO extends SEDAPExpressMessage {
 
 	private String reference;
 
+	/**
+	 * Returns the speed through water.
+	 * @return the speed through water
+	 */
 	public Double getSpeedThroughWater() {
 		return this.speedThroughWater;
 	}
 
+	/**
+	 * Sets the speed through water.
+	 * @param speedThroughWater value for speed through water
+	 */
 	public void setSpeedThroughWater(Double speedThroughWater) {
 		this.speedThroughWater = speedThroughWater;
 	}
 
+	/**
+	 * Returns the water speed.
+	 * @return the water speed
+	 */
 	public Double getWaterSpeed() {
 		return this.waterSpeed;
 	}
 
+	/**
+	 * Sets the water speed.
+	 * @param waterSpeed value for water speed
+	 */
 	public void setWaterSpeed(Double waterSpeed) {
 		this.waterSpeed = waterSpeed;
 	}
 
+	/**
+	 * Returns the water direction.
+	 * @return the water direction
+	 */
 	public Double getWaterDirection() {
 		return this.waterDirection;
 	}
 
+	/**
+	 * Sets the water direction.
+	 * @param waterDirection value for water direction
+	 */
 	public void setWaterDirection(Double waterDirection) {
 		this.waterDirection = waterDirection;
 	}
 
+	/**
+	 * Returns the water temperature.
+	 * @return the water temperature
+	 */
 	public Double getWaterTemperature() {
 		return this.waterTemperature;
 	}
 
+	/**
+	 * Sets the water temperature.
+	 * @param waterTemperature value for water temperature
+	 */
 	public void setWaterTemperature(Double waterTemperature) {
 		this.waterTemperature = waterTemperature;
 	}
 
+	/**
+	 * Returns the water depth.
+	 * @return the water depth
+	 */
 	public Double getWaterDepth() {
 		return this.waterDepth;
 	}
 
+	/**
+	 * Sets the water depth.
+	 * @param waterDepth value for water depth
+	 */
 	public void setWaterDepth(Double waterDepth) {
 		this.waterDepth = waterDepth;
 	}
 
+	/**
+	 * Returns the air temperature.
+	 * @return the air temperature
+	 */
 	public Double getAirTemperature() {
 		return this.airTemperature;
 	}
 
+	/**
+	 * Sets the air temperature.
+	 * @param airTemperature value for air temperature
+	 */
 	public void setAirTemperature(Double airTemperature) {
 		this.airTemperature = airTemperature;
 	}
 
+	/**
+	 * Returns the dew point.
+	 * @return the dew point
+	 */
 	public Double getDewPoint() {
 		return this.dewPoint;
 	}
 
+	/**
+	 * Sets the dew point.
+	 * @param dewPoint value for dew point
+	 */
 	public void setDewPoint(Double dewPoint) {
 		this.dewPoint = dewPoint;
 	}
 
+	/**
+	 * Returns the humidity rel.
+	 * @return the humidity rel
+	 */
 	public Double getHumidityRel() {
 		return this.humidityRel;
 	}
 
+	/**
+	 * Sets the humidity rel.
+	 * @param humidityRel value for humidity rel
+	 */
 	public void setHumidityRel(Double humidityRel) {
 		this.humidityRel = humidityRel;
 	}
 
+	/**
+	 * Returns the pressure.
+	 * @return the pressure
+	 */
 	public Double getPressure() {
 		return this.pressure;
 	}
 
+	/**
+	 * Sets the pressure.
+	 * @param pressure value for pressure
+	 */
 	public void setPressure(Double pressure) {
 		this.pressure = pressure;
 	}
 
+	/**
+	 * Returns the wind speed.
+	 * @return the wind speed
+	 */
 	public Double getWindSpeed() {
 		return this.windSpeed;
 	}
 
+	/**
+	 * Sets the wind speed.
+	 * @param windSpeed value for wind speed
+	 */
 	public void setWindSpeed(Double windSpeed) {
 		this.windSpeed = windSpeed;
 	}
 
+	/**
+	 * Returns the wind direction.
+	 * @return the wind direction
+	 */
 	public Double getWindDirection() {
 		return this.windDirection;
 	}
 
+	/**
+	 * Sets the wind direction.
+	 * @param windDirection value for wind direction
+	 */
 	public void setWindDirection(Double windDirection) {
 		this.windDirection = windDirection;
 	}
 
+	/**
+	 * Returns the visibility.
+	 * @return the visibility
+	 */
 	public Double getVisibility() {
 		return this.visibility;
 	}
 
+	/**
+	 * Sets the visibility.
+	 * @param visibility value for visibility
+	 */
 	public void setVisibility(Double visibility) {
 		this.visibility = visibility;
 	}
 
+	/**
+	 * Returns the cloud height.
+	 * @return the cloud height
+	 */
 	public Double getCloudHeight() {
 		return this.cloudHeight;
 	}
 
+	/**
+	 * Sets the cloud height.
+	 * @param cloudHeight value for cloud height
+	 */
 	public void setCloudHeight(Double cloudHeight) {
 		this.cloudHeight = cloudHeight;
 	}
 
+	/**
+	 * Returns the cloud cover.
+	 * @return the cloud cover
+	 */
 	public Double getCloudCover() {
 		return this.cloudCover;
 	}
 
+	/**
+	 * Sets the cloud cover.
+	 * @param cloudCover value for cloud cover
+	 */
 	public void setCloudCover(Double cloudCover) {
 		this.cloudCover = cloudCover;
 	}
 
+	/**
+	 * Returns the reference.
+	 * @return the reference
+	 */
 	public String getReference() {
 		return this.reference;
 	}
 
+	/**
+	 * Sets the reference.
+	 * @param reference value for reference
+	 */
 	public void setReference(String reference) {
 		this.reference = reference;
 	}
@@ -201,27 +322,27 @@ public class METEO extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new METEO message
 	 *
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param speedThroughWater
-	 * @param waterSpeed
-	 * @param waterDirection
-	 * @param waterTemperature
-	 * @param waterDepth
-	 * @param airTemperature
-	 * @param dewPoint
-	 * @param humidityRel
-	 * @param pressure
-	 * @param windSpeed
-	 * @param windDirection
-	 * @param visibility
-	 * @param cloudHeight
-	 * @param cloudCover
-	 * @param reference
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param speedThroughWater value for speed through water
+	 * @param waterSpeed value for water speed
+	 * @param waterDirection value for water direction
+	 * @param waterTemperature value for water temperature
+	 * @param waterDepth value for water depth
+	 * @param airTemperature value for air temperature
+	 * @param dewPoint value for dew point
+	 * @param humidityRel value for humidity rel
+	 * @param pressure value for pressure
+	 * @param windSpeed value for wind speed
+	 * @param windDirection value for wind direction
+	 * @param visibility value for visibility
+	 * @param cloudHeight value for cloud height
+	 * @param cloudCover value for cloud cover
+	 * @param reference value for reference
 	 */
 	public METEO(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, Double speedThroughWater, Double waterSpeed, Double waterDirection,
 			Double waterTemperature, Double waterDepth, Double airTemperature, Double dewPoint, Double humidityRel, Double pressure, Double windSpeed, Double windDirection, Double visibility,
@@ -247,14 +368,19 @@ public class METEO extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a meteo instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public METEO(String message) {
 
 		this(SEDAPExpressMessage.splitMessage(message.substring(message.indexOf(';') + 1)).iterator());
 	}
 
+	/**
+	 * Creates a meteo instance.
+	 * @param message value for message
+	 */
 	public METEO(Iterator<String> message) {
 
 		super(message);
@@ -442,33 +568,38 @@ public class METEO extends SEDAPExpressMessage {
 
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		} else if (!(obj instanceof METEO)) {
-			return false;
-		} else {
-			return super.equals(obj) && (this.speedThroughWater == ((METEO) obj).speedThroughWater) && (this.waterSpeed == ((METEO) obj).waterSpeed)
-					&& (this.waterDirection == ((METEO) obj).waterDirection)
-
-					&& (this.waterTemperature == ((METEO) obj).waterTemperature) && (this.waterDepth == ((METEO) obj).waterDepth) && (this.airTemperature == ((METEO) obj).airTemperature)
-					&& (this.dewPoint == ((METEO) obj).dewPoint)
-
-					&& (this.humidityRel == ((METEO) obj).humidityRel) && (this.pressure == ((METEO) obj).pressure) && (this.windSpeed == ((METEO) obj).windSpeed)
-					&& (this.windDirection == ((METEO) obj).windDirection)
-
-					&& (this.visibility == ((METEO) obj).visibility) && (this.cloudHeight == ((METEO) obj).cloudHeight) && (this.cloudCover == ((METEO) obj).cloudCover)
-
-					&& (((this.reference == null) && (((METEO) obj).reference == null)) || ((this.reference != null) && this.reference.equals(((METEO) obj).reference)));
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
 	}
 
+	/**
+	 * Returns the hash code for this instance.
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 

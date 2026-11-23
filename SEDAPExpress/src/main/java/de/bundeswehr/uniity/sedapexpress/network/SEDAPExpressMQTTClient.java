@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -31,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +48,7 @@ import org.eclipse.paho.mqttv5.common.MqttSecurityException;
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties;
 
 import de.bundeswehr.uniity.sedapexpress.messages.SEDAPExpressMessage;
+import de.bundeswehr.uniity.sedapexpress.utils.SSLUtils;
 
 /**
  * MQTT Client for the communication with a MQTT SEDAP-Express server (e.g.
@@ -59,7 +61,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 
 	protected static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	static {
-		SEDAPExpressTCPClient.logger.setLevel(Level.ALL);
+		SEDAPExpressMQTTClient.logger.setLevel(Level.ALL);
 	}
 
 	private Exception lastException = null;
@@ -84,13 +86,14 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 
 	private MqttClient client;
 
-	private final LinkedBlockingQueue<SEDAPExpressMessage> outQueue = new LinkedBlockingQueue<>();
+	private static final int OUTGOING_QUEUE_CAPACITY = 10_000;
+	private final LinkedBlockingQueue<SEDAPExpressMessage> outQueue = new LinkedBlockingQueue<>(OUTGOING_QUEUE_CAPACITY);
 
 	/**
 	 * Instantiate a new SEDAP-Express MQTT client
 	 * 
-	 * @param mqttAddress
-	 * @param name
+	 * @param mqttAddress value for mqtt address
+	 * @param name        value for name
 	 */
 	public SEDAPExpressMQTTClient(final String mqttAddress, final String name) {
 		this(mqttAddress, name, null, null, new ArrayList<>(), "SEDAP-X");
@@ -99,8 +102,8 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 	/**
 	 * Instantiate a new SEDAP-Express MQTT client
 	 * 
-	 * @param mqttAddress
-	 * @param name
+	 * @param mqttAddress value for mqtt address
+	 * @param name        value for name
 	 * @param filterNames List of topics/path which should be filted
 	 */
 	public SEDAPExpressMQTTClient(final String mqttAddress, final String name, final List<String> filterNames) {
@@ -110,8 +113,8 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 	/**
 	 * Instantiate a new SEDAP-Express MQTT client
 	 * 
-	 * @param mqttAddress
-	 * @param name
+	 * @param mqttAddress value for mqtt address
+	 * @param name        value for name
 	 * @param filterNames List of topics/path which should be filted
 	 * @param rootPath    default "SEDAP-X"
 	 */
@@ -122,10 +125,10 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 	/**
 	 * Instantiate a new SEDAP-Express MQTT client
 	 * 
-	 * @param mqttAddress
-	 * @param name
-	 * @param clientUsername
-	 * @param clientPassword
+	 * @param mqttAddress    value for mqtt address
+	 * @param name           value for name
+	 * @param clientUsername value for client username
+	 * @param clientPassword value for client password
 	 * @param filterNames    List of topics/path which should be filted
 	 */
 	public SEDAPExpressMQTTClient(final String mqttAddress, final String name, final String clientUsername, final String clientPassword, final List<String> filterNames) {
@@ -135,10 +138,10 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 	/**
 	 * Instantiate a new SEDAP-Express MQTT client
 	 * 
-	 * @param mqttAddress
-	 * @param name
-	 * @param clientUsername
-	 * @param clientPassword
+	 * @param mqttAddress    value for mqtt address
+	 * @param name           value for name
+	 * @param clientUsername value for client username
+	 * @param clientPassword value for client password
 	 * @param filterNames    List of topics/path which should be filted
 	 * @param rootPath       default "SEDAP-X"
 	 */
@@ -162,13 +165,13 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 	/**
 	 * Instantiate a new SEDAP-Express MQTT client
 	 * 
-	 * @param mqttAddress
-	 * @param name
-	 * @param caCertificateFile
-	 * @param clientCertificateFile
-	 * @param clientKeyFileFile
+	 * @param mqttAddress           value for mqtt address
+	 * @param name                  value for name
+	 * @param caCertificateFile     value for ca certificate file
+	 * @param clientCertificateFile value for client certificate file
+	 * @param clientKeyFileFile     value for client key file file
 	 * @param filterNames           List of topics/path which should be filted
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException if the operation cannot be completed because of this condition
 	 */
 	public SEDAPExpressMQTTClient(final String mqttAddress, final String name, final String caCertificateFile, final String clientCertificateFile, String clientKeyFileFile,
 			final List<String> filterNames) throws FileNotFoundException {
@@ -179,14 +182,14 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 	/**
 	 * Instantiate a new SEDAP-Express MQTT client
 	 * 
-	 * @param mqttAddress
-	 * @param name
-	 * @param caCertificateFile
-	 * @param clientCertificateFile
-	 * @param clientKeyFileFile
+	 * @param mqttAddress           value for mqtt address
+	 * @param name                  value for name
+	 * @param caCertificateFile     value for ca certificate file
+	 * @param clientCertificateFile value for client certificate file
+	 * @param clientKeyFileFile     value for client key file file
 	 * @param filterNames           List of topics/path which should be filted
 	 * @param rootPath              default "SEDAP-X"
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException if the operation cannot be completed because of this condition
 	 */
 	public SEDAPExpressMQTTClient(final String mqttAddress, final String name, final String caCertificateFile, final String clientCertificateFile, String clientKeyFileFile,
 			final List<String> filterNames, String rootPath) throws FileNotFoundException {
@@ -197,13 +200,13 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 	/**
 	 * Instantiate a new SEDAP-Express MQTT client
 	 * 
-	 * @param mqttAddress
-	 * @param name
-	 * @param clientUsername
-	 * @param clientPassword
-	 * @param caCertificateFile
-	 * @param clientCertificateFile
-	 * @param clientKeyFile
+	 * @param mqttAddress           value for mqtt address
+	 * @param name                  value for name
+	 * @param clientUsername        value for client username
+	 * @param clientPassword        value for client password
+	 * @param caCertificateFile     value for ca certificate file
+	 * @param clientCertificateFile value for client certificate file
+	 * @param clientKeyFile         value for client key file
 	 * @param filterNames           List of topics/path which should be filted
 	 * @param rootPath              default "SEDAP-X"
 	 */
@@ -226,6 +229,11 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 
 	}
 
+	/**
+	 * Establishes the connection to the configured endpoint.
+	 * 
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean connect() {
 
@@ -239,7 +247,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 
 				try {
 
-					this.client = new MqttClient(this.mqttAddress, this.clientUsername, new MemoryPersistence());
+					this.client = new MqttClient(this.mqttAddress, UUID.randomUUID().toString(), new MemoryPersistence());
 					this.client.setCallback(this);
 
 					final MqttConnectionOptions options = new MqttConnectionOptions();
@@ -259,7 +267,7 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 
 					this.client.connect(options);
 
-					this.client.subscribe(this.mqttRoot + "/+/+", 1);
+					this.client.subscribe(this.mqttRoot.substring(0, this.mqttRoot.lastIndexOf('/') + 1) + "+/+", 1);
 
 					while (this.status) {
 
@@ -326,13 +334,20 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 
 	}
 
+	/**
+	 * Processes the incoming communication or work item.
+	 * 
+	 * @param topic   value for topic
+	 * @param message value for message
+	 * @throws Exception if the operation cannot be completed because of this condition
+	 */
 	@Override
 	public void messageArrived(final String topic, final MqttMessage message) throws Exception {
 
 		try {
 			if (message != null) {
 
-				if (!this.filterTopics.contains(topic.substring(topic.lastIndexOf("/"))))
+				if (!this.filterTopics.contains(topic.substring(topic.lastIndexOf("/") + 1)))
 					distributeReceivedSEDAPExpressMessage(SEDAPExpressMessage.deserialize(new String(message.getPayload(), StandardCharsets.ISO_8859_1)));
 			}
 		} catch (Exception e) {
@@ -345,6 +360,9 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 		}
 	}
 
+	/**
+	 * Stops the communication resource and releases its active connection.
+	 */
 	@Override
 	public void stopCommunicator() {
 
@@ -353,47 +371,90 @@ public class SEDAPExpressMQTTClient extends SEDAPExpressCommunicator implements 
 		this.status = false;
 	}
 
+	/**
+	 * Indicates whether the ready condition is met.
+	 * 
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	public boolean isReady() {
 
 		return (this.client != null) && this.client.isConnected();
 	}
 
+	/**
+	 * Performs the auth packet arrived operation.
+	 * 
+	 * @param reasonCode value for reason code
+	 * @param properties value for properties
+	 */
 	@Override
 	public void authPacketArrived(final int reasonCode, final MqttProperties properties) {
 		// Ignore
 	}
 
+	/**
+	 * Performs the connect complete operation.
+	 * 
+	 * @param arg0 value for arg0
+	 * @param arg1 value for arg1
+	 */
 	@Override
 	public void connectComplete(final boolean arg0, final String arg1) {
 		SEDAPExpressMQTTClient.logger.logp(Level.INFO, "SEDAPExpressMQTTClient", "connectComplete()", "Successfully connected to MQTT server ...");
 		logInput("Successfully connected to MQTT server ...");
 	}
 
+	/**
+	 * Performs the delivery complete operation.
+	 * 
+	 * @param token value for token
+	 */
 	@Override
 	public void deliveryComplete(final IMqttToken token) {
 		// Ignore
 	}
 
+	/**
+	 * Performs the disconnected operation.
+	 * 
+	 * @param response value for response
+	 */
 	@Override
 	public void disconnected(final MqttDisconnectResponse response) {
 		SEDAPExpressMQTTClient.logger.logp(Level.INFO, "SEDAPExpressMQTTClient", "disconnected()", "Disconnected from MQTT server ...");
 		logInput("Disconnected from MQTT server ...");
 	}
 
+	/**
+	 * Performs the mqtt error occurred operation.
+	 * 
+	 * @param exception value for exception
+	 */
 	@Override
 	public void mqttErrorOccurred(final MqttException exception) {
 		SEDAPExpressMQTTClient.logger.logp(Level.INFO, "SEDAPExpressMQTTClient", "mqttErrorOccurred()", "MQTT error occurred: " + exception.getLocalizedMessage());
 		logInput("MQTT error occurred: " + exception.getLocalizedMessage());
 	}
 
+	/**
+	 * Sends the supplied message through the configured transport.
+	 * 
+	 * @param message value for message
+	 * @return {@code true} if the message was accepted by the outgoing queue; {@code false}
+	 *         if the message is {@code null} or the bounded queue is full
+	 * @throws IOException if the transport cannot accept the message because of an I/O failure
+	 */
 	@Override
 	public boolean sendSEDAPExpressMessage(SEDAPExpressMessage message) throws IOException {
 
-		this.outQueue.add(message);
-
-		return true;
+		return message != null && this.outQueue.offer(message);
 	}
 
+	/**
+	 * Returns the last exception.
+	 * 
+	 * @return the last exception
+	 */
 	@Override
 	public Exception getLastException() {
 

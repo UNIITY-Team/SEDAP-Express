@@ -15,7 +15,7 @@
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSEnARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 /**
+ * Represents or provides the timesync functionality.
  * 
  * @author Volker Voß
  *
@@ -39,10 +40,18 @@ public class TIMESYNC extends SEDAPExpressMessage {
 
 	private Long timestamp;
 
+	/**
+	 * Returns the timestamp.
+	 * @return the timestamp
+	 */
 	public Long getTimestamp() {
 		return this.timestamp;
 	}
 
+	/**
+	 * Sets the timestamp.
+	 * @param timestamp value for timestamp
+	 */
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
@@ -60,12 +69,12 @@ public class TIMESYNC extends SEDAPExpressMessage {
 	/**
 	 * Instantiate the initial TIMESYNC message
 	 *
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
 	 */
 	public TIMESYNC(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac) {
 		super(number, time, sender, classification, acknowledgement, mac);
@@ -75,13 +84,13 @@ public class TIMESYNC extends SEDAPExpressMessage {
 	/**
 	 * Instantiate the answer TIMESYNC message (used only by the SEC/SECMockUp
 	 * 
-	 * @param number
-	 * @param time
-	 * @param sender
-	 * @param classification
-	 * @param acknowledgement
-	 * @param mac
-	 * @param timestamp
+	 * @param number value for number
+	 * @param time value for time
+	 * @param sender value for sender
+	 * @param classification value for classification
+	 * @param acknowledgement value for acknowledgement
+	 * @param mac value for mac
+	 * @param timestamp value for timestamp
 	 */
 	public TIMESYNC(Byte number, Long time, String sender, Classification classification, Acknowledgement acknowledgement, String mac, Long timestamp) {
 		super(number, time, sender, classification, acknowledgement, mac);
@@ -91,7 +100,7 @@ public class TIMESYNC extends SEDAPExpressMessage {
 	/**
 	 * Instantiate a new TIMESYNC message
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public TIMESYNC(String message) {
 
@@ -99,8 +108,9 @@ public class TIMESYNC extends SEDAPExpressMessage {
 	}
 
 	/**
+ * Creates a timesync instance.
 	 *
-	 * @param message
+	 * @param message value for message
 	 */
 	public TIMESYNC(Iterator<String> message) {
 
@@ -121,25 +131,38 @@ public class TIMESYNC extends SEDAPExpressMessage {
 		}
 	}
 
+	/**
+	 * Compares this instance with the specified object.
+	 * @param obj value for obj
+	 * @return {@code true} if the condition is satisfied; otherwise {@code false}.
+	 */
 	@Override
 	public boolean equals(Object obj) {
-
-		if (obj == null) {
-			return false;
-		} else if (!(obj instanceof TIMESYNC)) {
-			return false;
-		} else {
-			return super.equals(obj) &&
-
-					(((this.timestamp == null) && (((TIMESYNC) obj).timestamp == null)) || ((this.timestamp != null) && this.timestamp.equals(((TIMESYNC) obj).timestamp)));
+		if (this == obj) {
+			return true;
 		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		String thisKey = equalityKey();
+		String otherKey = ((SEDAPExpressMessage) obj).equalityKey();
+		return thisKey != null && thisKey.equals(otherKey);
 	}
 
+	/**
+	 * Returns the hash code for this instance.
+	 * @return the result of the check
+	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		String key = equalityKey();
+		return (key != null) ? key.hashCode() : System.identityHashCode(this);
 	}
 
+	/**
+	 * Returns the textual representation of this instance.
+	 * @return the result of the operation
+	 */
 	@Override
 	public String toString() {
 
