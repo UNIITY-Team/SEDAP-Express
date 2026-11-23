@@ -7,8 +7,13 @@ This repository has not yet been officially published. The ICD (Interface Descri
  
 ## Scope
 
-SEDAP-Express is an exceptionally fast path/lightweight protocol to integrate new applications, sensors, effectors or other similar things especially into the ecosystem of MESE/UNIITY but not only! There are already a bunch of companies and individuals who use that internally for their own projects to exchange tactical or telemetry data.
-That's why it is intentionally kept simple and offers several technical ways of communication. Of course, this results in limitations, but in most cases where quick and easy integration is required, these are negligible. If increased demands arise later on, the “bigger” SEDAP API respective MESE/UNIITY interface can be used if necessary.
+SEDAP-Express is an exceptionally fast, lightweight and extremely easy-to-implement communication protocol that enables anyone to seamlessly integrate applications, sensors, effectors, drones, C2 systems and other platforms or devices. It facilitates the exchange of tactical data, telemetry and operational situational awareness (COP) across heterogeneous systems, making it easy to connect different capabilities and establish a shared operational picture.
+
+Designed with simplicity and interoperability in mind, SEDAP-Express is intentionally uncomplicated and can be implemented in virtually any programming language – it is by no means limited to Java. Compared to many established NATO standards and protocols, as well as civilian technologies such as CoT, MAVLink or ROS 2, SEDAP-Express offers a significantly simpler and more straightforward approach to integration, without the complexity and implementation overhead often associated with these technologies.
+
+SEDAP-Express comes with a wide range of built-in communication options out of the box, allowing systems to exchange data over different transports and communication channels. These include REST APIs, TCP, UDP and even unconventional communication technologies such as GGWave. This flexibility makes it possible to use the same protocol across very different networks, infrastructures and communication environments without having to reinvent the integration layer for each use case.
+
+Whether used within the MESE/UNIITY ecosystem or independently, SEDAP-Express is available to everyone for integration into their own systems, projects and applications.
 
 SEDAP-Express is licensed under the “Simplified BSD License” (BSD-2-Clause). Therefore, there should be no problems using SEDAP-Express in commercial or non-commercial projects or integrating parts of the SEDAP-Express framework.
 
